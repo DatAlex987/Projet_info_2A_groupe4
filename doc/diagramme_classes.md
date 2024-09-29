@@ -2,6 +2,7 @@
 classDiagram
 
 %% Classes DAO
+namespace DAO {
     class SonDAO {
         +ajouter_son()
         +modifier_son()
@@ -38,8 +39,9 @@ classDiagram
     class SonFactory {
         +instantiate_son()
     }
-
+}
 %% Classes OBJET
+namespace Business {
     class Son {
         +nom: str
         +description: str
@@ -79,7 +81,6 @@ classDiagram
         +modifier_son_continu()
         +modifier_son_manuel()
         +supprimer_scene()
-        +recherche_son_avec_tag(str)
     }
 
     class Sounddeck {
@@ -109,32 +110,33 @@ classDiagram
         +hach_mdp()
         +supprimer_user()
     }
-
+}
 %% Classes Services
-
+namespace Services {
     class Singleton{
         +__call__()
     }
 
     class DBConnection{
+    <<Singleton>>
     }
 
     class Son_Service{
-
     }
 
     class User_Service{
-
     }
 
     class Scene_Service{
-
     }
 
     class SD_Service{
-
     }
 
+    class Freesound{
+        +recherche_par_tag(str)
+    }
+}
     %%Liens Objets
     Son_Aleatoire <|-- Son
     Son_Manuel <|-- Son
@@ -147,14 +149,14 @@ classDiagram
     User <.. UserDAO : create
     Son <.. SonDAO : create
     Scene <.. SceneDAO : create
-    SD <.. SDDAO : create
+    Sounddeck <.. SDDAO : create
     Son <.. SonFactory : instantiate
 
     %%Liens Services
     Singleton <|-- DBConnection
     Son <.. Son_Service : uses
     Scene <.. Scene_Service : uses
-    SD <.. SD_Service : uses
+    Sounddeck <.. SD_Service : uses
     User <.. User_Service : uses
 
 ```
