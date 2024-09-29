@@ -40,6 +40,7 @@ classDiagram
         +modifier_son_continu()
         +modifier_son_manuel()
         +supprimer_scène()
+        +recherche_son_avec_tag(str)
     }
     
     class Sounddeck {
@@ -69,7 +70,7 @@ classDiagram
         +hach_mdp()
         +supprimer_user()
     }
-    
+
     User <|-- Personne
     Sounddeck o-- Scène
     Son o-- Scène
