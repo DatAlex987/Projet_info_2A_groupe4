@@ -41,14 +41,37 @@ classDiagram
         +modifier_son_manuel()
         +supprimer_scène()
     }
+    
+    class Sounddeck {
+        +nom : str
+        +description : str
+        +id_sd : str
+        +scènes : list[Scène]
+        +auteur : Utilisateur
+        +date_création : datetime
+        +modifier_nom()
+        +modifier_description()
+        +ajouter_scène()
+        +retirer_scène()
+    }
 
+    class Personne {
+        +nom : str
+        +prénom : str
+        +date_naissance : datetime
+        +modifier_nom()
+        +modifier_prénom()
+    }
 
-    VueAbstraite <|-- AccueilVue
-    VueAbstraite <|-- ConnexionVue
-    VueAbstraite <|-- MenuJoueurVue
-    MenuJoueurVue ..> JoueurService : appelle
-    ConnexionVue ..> JoueurService : appelle
-    JoueurService ..> JoueurDao : appelle
-    Joueur <.. JoueurService: utilise
-    Joueur <.. JoueurDao: utilise
+    class User {
+        +id_user : str
+        +mdp : str
+        +hach_mdp()
+        +supprimer_user()
+    }
+    
+    User <|-- Personne
+    Sounddeck o-- Scène
+    Son o-- Scène
+
 ```
