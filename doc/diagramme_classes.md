@@ -45,7 +45,7 @@ namespace Business {
     class Son {
         +nom: str
         +description: str
-        +durée: datetime
+        +durée: date
         +id_freesound: str
         +tag: list[str]
         +jouer_son()
@@ -89,7 +89,7 @@ namespace Business {
         +id_sd : str
         +scenes : list[Scene]
         +auteur : Utilisateur
-        +date_création : datetime
+        +date_création : date
         +modifier_nom()
         +modifier_description()
         +ajouter_scene()
@@ -99,7 +99,7 @@ namespace Business {
     class Personne {
         +nom : str
         +prénom : str
-        +date_naissance : datetime
+        +date_naissance : date
         +modifier_nom()
         +modifier_prénom()
     }
