@@ -1,28 +1,70 @@
 @startuml
-' à coller ici pour visualiser : https://www.plantuml.com/plantuml/uml/SyfFKj2rKt3CoKnELR1Io4ZDoSa70000
+' à coller ici pour visualiser en png ou svg : https://www.plantuml.com/plantuml/uml/SyfFKj2rKt3CoKnELR1Io4ZDoSa70000
 ' doc : https://plantuml.com/fr/use-case-diagram
 
 
-left to right direction
-
-actor "Utilisateur"      as user
-actor "Administrateur"   as admin
-actor "Joueur"           as joueur
-
-rectangle {
-  usecase "S'inscrire"        as inscription
-  usecase "S'authentifier"    as authentification
-  usecase "Quitter"           as quitter
-  usecase "Lister joueurs"    as lister_joueurs
+!define RECTANGLE #fdf5e6
+skinparam rectangle {
+  BackgroundColor RECTANGLE
 }
 
-joueur --> quitter
+rectangle "Diagramme de cas d'utilisation" {
+  actor "utilisateur connecté" as uc
+  actor "utilisateur non connecté" as unc
 
-user --> inscription
-user --> authentification
-user --> quitter
+  usecase "créer un compte" as UC1
+  usecase "se connecter" as UC2
+  usecase "se déconnecter" as UC3
+  usecase "Quitter" as UC4
+  usecase "supprimer son compte" as UC5
+  usecase "modifier les paramètres d'un son" as UC6
+  usecase "créer une scène" as UC7
+  usecase "définir des sons continus,\n aléatoires et déclenchés pour une scène" as UC8
+  usecase "supprimer une scène" as UC9
+  usecase "supprimer la scène de tous\n les sound-decks" as UC10
+  usecase "créer un sound-deck" as UC11
+  usecase "retirer une scène à un sound-deck" as UC12
+  usecase "supprimer un sound-deck" as UC13
+  usecase "jouer une scène" as UC14
+  usecase "ajouter une scène à un sound-deck" as UC15
+  usecase "jouer un sound-deck" as UC16
+  usecase "prévisualiser une scène avant\n de l'ajouter à un sound-deck" as UC17
+  usecase "rechercher des sons via API" as UC18
+  usecase "rechercher et importer une scène/\n un sound-deck d'un autre utilisateur" as UC19
+  
+  uc --> UC1
+  uc --> UC2
+  uc --> UC3
+  uc --> UC4
+  uc --> UC5
+  uc --> UC6
+  uc --> UC7
+  uc --> UC8
+  uc --> UC9
+  uc --> UC10
+  uc --> UC11
+  uc --> UC12
+  uc --> UC13
+  uc --> UC14
+  uc --> UC15
+  uc --> UC16
+  uc --> UC17
+  uc --> UC18
+  uc --> UC19
 
-admin --> quitter
-admin --> lister_joueurs
-
+  UC9 -[hidden]-> UC10 : include
+  UC3 .> UC4 : extend
+  UC14 .> UC15 : include
+  UC16 .> UC14 : extend
+  UC17 .> UC15 : extend
+  UC14 .> UC19 : extend
+  UC9 .> UC12 : include
+  UC15 .> UC12 : include
+  
+  unc --> UC1
+  unc --> UC2
+  unc --> UC3
+  unc --> UC5
+  unc --> UC4
+}
 @enduml
