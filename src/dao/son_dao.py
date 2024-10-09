@@ -3,7 +3,7 @@ from dao.db_connection import DBConnection
 from business_object.son import Son
 
 
-class SDDAO:
+class SonDAO:
     """Implémente les méthodes du CRUD pour accéder à la base de données des sons"""
 
     def ajouter_son():

@@ -1,12 +1,11 @@
 -----------------------------------------------------
--- Joueur
+-- User
 -----------------------------------------------------
-DROP TABLE IF EXISTS joueur CASCADE ;
-CREATE TABLE joueur(
-    id_joueur    SERIAL PRIMARY KEY,
+DROP TABLE IF EXISTS User CASCADE ;
+CREATE TABLE User(
+    id_user    SERIAL PRIMARY KEY,
     pseudo       VARCHAR(30) UNIQUE,
     mdp          VARCHAR(256),
     age          INTEGER,
-    mail         VARCHAR(50),
-    fan_pokemon  BOOLEAN
+    mail         VARCHAR(50)
 );
