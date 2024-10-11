@@ -16,8 +16,8 @@ class Son_manuel(Son):
     --------
     """
 
-    def __init__(self, start_key):
-        """Constructeur"""
+    def __init__(self, nom, description, duree, id_freesound, tags, start_key):
+        super().__init__(nom, description, duree, id_freesound, tags)
         self.start_key = start_key
 
     def modifier_key(self, new_key):
