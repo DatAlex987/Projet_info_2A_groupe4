@@ -28,3 +28,6 @@ class Son:
         self.tags = tags
 
     "def jouer_son(self):" """Lancer le son"""
+
+
+# Jouer_son_preview
