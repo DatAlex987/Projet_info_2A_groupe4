@@ -4,7 +4,7 @@ from dao.db_connection import DBConnection
 # from business_object.user import User
 
 
-class UserDAO:
+class UserDAO(metaclass=Singleton):
     """Implémente les méthodes du CRUD pour accéder à la base de données des users"""
 
     def ajouter_user(pseudo, mdp, age, mail) -> None:
@@ -24,9 +24,6 @@ class UserDAO:
                 res = cursor.fetchone()
 
         return res
-
-    def modifier_user():
-        pass
 
     def supprimer_user():
         pass
