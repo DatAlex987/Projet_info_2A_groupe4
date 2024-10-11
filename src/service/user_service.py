@@ -14,17 +14,17 @@ class UserService:
     def creer():
         """Création d'un utilisateur à partir de ses attributs"""
         new_user = User(**kwargs)
-        return new_user if UserDao().ajouter_user(new_user) else None
+        return new_user if UserDAO().ajouter_user(new_user) else None
 
     @log
     def supprimer(self, utilisateur) -> bool:
         """Supprimer le compte d'un joueur"""
-        return UserDao().supprimer(utilisateur)
+        return UserDAO().supprimer(utilisateur)
 
     @log
     def se_connecter(self, pseudo, mdp) -> User:
         """Se connecter à partir de pseudo et mdp"""
-        return UserDao().se_connecter(pseudo, hash_password(mdp, pseudo))
+        return UserDAO().se_connecter(pseudo, hash_password(mdp, pseudo))
 
     @log
     def lister_tous_les_utilisateurs(self, inclure_mdp=False) -> list[User]:
@@ -70,7 +70,7 @@ class UserService:
     @log
     def trouver_par_id(self, id_user) -> User:
         """Trouver un joueur à partir de son id"""
-        return UserDao().rechercher_par_id_users(id_user)
+        return UserDAO().rechercher_par_id_users(id_user)
 
     @log
     def pseudo_deja_utilise(self, pseudo) -> bool:
