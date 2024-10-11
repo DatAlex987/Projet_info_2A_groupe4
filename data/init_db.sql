@@ -3,11 +3,11 @@
 -----------------------------------------------------
 DROP TABLE IF EXISTS User CASCADE ;
 CREATE TABLE User(
-    id_user    SERIAL PRIMARY KEY,
-    pseudo       VARCHAR(30) UNIQUE,
-    mdp          VARCHAR(256),
-    age          INTEGER,
-    mail         VARCHAR(50)
+    id_user PRIMARY KEY,
+    nom TEXT,
+    mdp_hashe, TEXT,
+    age INTEGER,
+    prenom TEXT
 );
 
 ### SOUNDECK
