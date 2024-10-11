@@ -1,16 +1,16 @@
 -----------------------------------------------------
 -- User
 -----------------------------------------------------
-DROP TABLE IF EXISTS User CASCADE ;
-CREATE TABLE User(
-    id_user    SERIAL PRIMARY KEY,
+DROP TABLE IF EXISTS "User" CASCADE ;
+CREATE TABLE "User" (
+    id_user      SERIAL PRIMARY KEY,
     pseudo       VARCHAR(30) UNIQUE,
-    mdp          VARCHAR(256),
+    mdp_hashe    VARCHAR(256),
     age          INTEGER,
-    mail         VARCHAR(50)
+    nom          VARCHAR(30),
+    prenom       VARCHAR(30)
 );
 
-### SOUNDECK
 DROP TABLE IF EXISTS Sounddeck CASCADE ;
 CREATE TABLE Sounddeck(
     id_sd INTEGER PRIMARY KEY,
@@ -18,7 +18,7 @@ CREATE TABLE Sounddeck(
     description TEXT
 );
 
-#SCENE
+
 DROP TABLE IF EXISTS Scene CASCADE ;
 CREATE TABLE Scene (
     id_scene INTEGER PRIMARY KEY,
@@ -27,7 +27,6 @@ CREATE TABLE Scene (
     date_creation DATE
 );
 
-#SON
 DROP TABLE IF EXISTS Scene CASCADE ;
 CREATE TABLE Son (
     id_son INTEGER PRIMARY KEY,
@@ -36,13 +35,12 @@ CREATE TABLE Son (
     duree INTEGER
 );
 
-#TAG
 DROP TABLE IF EXISTS Tag CASCADE ;
-CREATE TABLE Tag (
+CREATE TABLE Tag(
     nom_tag TEXT PRIMARY KEY
 );
 
-#User_Sounddeck
+
 DROP TABLE IF EXISTS User_Sounddeck CASCADE ;
 CREATE TABLE User_Sounddeck (
     id_user INTEGER,
@@ -52,7 +50,7 @@ CREATE TABLE User_Sounddeck (
     FOREIGN KEY (id_sd) REFERENCES Sounddeck(id_sd)
 );
 
-#Sounddeck_Scene
+
 DROP TABLE IF EXISTS Sounddeck_Scene CASCADE ;
 CREATE TABLE Sounddeck_Scene(
     id_scene INTEGER,
@@ -62,20 +60,20 @@ CREATE TABLE Sounddeck_Scene(
     FOREIGN KEY (id_sd) REFERENCES Sounddeck(id_sd)
 );
 
-#Scene_Son
+
 DROP TABLE IF EXISTS Scene_Son CASCADE ;
 CREATE TABLE Scene_Son(
     id_scene INTEGER,
     id_son INTEGER,
-    typ_param TEXT,
+    type_param TEXT,
     PRIMARY KEY (id_scene, id_son),
     FOREIGN KEY (id_scene) REFERENCES Scene(id_scene),
     FOREIGN KEY (id_son) REFERENCES Son(id_son)
 );
 
-#Son_Tag
+
 DROP TABLE IF EXISTS Son_Tag CASCADE ;
-CREATE TABLE  Son_Tag (
+CREATE TABLE  Son_Tag(
     id_son INTEGER,
     nom_tag TEXT,
     PRIMARY KEY (id_son, nom_tag),
