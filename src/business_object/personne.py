@@ -27,11 +27,11 @@ class Personne:
         self.prenom = prenom
         self.date_naissance = date_naissance
 
-    def modifier_nom(self, nouveau_nom):
+    def modifier_nom_personne(self, nouveau_nom):
         """Modifier le nom de la personne"""
         self.nom = nouveau_nom
 
-    def modifier_prenom(self, nouveau_prenom):
+    def modifier_prenom_personne(self, nouveau_prenom):
         """Modifier le prénom de la personne"""
         self.prenom = nouveau_prenom
 
