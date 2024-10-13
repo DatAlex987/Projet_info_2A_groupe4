@@ -1,8 +1,8 @@
 -----------------------------------------------------
 -- User
 -----------------------------------------------------
-DROP SCHEMA IF EXISTS ProjetInfo CASCADE ; 
-CREATE SCHEMA ProjetInfo ; 
+DROP SCHEMA IF EXISTS ProjetInfo CASCADE;
+CREATE SCHEMA ProjetInfo;
 
 DROP TABLE IF EXISTS ProjetInfo.Utilisateur CASCADE ;
 CREATE TABLE ProjetInfo.Utilisateur (
