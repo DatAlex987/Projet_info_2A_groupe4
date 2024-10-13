@@ -7,18 +7,19 @@ from dao.db_connection import DBConnection
 class UserDAO(metaclass=Singleton):
     """Implémente les méthodes du CRUD pour accéder à la base de données des users"""
 
-    def ajouter_user(pseudo, mdp, age, mail) -> None:
+    def ajouter_user(pseudo, mdp_hashe, age, nom, prenom) -> None:
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:
                 cursor.execute(
-                    "INSERT INTO User(pseudo, mdp, age, mail) VALUES        "
-                    "(%(pseudo)s, %(mdp)s, %(age)s, %(mail)s)             "
+                    "INSERT INTO Utilisateur(pseudo, mdp_hashe, age, nom, prenom) VALUES        "
+                    "(%(pseudo)s, %(mdp_hashe)s, %(age)s, %(nom)s, %(prenom)s)             "
                     "  RETURNING id_user;                                                ",
                     {
                         "pseudo": pseudo,
-                        "mdp": mdp,
+                        "mdp_hashe": mdp_hashe,
                         "age": age,
-                        "mail": mail,
+                        "nom": nom,
+                        "prenom": prenom,
                     },
                 )
                 res = cursor.fetchone()
