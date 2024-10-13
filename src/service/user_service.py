@@ -48,7 +48,7 @@ class UserService:
         utilisateurs = UserDAO().consulter_users()
 
         for u in utilisateurs:  # mesure de sécurité dans le cas d'une l'implémentation
-            if u.pseudo == "admin":  # future d'un objet Admin
+            if u.pseudo == "admin":  # futur objet Admin
                 utilisateurs.remove(u)
 
         utilisateurs_as_list = [u.as_list() for u in utilisateurs]

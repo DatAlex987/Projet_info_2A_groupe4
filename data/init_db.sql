@@ -1,8 +1,8 @@
 -----------------------------------------------------
 -- User
 -----------------------------------------------------
-DROP TABLE IF EXISTS "User" CASCADE ;
-CREATE TABLE "User" (
+DROP TABLE IF EXISTS Utilisateur CASCADE ;
+CREATE TABLE Utilisateur (
     id_user      SERIAL PRIMARY KEY,
     pseudo       VARCHAR(30) UNIQUE,
     mdp_hashe    VARCHAR(256),
@@ -27,7 +27,7 @@ CREATE TABLE Scene (
     date_creation DATE
 );
 
-DROP TABLE IF EXISTS Scene CASCADE ;
+DROP TABLE IF EXISTS Son CASCADE ;
 CREATE TABLE Son (
     id_son INTEGER PRIMARY KEY,
     nom TEXT,
@@ -46,7 +46,7 @@ CREATE TABLE User_Sounddeck (
     id_user INTEGER,
     id_sd INTEGER,
     PRIMARY KEY (id_user, id_sd),
-    FOREIGN KEY (id_user) REFERENCES User(id_user),
+    FOREIGN KEY (id_user) REFERENCES Utilisateur(id_user),
     FOREIGN KEY (id_sd) REFERENCES Sounddeck(id_sd)
 );
 
