@@ -5,10 +5,10 @@ from utils.reset_database import ResetDatabase
 ResetDatabase().lancer()
 print(
     UserDAO.ajouter_user(
-        pseudo="folsory",
+        pseudo="swannetneo",
         mdp_hashe="mdp123",
         age=99,
-        nom="sannier",
-        prenom="theo",
+        nom="swann",
+        prenom="neo",
     )
 )
