@@ -11,7 +11,7 @@ class UserDAO(metaclass=Singleton):
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:
                 cursor.execute(
-                    "INSERT INTO Utilisateur(pseudo, mdp_hashe, age, nom, prenom) VALUES        "
+                    "INSERT INTO ProjetInfo.Utilisateur(pseudo, mdp_hashe, age, nom, prenom) VALUES        "
                     "(%(pseudo)s, %(mdp_hashe)s, %(age)s, %(nom)s, %(prenom)s)             "
                     "  RETURNING id_user;                                                ",
                     {
