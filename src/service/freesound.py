@@ -32,3 +32,9 @@ def request_search(query_term: str) -> Dict:
 
 print(request_search("wind"))
 # La sortie est une liste de dico des 10 sons liés au wind (id, name, tags, licence, username)
+
+
+class Freesound(metaclass=Singleton)
+
+    def recherche_tot():
+        pass
