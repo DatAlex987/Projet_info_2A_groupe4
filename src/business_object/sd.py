@@ -34,6 +34,9 @@ class SD:
         self.auteur = auteur
         self.date_creation = date_creation
 
+        if not isinstance(id_sd, str):
+            raise TypeError("L'identifiant sound-deck doit être une instance de string.")
+
     def modifier_nom_sd(self, nouveau_nom):
         """Modifier le nom du sound-deck"""
         self.nom = nouveau_nom

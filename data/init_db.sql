@@ -1,6 +1,7 @@
 -----------------------------------------------------
 -- User
 -----------------------------------------------------
+<<<<<<< HEAD
 DROP TABLE IF EXISTS User CASCADE ;
 CREATE TABLE User(
     id_user PRIMARY KEY,
@@ -8,53 +9,63 @@ CREATE TABLE User(
     mdp_hashe, TEXT,
     age INTEGER,
     prenom TEXT
+=======
+DROP SCHEMA IF EXISTS ProjetInfo CASCADE;
+CREATE SCHEMA ProjetInfo;
+
+DROP TABLE IF EXISTS ProjetInfo.Utilisateur CASCADE ;
+CREATE TABLE ProjetInfo.Utilisateur (
+    id_user      SERIAL PRIMARY KEY,
+    pseudo       VARCHAR(30) UNIQUE,
+    mdp_hashe    VARCHAR(256),
+    age          INTEGER,
+    nom          VARCHAR(30),
+    prenom       VARCHAR(30)
+>>>>>>> 12124db55275a64fc95deace2f201c8e7ca85857
 );
 
-### SOUNDECK
-DROP TABLE IF EXISTS Sounddeck CASCADE ;
-CREATE TABLE Sounddeck(
+DROP TABLE IF EXISTS ProjetInfo.Sounddeck CASCADE ;
+CREATE TABLE ProjetInfo.Sounddeck(
     id_sd INTEGER PRIMARY KEY,
     nom TEXT,
     description TEXT
 );
 
-#SCENE
-DROP TABLE IF EXISTS Scene CASCADE ;
-CREATE TABLE Scene (
+
+DROP TABLE IF EXISTS ProjetInfo.Scene CASCADE ;
+CREATE TABLE ProjetInfo.Scene (
     id_scene INTEGER PRIMARY KEY,
     nom TEXT,
     description TEXT,
     date_creation DATE
 );
 
-#SON
-DROP TABLE IF EXISTS Scene CASCADE ;
-CREATE TABLE Son (
+DROP TABLE IF EXISTS ProjetInfo.Son CASCADE ;
+CREATE TABLE ProjetInfo.Son (
     id_son INTEGER PRIMARY KEY,
     nom TEXT,
     description TEXT,
     duree INTEGER
 );
 
-#TAG
-DROP TABLE IF EXISTS Tag CASCADE ;
-CREATE TABLE Tag (
+DROP TABLE IF EXISTS ProjetInfo.Tag CASCADE ;
+CREATE TABLE ProjetInfo.Tag(
     nom_tag TEXT PRIMARY KEY
 );
 
-#User_Sounddeck
-DROP TABLE IF EXISTS User_Sounddeck CASCADE ;
-CREATE TABLE User_Sounddeck (
+
+DROP TABLE IF EXISTS ProjetInfo.User_Sounddeck CASCADE ;
+CREATE TABLE ProjetInfo.User_Sounddeck (
     id_user INTEGER,
     id_sd INTEGER,
     PRIMARY KEY (id_user, id_sd),
-    FOREIGN KEY (id_user) REFERENCES User(id_user),
+    FOREIGN KEY (id_user) REFERENCES Utilisateur(id_user),
     FOREIGN KEY (id_sd) REFERENCES Sounddeck(id_sd)
 );
 
-#Sounddeck_Scene
-DROP TABLE IF EXISTS Sounddeck_Scene CASCADE ;
-CREATE TABLE Sounddeck_Scene(
+
+DROP TABLE IF EXISTS ProjetInfo.Sounddeck_Scene CASCADE ;
+CREATE TABLE ProjetInfo.Sounddeck_Scene(
     id_scene INTEGER,
     id_sd INTEGER,
     PRIMARY KEY (id_scene, id_sd),
@@ -62,20 +73,20 @@ CREATE TABLE Sounddeck_Scene(
     FOREIGN KEY (id_sd) REFERENCES Sounddeck(id_sd)
 );
 
-#Scene_Son
-DROP TABLE IF EXISTS Scene_Son CASCADE ;
-CREATE TABLE Scene_Son(
+
+DROP TABLE IF EXISTS ProjetInfo.Scene_Son CASCADE ;
+CREATE TABLE ProjetInfo.Scene_Son(
     id_scene INTEGER,
     id_son INTEGER,
-    typ_param TEXT,
+    type_param TEXT,
     PRIMARY KEY (id_scene, id_son),
     FOREIGN KEY (id_scene) REFERENCES Scene(id_scene),
     FOREIGN KEY (id_son) REFERENCES Son(id_son)
 );
 
-#Son_Tag
-DROP TABLE IF EXISTS Son_Tag CASCADE ;
-CREATE TABLE  Son_Tag (
+
+DROP TABLE IF EXISTS ProjetInfo.Son_Tag CASCADE ;
+CREATE TABLE  ProjetInfo.Son_Tag(
     id_son INTEGER,
     nom_tag TEXT,
     PRIMARY KEY (id_son, nom_tag),

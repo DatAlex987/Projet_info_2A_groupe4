@@ -5,6 +5,7 @@ from business_object.scene import Scene
 
 class SceneDAO:
     """Implémente les méthodes du CRUD pour accéder à la base de données des scènes"""
+    
 
     def ajouter_scene():
         pass

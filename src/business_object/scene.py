@@ -32,6 +32,9 @@ class Scene:
         self.auteur = auteur
         self.date_creation = date_creation
 
+        if not isinstance(id_scene, str):
+            raise TypeError("L'identifiant scène doit être une instance de string.")
+
     def modifier_nom_scene(self, nouveau_nom):
         """Modifier le nom de la scène"""
         self.nom = nouveau_nom

@@ -27,6 +27,9 @@ class Son:
         self.id_freesound = id_freesound
         self.tags = tags
 
+        if not isinstance(id_freesound, str):
+            raise TypeError("L'identifiant son doit être une instance de string.")
+
     "def jouer_son(self):" """Lancer le son"""
 
 

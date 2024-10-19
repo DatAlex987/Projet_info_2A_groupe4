@@ -26,3 +26,6 @@ class VueAbstraite(ABC):
     def choisir_menu(self):
         """Choix du menu suivant de l'utilisateur"""
         pass
+
+
+# Utiliser singleton session
