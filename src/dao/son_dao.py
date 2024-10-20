@@ -50,7 +50,7 @@ class SonDAO:
             with conn.cursor() as cursor:
                 cursor.execute(
                     """
-                    DELETE FROM sons
+                    DELETE FROM ProjetInfo.Son
                     WHERE id_son = %(id_son)s;
                     """,
                     {"id_son": id_son}
