@@ -104,3 +104,6 @@ class Freesound(metaclass=Singleton):
         # La sortie est une liste de dico des 10 sons liés au
         # wind (id, name, tags, licence, username)
         return results["results"]
+
+
+print(Freesound.rechercher_par_tag("wind", limit=10))
