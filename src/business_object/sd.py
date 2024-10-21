@@ -15,8 +15,6 @@ class SD:
         identifiant de sound-deck
     scenes : list[Scene]
         liste des scènes présentes dans la sound-deck
-    auteur : User
-        auteur de la sound-deck
     date_creation : date
         date de création du sound-deck
 
@@ -24,14 +22,13 @@ class SD:
     --------
     """
 
-    def __init__(self, nom, description, id_sd, scenes, auteur, date_creation):
+    def __init__(self, nom, description, id_sd, scenes, date_creation):
         "self.scenes à modifier dès que possible"
         """Constructeur"""
         self.nom = nom
         self.description = description
         self.id_sd = id_sd
         self.scenes = scenes
-        self.auteur = auteur
         self.date_creation = date_creation
 
         if not isinstance(id_sd, str):
@@ -44,6 +41,3 @@ class SD:
     def modifier_description_sd(self, nouvelle_description):
         """Modifier la description du sound-deck"""
         self.description = nouvelle_description
-
-
-"bp de méthodes à ajouter"
