@@ -22,12 +22,8 @@ class User(Personne):
     supprimer_utilisateur() -> None:
         Supprime l'utilisateur en réinitialisant ses données.
     """
-
-<<<<<<< HEAD
-    def __init__(self, nom, prenom, date_naissance, id_user, mdp):
-=======
     def __init__(self, nom, prenom, date_naissance, id_user, mdp, SD_possedes):
->>>>>>> e3ea40b9629ee51f992e0d51e31d074b8744a9fd
+
         """
         Initialise un nouvel utilisateur avec les attributs de la classe Personne et ceux propre à un utilisateur.
 

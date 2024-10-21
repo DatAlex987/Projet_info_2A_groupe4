@@ -2,6 +2,8 @@ from business_object.son import Son
 from business_object.son_aleatoire import Son_aleatoire
 from business_object.son_continu import Son_Continu
 from business_object.son_manuel import Son_Manuel
+from business_object.user import User
+import datetime
 
 
 class Scene:
@@ -48,10 +50,22 @@ class Scene:
         self.auteur = auteur
         self.date_creation = date_creation
 
+        if not isinstance(nom, str):
+            raise TypeError("Le nom doit etre une instance de str.")
+        if not isinstance(description, str):
+            raise TypeError("La description doit être une instance de str.")
         if not isinstance(id_scene, str):
             raise TypeError("L'identifiant scène doit être une instance de string.")
-        if not isinstance(nom, str):
-            raise TypeError("Le nom doit etre une instance de str")
+        if not isinstance(sons_aleatoires, list):
+            raise TypeError("La liste des sons aléatoires doit être une instance de list.")
+        if not isinstance(sons_continus, list):
+            raise TypeError("La liste des sons continus doit être une instance de list.")
+        if not isinstance(sons_manuels, list):
+            raise TypeError("La liste des sons manuels doit être une instance de list.")
+        if not isinstance(auteur, User):
+            raise TypeError("L'auteur doit être une instance de User.")
+        if not isinstance(date_creation, (str, datetime)):
+            raise TypeError("La date de création doit être une instance de str ou datetime.")
 
     def modifier_nom(self, nouveau_nom):
         """Modifier le nom de la scène"""
@@ -72,6 +86,18 @@ class Scene:
     def ajouter_son_manuel(self, nouveau_son_manuel):
         """Ajoute un nouveau son manuel dans la scène"""
         self.sons_manuels.append(nouveau_son_manuel)
+
+    def supprimer_son_aleatoire(self, son_aleatoire):
+        """Ajoute un nouveau son aléatoire dans la scène"""
+        self.sons_aleatoires.remove(son_aleatoire)
+
+    def supprimer_son_continu(self, son_continu):
+        """Ajoute un nouveau son continu dans la scène"""
+        self.sons_continus.remove(son_continu)
+
+    def supprimer_son_manuel(self, son_manuel):
+        """Ajoute un nouveau son manuel dans la scène"""
+        self.sons_manuels.remove(son_manuel)
 
     def supprimer_scene(self):
         del self

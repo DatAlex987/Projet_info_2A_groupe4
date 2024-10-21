@@ -86,7 +86,7 @@ class UserDAO(metaclass=Singleton):
                 user = cursor.fetchone()
                 return user if user else None
 
-def ajouter_sounddeck(self, id_user: int, nom: str) -> None:
+    def ajouter_sounddeck(self, id_user: int, nom: str) -> bool:
         """
         Ajoute un sounddeck pour un utilisateur.
 
@@ -101,9 +101,10 @@ def ajouter_sounddeck(self, id_user: int, nom: str) -> None:
             with connection.cursor() as cursor:
                 cursor.execute(
                     "INSERT INTO ProjetInfo.Sounddeck(nom, id_user) VALUES (%(nom)s, %(id_user)s);",
-                    {"nom": nom_sounddeck, "id_user": id_user},
+                    {"nom": nom, "id_user": id_user},
                 )
-        print(f"Le sounddeck '{nom_sounddeck}' a été ajouté pour l'utilisateur {id_user}.")
+        print(f"Le sounddeck '{nom}' a été ajouté pour l'utilisateur {id_user}.")
+        return True
 
     def consulter_sounddecks_par_user(self, id_user: int) -> list:
         """
@@ -126,7 +127,7 @@ def ajouter_sounddeck(self, id_user: int, nom: str) -> None:
                     {"id_user": id_user},
                 )
                 sounddecks = cursor.fetchall()
-                return [sounddeck['nom'] for sounddeck in sounddecks] if sounddecks else []
+                return [sounddeck["nom"] for sounddeck in sounddecks] if sounddecks else []
 
     def supprimer_sounddeck(self, id_user: int, nom: str) -> bool:
         """
