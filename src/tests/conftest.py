@@ -1,11 +1,152 @@
 from business_object.personne import Personne
+from business_object.user import User
 from business_object.son import Son
 from business_object.scene import Scene
 from business_object.sd import SD
+from business_object.son_aleatoire import Son_Aleatoire
+from business_object.son_manuel import Son_Manuel
+from business_object.son_continu import Son_Continu
 import pytest
 
+from datetime import date
 
-# Substances chimiques
+
+@pytest.fixture
+def personne1_kwargs():
+    return {"nom": "Doe", "prenom": "John", "date_naissance": date(1990, 1, 1)}
+
+
+@pytest.fixture
+def personne2_kwargs():
+    return {"nom": "TheRipper", "prenom": "Jack", "date_naissance": date(1962, 3, 5)}
+
+
+@pytest.fixture
+def user1_kwargs(sd1_kwargs):
+    """Mock data for User class."""
+    return {
+        "nom": "Doe",
+        "prenom": "Jane",
+        "date_naissance": date(1995, 5, 5),
+        "id_user": "jdoe",
+        "mdp": "password123",
+        "SD_possedes": [sd1_kwargs],
+    }
+
+
+@pytest.fixture
+def son_aleatoire1_kwargs():
+    return {
+        "nom": "Ambiance de forêt",
+        "description": "Son de fond de forêt calme",
+        "duree": 60,
+        "id_freesound": "787956",
+        "tags": ["nature", "calm", "forest"],
+        "cooldown_min": 5,
+        "cooldown_max": 10,
+    }
+
+
+@pytest.fixture
+def son_aleatoire2_kwargs():
+    return {
+        "nom": "Manoir hanté",
+        "description": "Son de fantome dans un manoir",
+        "duree": 40,
+        "id_freesound": "445936",
+        "tags": ["manoir", "fantome", "scary"],
+        "cooldown_min": 3,
+        "cooldown_max": 15,
+    }
+
+
+@pytest.fixture
+def son_continu1_kwargs():
+    return {
+        "nom": "Ambiance de forêt",
+        "description": "Son de fond de forêt calme",
+        "duree": 60,
+        "id_freesound": "forest_1234",
+        "tags": ["nature", "calm", "forest"],
+    }
+
+
+@pytest.fixture
+def son_continu2_kwargs():
+    return {
+        "nom": "Musique douce",
+        "description": "Musique douce au piano",
+        "duree": 120,
+        "id_freesound": "125489",
+        "tags": ["piano", "calm", "soft"],
+    }
+
+
+@pytest.fixture
+def son_manuel1_kwargs():
+    return {
+        "nom": "Cloche",
+        "description": "Cloche qui sonne",
+        "duree": 5,
+        "id_freesound": "bell_5678",
+        "tags": ["bell", "chime"],
+        "start_key": "C",
+    }
+
+
+@pytest.fixture
+def son_manuel2_kwargs():
+    return {
+        "nom": "Bruits de pas",
+        "description": "Bruits de pas qui s'approchent",
+        "duree": 3,
+        "id_freesound": "458726",
+        "tags": ["step", "approaching"],
+        "start_key": "P",
+    }
+
+
+@pytest.fixture
+def scene1_kwargs(user1_kwargs, son_aleatoire1_kwargs, son_continu1_kwargs, son_manuel1_kwargs):
+    return {
+        "nom": "Forêt Mystique",
+        "description": "Une scène calme dans une forêt mystérieuse",
+        "id_scene": "scene_001",
+        "sons_aleatoires": [Son_Aleatoire(son_aleatoire1_kwargs)],
+        "sons_manuels": [Son_Manuel(son_manuel1_kwargs)],
+        "sons_continus": [Son_Continu(son_continu1_kwargs)],
+        "auteur": User(user1_kwargs),
+        "date_creation": date(2024, 1, 1),
+    }
+
+
+@pytest.fixture
+def scene2_kwargs(user2_kwargs, son_aleatoire2_kwargs, son_continu2_kwargs, son_manuel2_kwargs):
+    return {
+        "nom": "Forêt Mystique",
+        "description": "Une scène calme dans une forêt mystérieuse",
+        "id_scene": "scene_001",
+        "sons_aleatoires": [Son_Aleatoire(son_aleatoire2_kwargs)],
+        "sons_manuels": [Son_Manuel(son_manuel2_kwargs)],
+        "sons_continus": [Son_Continu(son_continu2_kwargs)],
+        "auteur": User(user2_kwargs),
+        "date_creation": date(2023, 10, 9),
+    }
+
+
+@pytest.fixture
+def sd_kwargs(scene1_kwargs, scene2_kwargs):
+    """Mock data for SD class."""
+    return {
+        "nom": "Aventure Mystique",
+        "description": "Un sound-deck pour une aventure calme",
+        "id_sd": 1,
+        "scenes": [Scene(scene1_kwargs), Scene(scene2_kwargs)],
+        "date_creation": date(2024, 1, 4),
+    }
+
+
+"""# Substances chimiques
 
 
 @pytest.fixture
@@ -230,3 +371,4 @@ def pytest_configure():
         volume_maximal=1_000,
         volume_disponible=0,
     )
+"""

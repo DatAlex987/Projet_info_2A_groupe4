@@ -1,7 +1,7 @@
 from son.py import Son
 
 
-class Son_aleatoire(Son):
+class Son_Aleatoire(Son):
     """
     Classe fille de son qui permet de jouer un son de manière aléatoire sur une plage définie
 

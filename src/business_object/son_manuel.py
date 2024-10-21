@@ -1,7 +1,7 @@
 from son.py import Son
 
 
-class Son_manuel(Son):
+class Son_Manuel(Son):
     """
     Classe fille de son qui permet de jouer un son quand on le souhaite à partir d'une touche du
     clavier bien définie

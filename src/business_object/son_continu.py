@@ -1,7 +1,7 @@
 from son.py import Son
 
 
-class Son_continu(Son):
+class Son_Continu(Son):
     """
     Classe fille de son qui permet de jouer un son en continu durant une scène
 
