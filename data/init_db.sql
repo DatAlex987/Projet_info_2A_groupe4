@@ -1,15 +1,6 @@
 -----------------------------------------------------
 -- User
 -----------------------------------------------------
-<<<<<<< HEAD
-DROP TABLE IF EXISTS User CASCADE ;
-CREATE TABLE User(
-    id_user PRIMARY KEY,
-    nom TEXT,
-    mdp_hashe, TEXT,
-    age INTEGER,
-    prenom TEXT
-=======
 DROP SCHEMA IF EXISTS ProjetInfo CASCADE;
 CREATE SCHEMA ProjetInfo;
 
@@ -21,7 +12,7 @@ CREATE TABLE ProjetInfo.Utilisateur (
     age          INTEGER,
     nom          VARCHAR(30),
     prenom       VARCHAR(30)
->>>>>>> 12124db55275a64fc95deace2f201c8e7ca85857
+
 );
 
 DROP TABLE IF EXISTS ProjetInfo.Sounddeck CASCADE ;
