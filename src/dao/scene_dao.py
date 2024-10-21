@@ -23,7 +23,7 @@ class SceneDAO:
                     }
                 )
                 son.id = cursor.fetchone()["id_scene"]
-         return scene
+        return scene
 
     def modifier_scene(self, scene):
         with DBConnection() as conn:
