@@ -52,7 +52,6 @@ class Scene:
             raise TypeError("L'identifiant scène doit être une instance de string.")
         if not isinstance(nom, str):
             raise TypeError("Le nom doit etre une instance de str")
-        if not isinstance
 
     def modifier_nom(self, nouveau_nom):
         """Modifier le nom de la scène"""
