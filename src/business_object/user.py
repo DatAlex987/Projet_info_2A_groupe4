@@ -1,5 +1,6 @@
 import os
 import hashlib
+from src.business_object.personne import Personne
 from datetime import date
 
 
@@ -22,8 +23,8 @@ class User(Personne):
     supprimer_utilisateur() -> None:
         Supprime l'utilisateur en réinitialisant ses données.
     """
-    def __init__(self, nom, prenom, date_naissance, id_user, mdp, SD_possedes):
 
+    def __init__(self, nom, prenom, date_naissance, id_user, mdp, SD_possedes):
         """
         Initialise un nouvel utilisateur avec les attributs de la classe Personne et ceux propre à un utilisateur.
 
@@ -42,11 +43,8 @@ class User(Personne):
         """
         super().__init__(nom, prenom, date_naissance)
         self.id_user = id_user
-        self.mot_de_passe_hash = self._hash_mot_de_passe(mdp)
-<<<<<<< HEAD
-=======
+        self.mot_de_passe_hash = self._hash_mdp(mdp)
         self.SD_possedes = SD_possedes
->>>>>>> e3ea40b9629ee51f992e0d51e31d074b8744a9fd
 
     def _hash_mdp(self, mdp):
         mdp_combine = mdp + self.id_user

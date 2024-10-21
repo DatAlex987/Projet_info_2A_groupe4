@@ -1,11 +1,11 @@
-from business_object.personne import Personne
-from business_object.user import User
-from business_object.son import Son
-from business_object.scene import Scene
-from business_object.sd import SD
-from business_object.son_aleatoire import Son_Aleatoire
-from business_object.son_manuel import Son_Manuel
-from business_object.son_continu import Son_Continu
+from src.business_object.personne import Personne
+from src.business_object.user import User
+from src.business_object.son import Son
+from src.business_object.scene import Scene
+from src.business_object.sd import SD
+from src.business_object.son_aleatoire import Son_Aleatoire
+from src.business_object.son_manuel import Son_Manuel
+from src.business_object.son_continu import Son_Continu
 import pytest
 
 from datetime import date
@@ -22,7 +22,7 @@ def personne2_kwargs():
 
 
 @pytest.fixture
-def user1_kwargs(sd1_kwargs):
+def user1_kwargs():
     """Mock data for User class."""
     return {
         "nom": "Doe",
@@ -30,7 +30,7 @@ def user1_kwargs(sd1_kwargs):
         "date_naissance": date(1995, 5, 5),
         "id_user": "jdoe",
         "mdp": "password123",
-        "SD_possedes": [sd1_kwargs],
+        "SD_possedes": [],
     }
 
 
@@ -112,10 +112,10 @@ def scene1_kwargs(user1_kwargs, son_aleatoire1_kwargs, son_continu1_kwargs, son_
         "nom": "Forêt Mystique",
         "description": "Une scène calme dans une forêt mystérieuse",
         "id_scene": "scene_001",
-        "sons_aleatoires": [Son_Aleatoire(son_aleatoire1_kwargs)],
-        "sons_manuels": [Son_Manuel(son_manuel1_kwargs)],
-        "sons_continus": [Son_Continu(son_continu1_kwargs)],
-        "auteur": User(user1_kwargs),
+        "sons_aleatoires": [Son_Aleatoire(**son_aleatoire1_kwargs)],
+        "sons_manuels": [Son_Manuel(**son_manuel1_kwargs)],
+        "sons_continus": [Son_Continu(**son_continu1_kwargs)],
+        "auteur": User(**user1_kwargs),
         "date_creation": date(2024, 1, 1),
     }
 
@@ -126,10 +126,10 @@ def scene2_kwargs(user2_kwargs, son_aleatoire2_kwargs, son_continu2_kwargs, son_
         "nom": "Forêt Mystique",
         "description": "Une scène calme dans une forêt mystérieuse",
         "id_scene": "scene_001",
-        "sons_aleatoires": [Son_Aleatoire(son_aleatoire2_kwargs)],
-        "sons_manuels": [Son_Manuel(son_manuel2_kwargs)],
-        "sons_continus": [Son_Continu(son_continu2_kwargs)],
-        "auteur": User(user2_kwargs),
+        "sons_aleatoires": [Son_Aleatoire(**son_aleatoire2_kwargs)],
+        "sons_manuels": [Son_Manuel(**son_manuel2_kwargs)],
+        "sons_continus": [Son_Continu(**son_continu2_kwargs)],
+        "auteur": User(**user2_kwargs),
         "date_creation": date(2023, 10, 9),
     }
 
@@ -141,7 +141,7 @@ def sd_kwargs(scene1_kwargs, scene2_kwargs):
         "nom": "Aventure Mystique",
         "description": "Un sound-deck pour une aventure calme",
         "id_sd": 1,
-        "scenes": [Scene(scene1_kwargs), Scene(scene2_kwargs)],
+        "scenes": [Scene(**scene1_kwargs), Scene(**scene2_kwargs)],
         "date_creation": date(2024, 1, 4),
     }
 

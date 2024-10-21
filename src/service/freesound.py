@@ -1,11 +1,8 @@
-# -*- coding: utf-8 -*-
-
-
 from typing import Optional, Dict, Any, Union
 import os
 from dotenv import load_dotenv
 import requests
-from service.singleton import Singleton
+from src.service.singleton import Singleton
 
 
 class Freesound(metaclass=Singleton):

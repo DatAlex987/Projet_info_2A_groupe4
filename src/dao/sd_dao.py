@@ -1,6 +1,7 @@
-from utils.singleton import Singleton
-from dao.db_connection import DBConnection
-from business_object.sd import SD
+from src.utils.singleton import Singleton
+from src.dao.db_connection import DBConnection
+from src.business_object.sd import SD
+
 
 class SDDAO(metaclass=Singleton):
     """Implémente les méthodes du CRUD pour accéder à la base de données des sound-decks"""
@@ -36,7 +37,7 @@ class SDDAO(metaclass=Singleton):
                             "nom": sd.nom,
                             "description": sd.description,
                             "date_creation": sd.date_creation,
-                        }
+                        },
                     )
                     sd.id_sd = cursor.fetchone()["id_sd"]
             return sd
@@ -76,7 +77,7 @@ class SDDAO(metaclass=Singleton):
                             "description": sd.description,
                             "date_creation": sd.date_creation,
                             "id_sd": sd.id_sd,
-                        }
+                        },
                     )
             return sd
         except Exception as e:
@@ -109,7 +110,7 @@ class SDDAO(metaclass=Singleton):
                         DELETE FROM ProjetInfo.SoundDeck
                         WHERE id_sd = %(id_sd)s;
                         """,
-                        {"id_sd": id_sd}
+                        {"id_sd": id_sd},
                     )
                     return cursor.rowcount > 0
         except Exception as e:
@@ -141,10 +142,10 @@ class SDDAO(metaclass=Singleton):
 
                     return [
                         SD(
-                            id_sd=row['id_sd'],
-                            nom=row['nom'],
-                            description=row['description'],
-                            date_creation=row['date_creation']
+                            id_sd=row["id_sd"],
+                            nom=row["nom"],
+                            description=row["description"],
+                            date_creation=row["date_creation"],
                         )
                         for row in res
                     ]
@@ -179,17 +180,17 @@ class SDDAO(metaclass=Singleton):
                         FROM ProjetInfo.SoundDeck
                         WHERE id_sd = %(id_sd)s;
                         """,
-                        {"id_sd": id_sd}
+                        {"id_sd": id_sd},
                     )
                     res = cursor.fetchone()
                     if res is None:
                         return None
 
                     return SD(
-                        id_sd=res['id_sd'],
-                        nom=res['nom'],
-                        description=res['description'],
-                        date_creation=res['date_creation']
+                        id_sd=res["id_sd"],
+                        nom=res["nom"],
+                        description=res["description"],
+                        date_creation=res["date_creation"],
                     )
         except Exception as e:
             print(f"Erreur lors de la recherche du sound-deck avec ID {id_sd} : {e}")
@@ -212,7 +213,7 @@ class SDDAO(metaclass=Singleton):
         if not isinstance(sd.nom, str) or not sd.nom:
             return False
         if not isinstance(sd.description, str):
-            return False  
+            return False
         if not isinstance(sd.date_creation, str) or not sd.date_creation:
-            return False  
+            return False
         return True

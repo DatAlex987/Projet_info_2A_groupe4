@@ -1,6 +1,10 @@
 from src.dao.db_connection import DBConnection
+from src.business_object.user import User
+from src.business_object.personne import Personne
+from datetime import date
 
 
+# test de DBConnection
 def test_db_connection():
     try:
         with DBConnection() as conn:

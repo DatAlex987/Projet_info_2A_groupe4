@@ -1,4 +1,4 @@
-from son.py import Son
+from src.business_object.son import Son
 
 
 class Son_Aleatoire(Son):
@@ -16,8 +16,8 @@ class Son_Aleatoire(Son):
     --------
     """
 
-    def __init__(self, cooldown_min, cooldown_max):
-        """Constructeur"""
+    def __init__(self, nom, description, duree, id_freesound, tags, cooldown_min, cooldown_max):
+        super().__init__(nom, description, duree, id_freesound, tags)
         self.cooldown_min = cooldown_min
         self.cooldown_max = cooldown_max
 

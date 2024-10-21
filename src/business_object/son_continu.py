@@ -1,4 +1,4 @@
-from son.py import Son
+from src.business_object.son import Son
 
 
 class Son_Continu(Son):
@@ -12,7 +12,8 @@ class Son_Continu(Son):
     --------
     """
 
-    "def __init__(self, start_key):" """Constructeur"""
+    def __init__(self, nom, description, duree, id_freesound, tags):
+        super().__init__(nom, description, duree, id_freesound, tags)
 
     def jouer_son_en_boucle(self):
         """Lancer le son en boucle"""

@@ -1,5 +1,5 @@
-from scene.py import Scene
-from user.py import User
+from src.business_object.scene import Scene
+from src.business_object.user import User
 import datetime
 
 
@@ -43,11 +43,8 @@ class SD:
             raise TypeError("Scènes doit etre une liste de scènes")
         if not all(isinstance(element, Scene) for element in list):
             raise TypeError("Les éléments de la liste doivent etre des scènes")
-        if not isinstance(auteur, User):
-            ("L'auteur doit etre de type User")
         if not isinstance(date_creation, datetime):
             raise TypeError("La date de creation doit etre une date")
-
 
     def modifier_nom_sd(self, nouveau_nom):
         """Modifier le nom du sound-deck"""
@@ -58,10 +55,10 @@ class SD:
         self.description = nouvelle_description
 
     def ajouter_scene(self, scene):
-        """ajoute une scène au sound-deck""""
+        """ajoute une scène au sound-deck"""
         self.scenes.append(scene)
 
-    def retirer_scene(self,scene):
+    def retirer_scene(self, scene):
         """retire une scène du sound-deck"""
         if scene in self.scenes:
             self.scenes.remove(scene)

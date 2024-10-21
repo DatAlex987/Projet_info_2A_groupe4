@@ -1,8 +1,8 @@
-from business_object.son import Son
-from business_object.son_aleatoire import Son_aleatoire
-from business_object.son_continu import Son_Continu
-from business_object.son_manuel import Son_Manuel
-from business_object.user import User
+from src.business_object.son import Son
+from src.business_object.son_aleatoire import Son_Aleatoire
+from src.business_object.son_continu import Son_Continu
+from src.business_object.son_manuel import Son_Manuel
+from src.business_object.user import User
 import datetime
 
 
@@ -64,8 +64,8 @@ class Scene:
             raise TypeError("La liste des sons manuels doit être une instance de list.")
         if not isinstance(auteur, User):
             raise TypeError("L'auteur doit être une instance de User.")
-        if not isinstance(date_creation, (str, datetime)):
-            raise TypeError("La date de création doit être une instance de str ou datetime.")
+        # if not isinstance(date_creation, datetime):
+        #    raise TypeError("La date de création doit être une instance de str ou datetime.")
 
     def modifier_nom(self, nouveau_nom):
         """Modifier le nom de la scène"""
