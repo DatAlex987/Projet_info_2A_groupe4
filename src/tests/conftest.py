@@ -7,7 +7,11 @@ from business_object.son_aleatoire import Son_Aleatoire
 from business_object.son_manuel import Son_Manuel
 from business_object.son_continu import Son_Continu
 import pytest
-
+from business_object.son_aleatoire import Son_Aleatoire
+from business_object.son_continu import Son_Continu
+from business_object.son_manuel import Son_Manuel
+from business_object.user import User
+from business_object.scene import Scene
 from datetime import date
 
 
@@ -148,13 +152,13 @@ def scene2_kwargs(user2_kwargs, son_aleatoire2_kwargs, son_continu2_kwargs, son_
 
 
 @pytest.fixture
-def sd_kwargs(scene1_kwargs, scene2_kwargs):
+def sd_kwargs(scene1_kwargs):
     """Mock data for SD class."""
     return {
         "nom": "Aventure Mystique",
         "description": "Un sound-deck pour une aventure calme",
         "id_sd": 1,
-        "scenes": [Scene(**scene1_kwargs), Scene(**scene2_kwargs)],
+        "scenes": [Scene(**scene1_kwargs)],
         "date_creation": date(2024, 1, 4),
     }
 
