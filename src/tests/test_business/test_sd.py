@@ -8,11 +8,18 @@ def test_modifier_nom_sd_succes(sd_kwargs):
     sd_test.modifier_nom_sd("aventure foraine")
     assert sd_test.nom == "aventure foraine"
 
-def test_modifier_nom_sd_echec(sd_kwargs):
-    """Test modifier_nom with invalid input (not a string)"""
-    sd_test = SD(**sd_kwargs)
-    with pytest.raises(TypeError):
-        sd_test.modifier_nom_sd(12345)
+
+@pytest.mark.parametrize(
+    "new_nom, expected_error, error_type",
+    [
+        (15, "Le nouveau nom doit etre une instance de str.", TypeError),
+        ([], "Le nouveau nom doit etre une instance de str.", TypeError),
+    ],
+)
+def test_modifier_nom_sd_echec(sd_kwargs, new_nom, expected_error, error_type):
+    with pytest.raises(error_type, match=re.escape(expected_error)):
+        sd_test = Scene(**sd_kwargs)
+        sd_test.modifier_nom_sd(new_nom)
 
 
 def test_modifier_description_sd_succes(sd_kwargs):
@@ -21,22 +28,43 @@ def test_modifier_description_sd_succes(sd_kwargs):
     assert sd_test.description == "Nouvelle description"
 
 
-def test_modifier_description_sd_echec(sd_kwargs):
-    sd_test = SD(**sd_kwargs)
-    with pytest.raises(TypeError):
-        sd_test.modifier_description_sd(12345)
+@pytest.mark.parametrize(
+    "new_desc, expected_error, error_type",
+    [
+        (123, "La nouvelle description doit etre une instance de str.", TypeError),
+        ({}, "La nouvelle description doit etre une instance de str.", TypeError),
+    ],
+)
+def test_modifier_description_echec(sd_kwargs, new_desc, expected_error, error_type):
+    with pytest.raises(error_type, match=re.escape(expected_error)):
+        sd_test = Scene(**sd_kwargs)
+        sd_test.modifier_description_sd(new_desc)
 
 
 def test_ajouter_scene_succes(sd_kwargs, scene2_kwargs):
-    sd = SD(**sd_kwargs)
-    scene_new = Scene(**scene2_kwargs)
-    sd.ajouter_scene(scene_new)
-    assert scene_new in sd.scenes
+    sd_test = SD(**sd_kwargs)
+    new_scene = Scene(**scene2_kwargs)
+    sd_test.ajouter_scene(new_scene)
+    assert new_scene in sd_test.scenes
 
-def test_ajouter_scene_echec(sd_kwargs):
-     sd_test = SD(**sd_kwargs)
-     with pytest.raises(TypeError):
-        sd_test.ajouter_scene()
+
+@pytest.mark.parametrize(
+    "new_scene, expected_error, error_type",
+    [
+        (123, "La nouvelle scène doit etre une instance de Scene.", TypeError),
+        ({}, "La nouvelle scène doit etre une instance de Scene." , TypeError),
+    ],
+)
+def test_ajouter_scene_echec(
+    sd_kwargs, new_scene, expected_error, error_type
+):
+    with pytest.raises(error_type, match=re.escape(expected_error)):
+        sd_test = SD(**sd_kwargs)
+        sd_test.ajouter_scene(new_scene)
+
+def test_ajouter_scene_echec(sd):
+    with pytest.raises(TypeError):
+        sd.ajouter_scene("invalid")
 
 
 def test_retirer_scene()
