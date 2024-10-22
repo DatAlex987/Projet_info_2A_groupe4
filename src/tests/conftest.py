@@ -1,3 +1,11 @@
+from business_object.personne import Personne
+from business_object.user import User
+from business_object.son import Son
+from business_object.scene import Scene
+from business_object.sd import SD
+from business_object.son_aleatoire import Son_Aleatoire
+from business_object.son_manuel import Son_Manuel
+from business_object.son_continu import Son_Continu
 import pytest
 from business_object.son_aleatoire import Son_Aleatoire
 from business_object.son_continu import Son_Continu
@@ -26,6 +34,19 @@ def user1_kwargs():
         "date_naissance": date(1995, 5, 5),
         "id_user": "jdoe",
         "mdp": "password123",
+        "SD_possedes": [],
+    }
+
+
+@pytest.fixture
+def utilisateur_kwargs():
+    """Mock data for User class."""
+    return {
+        "nom": "Bocquet",
+        "prenom": "Noémie",
+        "date_naissance": date(2003, 8, 8),
+        "id_user": "noemie.b",
+        "mdp": "Mdpexample@1",
         "SD_possedes": [],
     }
 
@@ -117,7 +138,7 @@ def scene1_kwargs(user1_kwargs, son_aleatoire1_kwargs, son_continu1_kwargs, son_
 
 
 @pytest.fixture
-def scene2_kwargs(user2_kwargs, son_aleatoire2_kwargs, son_continu2_kwargs, son_manuel2_kwargs):
+def scene2_kwargs(user1_kwargs, son_aleatoire2_kwargs, son_continu2_kwargs, son_manuel2_kwargs):
     return {
         "nom": "Forêt Mystique",
         "description": "Une scène calme dans une forêt mystérieuse",
@@ -125,7 +146,7 @@ def scene2_kwargs(user2_kwargs, son_aleatoire2_kwargs, son_continu2_kwargs, son_
         "sons_aleatoires": [Son_Aleatoire(**son_aleatoire2_kwargs)],
         "sons_manuels": [Son_Manuel(**son_manuel2_kwargs)],
         "sons_continus": [Son_Continu(**son_continu2_kwargs)],
-        "auteur": User(**user2_kwargs),
+        "auteur": User(**user1_kwargs),
         "date_creation": date(2023, 10, 9),
     }
 
@@ -136,7 +157,7 @@ def sd_kwargs(scene1_kwargs):
     return {
         "nom": "Aventure Mystique",
         "description": "Un sound-deck pour une aventure calme",
-        "id_sd": 1,
+        "id_sd": "1",
         "scenes": [Scene(**scene1_kwargs)],
         "date_creation": date(2024, 1, 4),
     }
