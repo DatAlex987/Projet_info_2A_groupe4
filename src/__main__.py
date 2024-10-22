@@ -24,10 +24,3 @@ Sound = Son(
     ["voiture", "moteur", "puissance"],
 )
 print(son_dao.ajouter_son(Sound))
-# Not running :
-# Traceback (most recent call last):
-#  File "p:\Projet info 2A\Projet_info_2A_groupe4\src\__main__.py", line 26, in <module>
-#    print(son_dao.ajouter_son(Sound))
-#  File "p:\Projet info 2A\Projet_info_2A_groupe4\src\dao\son_dao.py", line 10, in ajouter_son
-#    with DBConnection() as conn:
-# AttributeError: __enter__
