@@ -1,3 +1,6 @@
+from pygame import *
+
+
 class Son:
     """
     Classe représentant tous les sons qui ont été téléchargés afin d'être ajoutés à des scènes
@@ -32,5 +35,5 @@ class Son:
 
     "def jouer_son(self):" """Lancer le son"""
 
-
-# Jouer_son_preview
+    def jouer_son(self):
+        pass
