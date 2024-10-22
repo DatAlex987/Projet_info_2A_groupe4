@@ -1,5 +1,5 @@
-from src.utils.singleton import Singleton
-from src.dao.db_connection import DBConnection
+from utils.singleton import Singleton
+from dao.db_connection import DBConnection
 
 # from business_object.user import User
 

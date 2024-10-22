@@ -1,5 +1,5 @@
-from src.business_object.scene import Scene
-from src.business_object.son import Son
+from business_object.scene import Scene
+from business_object.son import Son
 
 
 class Scene_Service:

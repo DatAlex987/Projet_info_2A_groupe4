@@ -1,9 +1,9 @@
 import re
 import pytest
-from src.business_object.scene import Scene
-from src.business_object.son_aleatoire import Son_Aleatoire
-from src.business_object.son_continu import Son_Continu
-from src.business_object.son_manuel import Son_Manuel
+from business_object.scene import Scene
+from business_object.son_aleatoire import Son_Aleatoire
+from business_object.son_continu import Son_Continu
+from business_object.son_manuel import Son_Manuel
 
 
 def test_modifier_nom_succes(scene1_kwargs):

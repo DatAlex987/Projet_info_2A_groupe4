@@ -1,10 +1,10 @@
 from tabulate import tabulate
 
-from src.utils.log_decorator import log
-from src.utils.securite import hash_password
+from utils.log_decorator import log
+from utils.securite import hash_password
 
-from src.business_object.user import User
-from src.dao.user_dao import UserDAO
+from business_object.user import User
+from dao.user_dao import UserDAO
 
 
 class UserService:

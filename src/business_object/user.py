@@ -1,6 +1,6 @@
 import os
 import hashlib
-from src.business_object.personne import Personne
+from business_object.personne import Personne
 from datetime import date
 
 

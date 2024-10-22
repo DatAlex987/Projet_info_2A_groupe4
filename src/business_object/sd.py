@@ -1,5 +1,5 @@
-from src.business_object.scene import Scene
-from src.business_object.user import User
+from business_object.scene import Scene
+from business_object.user import User
 import datetime
 
 

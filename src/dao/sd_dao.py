@@ -1,6 +1,6 @@
-from src.utils.singleton import Singleton
-from src.dao.db_connection import DBConnection
-from src.business_object.sd import SD
+from utils.singleton import Singleton
+from dao.db_connection import DBConnection
+from business_object.sd import SD
 
 
 class SDDAO(metaclass=Singleton):

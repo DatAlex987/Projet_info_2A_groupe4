@@ -1,11 +1,11 @@
 import os
 import pytest
 from unittest.mock import patch
-from src.utils.reset_database import ResetDatabase
-from src.utils.securite import hash_password
+from utils.reset_database import ResetDatabase
+from utils.securite import hash_password
 
-from src.dao.user_dao import UserDAO
-from src.business_object.user import User
+from dao.user_dao import UserDAO
+from business_object.user import User
 
 
 @pytest.fixture(scope="session", autouse=True)

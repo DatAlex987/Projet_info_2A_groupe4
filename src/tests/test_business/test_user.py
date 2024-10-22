@@ -1,7 +1,7 @@
 import hashlib
 import os
 import pytest
-from src.business_object.user import User
+from business_object.user import User
 
 
 @pytest.fixture
