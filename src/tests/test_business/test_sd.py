@@ -65,6 +65,3 @@ def test_ajouter_scene_echec(sd_kwargs, new_scene, expected_error, error_type):
 def test_ajouter_scene_echec(sd):
     with pytest.raises(TypeError):
         sd.ajouter_scene("invalid")
-
-
-# def test_retirer_scene()
