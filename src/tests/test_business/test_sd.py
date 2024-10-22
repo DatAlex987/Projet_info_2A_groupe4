@@ -32,8 +32,8 @@ def test_modifier_description_sd_succes(sd_kwargs):
 @pytest.mark.parametrize(
     "new_desc, expected_error, error_type",
     [
-        (123, "La description doit etre une instance de str.", TypeError),
-        ({}, "La description doit etre une instance de str.", TypeError),
+        (123, "La nouvelle description doit etre une instance de str.", TypeError),
+        ({}, "La nouvelle description doit etre une instance de str.", TypeError),
     ],
 )
 def test_modifier_description_echec(sd_kwargs, new_desc, expected_error, error_type):

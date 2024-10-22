@@ -34,7 +34,7 @@ from datetime import date
             "noemie.b",
             "Mdpexample@1",
             [],
-            "La date de naissance doit être une instance de datetime.",
+            "La date de naissance doit être une instance datetime.",
             TypeError,
         ),
         (
@@ -74,8 +74,8 @@ from datetime import date
             "noemie.b",
             "Mdpexample@1",
             [],
-            "La date de naissance doit être au format 'YYYY-MM-DD'.",
-            ValueError,
+            "La date de naissance doit être une instance datetime.",
+            TypeError,
         ),
     ],
 )
@@ -87,15 +87,15 @@ def test_initialisation_erreurs(
         User(nom, prenom, date_naissance, id_user, mdp, SD_possedes)
 
 
-def test_initialisation_succes(nom, prenom, date_naissance, id_user, mdp, SD_possedes):
+def test_initialisation_succes(user1_kwargs):
     """Test l'initialisation de l'utilisateur avec succès."""
-    utilisateur = User(nom, prenom, date_naissance, id_user, mdp, SD_possedes)
-    assert utilisateur.nom == nom
-    assert utilisateur.prenom == prenom
-    assert utilisateur.date_naissance == date_naissance
-    assert utilisateur.id_user == id_user
+    utilisateur = User(**user1_kwargs)
+    assert utilisateur.nom == user1_kwargs["nom"]
+    assert utilisateur.prenom == user1_kwargs["prenom"]
+    assert utilisateur.date_naissance == user1_kwargs["date_naissance"]
+    assert utilisateur.id_user == user1_kwargs["id_user"]
     assert utilisateur.mot_de_passe_hash is not None
-    assert utilisateur.SD_possedes == []
+    assert utilisateur.SD_possedes == user1_kwargs["SD_possedes"]
 
 
 def test_supprimer_utilisateur(utilisateur_kwargs):

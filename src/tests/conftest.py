@@ -33,7 +33,7 @@ def user1_kwargs():
         "prenom": "Jane",
         "date_naissance": date(1995, 5, 5),
         "id_user": "jdoe",
-        "mdp": "password123",
+        "mdp": "Password!123",
         "SD_possedes": [],
     }
 

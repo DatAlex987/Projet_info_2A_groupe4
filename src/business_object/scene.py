@@ -64,7 +64,7 @@ class Scene:
         if not isinstance(auteur, User):
             raise TypeError("L'auteur doit être une instance de User.")
         if not isinstance(date_creation, datetime.date):
-            raise TypeError("La date de création doit être une instance de str ou datetime.")
+            raise TypeError("La date de création doit être une instance de datetime.")
 
     def modifier_nom(self, nouveau_nom):
         """Modifier le nom de la scène"""

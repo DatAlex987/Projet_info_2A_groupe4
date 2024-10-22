@@ -1,7 +1,7 @@
 import os
 import hashlib
 from business_object.personne import Personne
-from datetime import date, datetime
+import datetime
 import re
 
 
