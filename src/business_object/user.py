@@ -1,5 +1,8 @@
+import os
 import hashlib
+from business_object.personne import Personne
 from datetime import date
+
 
 class User(Personne):
     """
@@ -11,23 +14,19 @@ class User(Personne):
     ----------
     id_user : str
         Nom d'utilisateur unique et obligatoire pour se connecter à l'application.
-    mot_de_passe_hash : bytes
+    mot_de_passe_hash : str
         Hachage du mot de passe de l'utilisateur combiné avec un élément lié à l'utilisateur.
-
+    SD_possedes : list[SD]
+        Liste des Sound-decks possédées par l'utilisateur.
     Méthodes
     --------
     supprimer_utilisateur() -> None:
         Supprime l'utilisateur en réinitialisant ses données.
-
-    Examples
-    --------
-    >>> utilisateur = User("Bocquet", "Noémie", "2003-08-08", "noemie.b", "password123")
-    >>> utilisateur.supprimer_utilisateur()
     """
-    
-    def __init__(self, nom, prenom, date_naissance, id_user, mdp):
+
+    def __init__(self, nom, prenom, date_naissance, id_user, mdp, SD_possedes):
         """
-        Initialise un nouvel utilisateur avec les attributs de la classe Personne et ceux spécifiques à un utilisateur.
+        Initialise un nouvel utilisateur avec les attributs de la classe Personne et ceux propre à un utilisateur.
 
         Parameters
         ----------
@@ -42,16 +41,16 @@ class User(Personne):
         mdp : str
             Mot de passe en clair à hacher.
         """
-        super().__init__(nom, prenom, date_naissance)  
+        super().__init__(nom, prenom, date_naissance)
         self.id_user = id_user
-        self.mot_de_passe_hash = self._hash_mot_de_passe(mdp)  
+        self.mot_de_passe_hash = self._hash_mdp(mdp)
+        self.SD_possedes = SD_possedes
 
     def _hash_mdp(self, mdp):
         mdp_combine = mdp + self.id_user
-        return hashlib.pbkdf2_hmac('sha256', mdp_combine.encode('utf-8'), os.urandom(16), 100000)
+        return hashlib.pbkdf2_hmac("sha256", mdp_combine.encode("utf-8"), os.urandom(16), 100000)
 
     def supprimer_utilisateur(self):
         self.id_user = None
         self.mot_de_passe_hash = None
         print("L'utilisateur a été supprimé avec succès.")
-

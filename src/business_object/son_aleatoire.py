@@ -1,7 +1,7 @@
-from son.py import Son
+from business_object.son import Son
 
 
-class Son_aleatoire(Son):
+class Son_Aleatoire(Son):
     """
     Classe fille de son qui permet de jouer un son de manière aléatoire sur une plage définie
 
@@ -16,8 +16,8 @@ class Son_aleatoire(Son):
     --------
     """
 
-    def __init__(self, cooldown_min, cooldown_max):
-        """Constructeur"""
+    def __init__(self, nom, description, duree, id_freesound, tags, cooldown_min, cooldown_max):
+        super().__init__(nom, description, duree, id_freesound, tags)
         self.cooldown_min = cooldown_min
         self.cooldown_max = cooldown_max
 

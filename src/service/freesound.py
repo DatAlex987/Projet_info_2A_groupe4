@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-
-
 from typing import Optional, Dict, Any, Union
 import os
 from dotenv import load_dotenv

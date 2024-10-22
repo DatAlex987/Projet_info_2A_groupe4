@@ -1,7 +1,7 @@
-from son.py import Son
+from business_object.son import Son
 
 
-class Son_continu(Son):
+class Son_Continu(Son):
     """
     Classe fille de son qui permet de jouer un son en continu durant une scène
 
@@ -12,7 +12,8 @@ class Son_continu(Son):
     --------
     """
 
-    "def __init__(self, start_key):" """Constructeur"""
+    def __init__(self, nom, description, duree, id_freesound, tags):
+        super().__init__(nom, description, duree, id_freesound, tags)
 
     def jouer_son_en_boucle(self):
         """Lancer le son en boucle"""
