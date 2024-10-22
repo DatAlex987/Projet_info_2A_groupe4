@@ -23,3 +23,19 @@ class Son_Manuel(Son):
     def modifier_key(self, new_key):
         """Modifier la touche pour lancer un son"""
         self.start_key = new_key
+    
+    def get_pygame_key(self):
+        return f'K_{self.start_key}'
+
+    def jouer_son_manuel(self):
+        """lance le son après déclenchement"""
+        running = True
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+        
+                # Vérifier si une touche du clavier est pressée
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.(self.get_pygame_key):  # Si la touche Espace est pressée
+                            son.JouerSon()

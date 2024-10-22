@@ -1,4 +1,4 @@
-from pygame import *
+import pygame
 from os import getenv
 
 
@@ -37,15 +37,15 @@ class Son:
         # Initialisation de pygame et du mixer
         pygame.mixer.init()
 
-    def JouerSon(self):
+    def JouerSon(self) -> None:
         try:
             fichier_son = getenv("DOSSIER_SAUVEGARDE") + "/f'{self.id_freesound}.mp3'"
             # Charger le son
             pygame.mixer.music.load(fichier_son)
             # Jouer le son
             pygame.mixer.music.play()
-            # Attendre que le son soit terminé
-            while pygame.mixer.music.get_busy():
-                pygame.time.Clock().tick(10)  # Attendre 10ms pour éviter un usage excessif du CPU
         except pygame.error as e:
             print(f"Erreur lors de la lecture du fichier son : {e}")
+
+    def Arret_Son(self) -> None:
+        pygame.mixer.music.stop()
