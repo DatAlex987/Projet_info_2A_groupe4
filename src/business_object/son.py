@@ -37,11 +37,14 @@ class Son:
         # Initialisation de pygame et du mixer
         pygame.mixer.init()
 
+    def charger_son(self) -> None:
+        fichier_son = getenv("DOSSIER_SAUVEGARDE") + "/f'{self.id_freesound}.mp3'"
+        # Charger le son
+        pygame.mixer.music.load(fichier_son)
+
     def JouerSon(self) -> None:
         try:
-            fichier_son = getenv("DOSSIER_SAUVEGARDE") + "/f'{self.id_freesound}.mp3'"
-            # Charger le son
-            pygame.mixer.music.load(fichier_son)
+            self.charger_son()
             # Jouer le son
             pygame.mixer.music.play()
         except pygame.error as e:
