@@ -25,8 +25,8 @@ class SDDAO(metaclass=Singleton):
             return None
 
         try:
-            with DBConnection().connection as connection:
-                with connection.cursor() as cursor:
+            with DBConnection() as conn:
+                with conn.cursor() as cursor:
                     cursor.execute(
                         """
                         INSERT INTO ProjetInfo.SoundDeck(nom, description, date_creation)
@@ -64,8 +64,8 @@ class SDDAO(metaclass=Singleton):
             return None
 
         try:
-            with DBConnection().connection as connection:
-                with connection.cursor() as cursor:
+            with DBConnection() as conn:
+                with conn.cursor() as cursor:
                     cursor.execute(
                         """
                         UPDATE ProjetInfo.SoundDeck
@@ -103,8 +103,8 @@ class SDDAO(metaclass=Singleton):
             return False
 
         try:
-            with DBConnection().connection as connection:
-                with connection.cursor() as cursor:
+            with DBConnection() as conn:
+                with conn.cursor() as cursor:
                     cursor.execute(
                         """
                         DELETE FROM ProjetInfo.SoundDeck
@@ -127,8 +127,8 @@ class SDDAO(metaclass=Singleton):
             Une liste d'objets SD contenant les informations des sound-decks.
         """
         try:
-            with DBConnection().connection as connection:
-                with connection.cursor() as cursor:
+            with DBConnection() as conn:
+                with conn.cursor() as cursor:
                     cursor.execute(
                         """
                         SELECT id_sd, nom, description, date_creation
@@ -172,8 +172,8 @@ class SDDAO(metaclass=Singleton):
             return None
 
         try:
-            with DBConnection().connection as connection:
-                with connection.cursor() as cursor:
+            with DBConnection() as conn:
+                with conn.cursor() as cursor:
                     cursor.execute(
                         """
                         SELECT id_sd, nom, description, date_creation

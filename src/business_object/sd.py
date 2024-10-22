@@ -55,13 +55,21 @@ class SD:
     def modifier_description_sd(self, nouvelle_description):
         """Modifier la description du sound-deck"""
         if not isinstance(nouvelle_description, str):
+<<<<<<< HEAD
             raise TypeError("La description doit etre une instance de str.")
+=======
+            raise TypeError("La nouvelle description doit etre une instance de str.")
+>>>>>>> ec7e2eb4b87fa21884df94adf346e2a7a433c4a8
         self.description = nouvelle_description
 
     def ajouter_scene(self, nouvelle_scene):
         """ajoute une scène au sound-deck"""
         if not isinstance(nouvelle_scene, Scene):
+<<<<<<< HEAD
             raise TypeError("La scène doit etre une instance de Scene.")
+=======
+            raise TypeError("La nouvelle scène doit etre une instance de Scene.")
+>>>>>>> ec7e2eb4b87fa21884df94adf346e2a7a433c4a8
         self.scenes.append(nouvelle_scene)
 
     def retirer_scene(self, scene):

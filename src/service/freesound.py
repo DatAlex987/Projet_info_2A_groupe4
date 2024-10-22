@@ -107,7 +107,8 @@ class Freesound(metaclass=Singleton):
         Returns
         -----------------
         result : dict | str
-            Dictionnaire contenant les informations du son, ou un message d'erreur si l'ID n'existe pas ou est mal formé.
+            Dictionnaire contenant les informations du son,
+            ou un message d'erreur si l'ID n'existe pas ou est mal formé.
         """
         if not isinstance(id, str):
             raise TypeError("L'argument id n'est pas un str.")
@@ -201,17 +202,18 @@ class Freesound(metaclass=Singleton):
         return ids[:limit]
 
     def télécharger_son(self, id_son):
-        sound_data = rechercher_par_id(id_son)
+        sound_data = self.rechercher_par_id(id_son)
         mp3_url = sound_data["previews"]["preview-hq-mp3"]  # Lien du fichier MP3 haute qualité
         # Télécharger le fichier MP3
         print(f"Téléchargement du son à partir de {mp3_url}")
         mp3_response = requests.get(mp3_url)
         if mp3_response.status_code == 200:
             # Chemin complet vers le fichier dans le dossier Fichiers_audio
+            dossier_sauvegarde: str = os.getenv("DOSSIER_SAUVEGARDE")
             chemin_fichier_mp3 = os.path.join(dossier_sauvegarde, f"{id_son}.mp3")
             with open(chemin_fichier_mp3, "wb") as f:
                 f.write(mp3_response.content)
-            print(f"Le fichier a été téléchargé sous le nom {fichier_mp3}")
+            print(f"Le fichier a été téléchargé sous le nom {chemin_fichier_mp3}")
         else:
             print(f"Erreur lors du téléchargement du fichier : {mp3_response.status_code}")
 
