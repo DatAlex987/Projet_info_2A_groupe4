@@ -46,8 +46,8 @@ class User(Personne):
             raise TypeError("Le nom doit être une instance de str.")
         if not isinstance(prenom, str):
             raise TypeError("Le prénom doit être une instance de str.")
-        if not isinstance(date_naissance, str):
-            raise TypeError("La date de naissance doit être une instance de str.")
+        if not isinstance(date_naissance, datetime.date):
+            raise TypeError("La date de naissance doit être une instance de datetime.")
         try:
             datetime.strptime(date_naissance, "%Y-%m-%d")
         except ValueError:
