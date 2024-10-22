@@ -1,7 +1,8 @@
 import os
 import hashlib
 from business_object.personne import Personne
-from datetime import date
+from datetime import date, datetime
+import re
 
 
 class User(Personne):
@@ -41,10 +42,38 @@ class User(Personne):
         mdp : str
             Mot de passe en clair à hacher.
         """
+        if not isinstance(nom, str):
+            raise TypeError("Le nom doit être une instance de str.")
+        if not isinstance(prenom, str):
+            raise TypeError("Le prénom doit être une instance de str.")
+        if not isinstance(date_naissance, str):
+            raise TypeError("La date de naissance doit être une instance de str.")
+        try:
+            datetime.strptime(date_naissance, "%Y-%m-%d")
+        except ValueError:
+            raise ValueError("La date de naissance doit être au format 'YYYY-MM-DD'.")
+
+        if not isinstance(id_user, str):
+            raise TypeError("Le nom d'utilisateur doit être une instance de str.")
+        if not isinstance(mdp, str):
+            raise TypeError("Le mot de passe doit être une instance de str.")
+        if not isinstance(SD_possedes, list):
+            raise TypeError("La liste des Sound-decks possédées doit être une instance de list.")
+        if len(mdp) < 8:
+            raise ValueError("Le mot de passe doit contenir au moins 8 caractères.")
+        if not re.search(r"[A-Z]", mdp):
+            raise ValueError("Le mot de passe doit contenir au moins une lettre majuscule.")
+        if not re.search(r"[a-z]", mdp):
+            raise ValueError("Le mot de passe doit contenir au moins une lettre minuscule.")
+        if not re.search(r"[0-9]", mdp):
+            raise ValueError("Le mot de passe doit contenir au moins un chiffre.")
+        if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", mdp):
+            raise ValueError("Le mot de passe doit contenir au moins un caractère spécial.")
+
         super().__init__(nom, prenom, date_naissance)
         self.id_user = id_user
         self.mot_de_passe_hash = self._hash_mdp(mdp)
-        self.SD_possedes = SD_possedes
+        self.SD_possedes = SD_possede
 
     def _hash_mdp(self, mdp):
         mdp_combine = mdp + self.id_user

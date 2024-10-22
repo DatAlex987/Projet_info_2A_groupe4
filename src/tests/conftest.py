@@ -1,3 +1,11 @@
+from business_object.personne import Personne
+from business_object.user import User
+from business_object.son import Son
+from business_object.scene import Scene
+from business_object.sd import SD
+from business_object.son_aleatoire import Son_Aleatoire
+from business_object.son_manuel import Son_Manuel
+from business_object.son_continu import Son_Continu
 import pytest
 
 from datetime import date
@@ -22,6 +30,19 @@ def user1_kwargs():
         "date_naissance": date(1995, 5, 5),
         "id_user": "jdoe",
         "mdp": "password123",
+        "SD_possedes": [],
+    }
+
+
+@pytest.fixture
+def utilisateur_kwargs():
+    """Mock data for User class."""
+    return {
+        "nom": "Bocquet",
+        "prenom": "Noémie",
+        "date_naissance": date(2003, 8, 8),
+        "id_user": "noemie.b",
+        "mdp": "Mdpex@1",
         "SD_possedes": [],
     }
 
