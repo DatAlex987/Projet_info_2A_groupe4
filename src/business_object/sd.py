@@ -33,39 +33,43 @@ class SD:
         self.scenes = scenes
         self.date_creation = date_creation
 
-        if not isinstance(id_sd, int):
-            raise TypeError("L'identifiant sound-deck doit être un entier.")
+        if not isinstance(id_sd, str):
+            raise TypeError("L'identifiant sound-deck doit être une instance de str.")
         if not isinstance(nom, str):
             raise TypeError("Le nom doit etre une instance de str.")
         if not isinstance(description, str):
             raise TypeError("La description doit etre une instance de str.")
         if not isinstance(scenes, list):
-            raise TypeError("Scènes doit etre une liste de scènes.")
-        if not all(isinstance(element, Scene) for element in list):
+            raise TypeError("Scenes doit etre une liste de scènes.")
+        if not all(isinstance(element, Scene) for element in scenes):
             raise TypeError("Les éléments de la liste doivent etre des scènes.")
-        if not isinstance(date_creation, datetime):
+        if not isinstance(date_creation, datetime.date):
             raise TypeError("La date de creation doit etre une date.")
 
     def modifier_nom_sd(self, nouveau_nom):
         """Modifier le nom du sound-deck"""
         if not isinstance(nouveau_nom, str):
-            raise TypeError("Le nouveau nom doit etre une instance de str.")
+            raise TypeError("Le nom doit etre une instance de str.")
         self.nom = nouveau_nom
 
     def modifier_description_sd(self, nouvelle_description):
         """Modifier la description du sound-deck"""
         if not isinstance(nouvelle_description, str):
             raise TypeError("La nouvelle description doit etre une instance de str.")
+
         self.description = nouvelle_description
 
     def ajouter_scene(self, nouvelle_scene):
         """ajoute une scène au sound-deck"""
         if not isinstance(nouvelle_scene, Scene):
             raise TypeError("La nouvelle scène doit etre une instance de Scene.")
+
         self.scenes.append(nouvelle_scene)
 
     def retirer_scene(self, scene):
         """retire une scène du sound-deck"""
+        if not isinstance(scene, Scene):
+            raise TypeError("La scène doit etre une instance de Scene.")
         if scene in self.scenes:
             self.scenes.remove(scene)
         else:
