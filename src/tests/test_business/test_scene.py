@@ -1,4 +1,3 @@
-import re
 import pytest
 from business_object.scene import Scene
 from business_object.son_aleatoire import Son_Aleatoire
