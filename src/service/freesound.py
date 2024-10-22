@@ -90,7 +90,7 @@ class Freesound(metaclass=Singleton):
         payload: Dict[str, Union[str, int]] = {"token": f"{KEY}"}
         url_search = f"{URL}search/text/"
         payload_search = payload.copy()
-        payload_search.update({"query": tag, "limit": limit})
+        payload_search.update({"query": dict, "limit": limit})
         req = requests.get(url_search, headers=headers, params=payload_search)
         results = req.json()
         # La sortie est une liste de dico des 10 sons liés au
