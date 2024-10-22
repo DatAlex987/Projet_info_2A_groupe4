@@ -110,3 +110,4 @@ class Scene:
 
     def supprimer_scene(self):
         del self
+        return True
