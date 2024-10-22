@@ -107,7 +107,8 @@ class Freesound(metaclass=Singleton):
         Returns
         -----------------
         result : dict | str
-            Dictionnaire contenant les informations du son, ou un message d'erreur si l'ID n'existe pas ou est mal formé.
+            Dictionnaire contenant les informations du son,
+            ou un message d'erreur si l'ID n'existe pas ou est mal formé.
         """
         if not isinstance(id, str):
             raise TypeError("L'argument id n'est pas un str.")
