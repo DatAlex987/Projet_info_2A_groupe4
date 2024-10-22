@@ -17,7 +17,7 @@ CREATE TABLE ProjetInfo.Utilisateur (
 
 DROP TABLE IF EXISTS ProjetInfo.Sounddeck CASCADE ;
 CREATE TABLE ProjetInfo.Sounddeck(
-    id_sd INTEGER PRIMARY KEY,
+    id_sd SERIAL PRIMARY KEY,
     nom TEXT,
     description TEXT
 );
@@ -25,7 +25,7 @@ CREATE TABLE ProjetInfo.Sounddeck(
 
 DROP TABLE IF EXISTS ProjetInfo.Scene CASCADE ;
 CREATE TABLE ProjetInfo.Scene (
-    id_scene INTEGER PRIMARY KEY,
+    id_scene SERIAL PRIMARY KEY,
     nom TEXT,
     description TEXT,
     date_creation DATE

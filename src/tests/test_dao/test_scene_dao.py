@@ -1,8 +1,8 @@
 import pytest
-from unittest.mock import MagicMock
+from unittest.mock import patch, MagicMock
 from dao.scene_dao import SceneDAO
 from business_object.scene import Scene
-from datetime import datetime
+import datetime
 
 
 @pytest.fixture
@@ -39,3 +39,21 @@ def test_ajouter_scene(mock_db_connection, scene1_kwargs):
             "date_creation": Scene_ajoute.date_creation,
         },
     )
+
+
+@patch("dao.db_connection.DBConnection")
+def test_ajouter_scene_succes(mock_db, scene1_kwargs):
+
+    # GIVEN une scène à ajouter et une base de données
+    mock_cursor = MagicMock()
+    mock_cursor.fetchone.return_value = (1,)  # La scène est ajoutée avec succès
+    mock_db().connection.__enter__().cursor.return_value = mock_cursor
+
+    scene_to_add = Scene(**scene1_kwargs)
+    scene_dao = SceneDAO()  # Create an instance of SceneDAO
+
+    # WHEN : on tente d'ajouter la scène
+    res = scene_dao.ajouter_scene(scene_to_add)  # Use the instance to call the method
+
+    # THEN
+    assert res is True

@@ -11,11 +11,12 @@ class SceneDAO:
             with connection.cursor() as cursor:
                 cursor.execute(
                     """
-                    INSERT INTO ProjetInfo.Scene(nom, description, date_creation)
-                    VALUES (%(nom)s, %(description)s, %(date_creation)s)
+                    INSERT INTO ProjetInfo.Scene(id_scene, nom, description, date_creation)
+                    VALUES (%(id_scene)s, %(nom)s, %(description)s, %(date_creation)s)
                     RETURNING id_scene;
                     """,
                     {
+                        "id_scene": scene.id_scene,
                         "nom": scene.nom,
                         "description": scene.description,
                         "date_creation": scene.date_creation,
