@@ -1,4 +1,4 @@
-from src.business_object.son import Son
+from business_object.son import Son
 
 
 class Son_Continu(Son):
