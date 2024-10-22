@@ -7,8 +7,8 @@ class SonDAO:
     """Implémente les méthodes du CRUD pour accéder à la base de données des sons"""
 
     def ajouter_son(self, son):
-        with DBConnection() as conn:
-            with conn.cursor() as cursor:
+        with DBConnection().connection as connection:
+            with connection.cursor() as cursor:
                 cursor.execute(
                     """
                     INSERT INTO ProjetInfo.Son (nom, description, duree)
@@ -25,8 +25,8 @@ class SonDAO:
         return son
 
     def modifier_son(self, son):
-        with DBConnection() as conn:
-            with conn.cursor() as cursor:
+        with DBConnection().connection as connection:
+            with connection.cursor() as cursor:
                 cursor.execute(
                     """
                     UPDATE son
@@ -43,8 +43,8 @@ class SonDAO:
         return son
 
     def supprimer_son(self, id_son):
-        with DBConnection() as conn:
-            with conn.cursor() as cursor:
+        with DBConnection().connection as connection:
+            with connection.cursor() as cursor:
                 cursor.execute(
                     """
                     DELETE FROM ProjetInfo.Son
@@ -54,8 +54,8 @@ class SonDAO:
                 )
 
     def consulter_sons(self) -> list["Son"]:
-        with DBConnection() as conn:
-            with conn.cursor() as cursor:
+        with DBConnection().connection as connection:
+            with connection.cursor() as cursor:
                 cursor.execute(
                     """
                     SELECT id_son, nom, description, duree
@@ -80,8 +80,8 @@ class SonDAO:
         return sons
 
     def rechercher_par_id_sons(self, id_son):
-        with DBConnection() as conn:
-            with conn.cursor() as cursor:
+        with DBConnection().connection as connection:
+            with connection.cursor() as cursor:
                 cursor.execute(
                     """
                     SELECT id_son, nom, description, duree

@@ -7,8 +7,8 @@ class SceneDAO:
     """Implémente les méthodes du CRUD pour accéder à la base de données des scènes"""
 
     def ajouter_scene(self, scene):
-        with DBConnection() as conn:
-            with conn.cursor() as cursor:
+        with DBConnection().connection as connection:
+            with connection.cursor() as cursor:
                 cursor.execute(
                     """
                     INSERT INTO ProjetInfo.Scene(nom, description, date_creation)
@@ -25,8 +25,8 @@ class SceneDAO:
         return scene
 
     def modifier_scene(self, scene):
-        with DBConnection() as conn:
-            with conn.cursor() as cursor:
+        with DBConnection().connection as connection:
+            with connection.cursor() as cursor:
                 cursor.execute(
                     """
                     UPDATE scene
@@ -43,8 +43,8 @@ class SceneDAO:
         return scene
 
     def supprimer_scene(self, id_scene):
-        with DBConnection() as conn:
-            with conn.cursor() as cursor:
+        with DBConnection().connection as connection:
+            with connection.cursor() as cursor:
                 cursor.execute(
                     """
                     DELETE FROM ProjetInfo.Scene
@@ -54,8 +54,8 @@ class SceneDAO:
                 )
 
     def consulter_scenes(self, scene):
-        with DBConnection() as conn:
-            with conn.cursor() as cursor:
+        with DBConnection().connection as connection:
+            with connection.cursor() as cursor:
                 cursor.execute(
                     """
                     SELECT id_scene, nom, description, date_creation
@@ -81,8 +81,8 @@ class SceneDAO:
         return scenes_trouvees
 
     def rechercher_par_id_scenes(self, id_scene):
-        with DBConnection() as conn:
-            with conn.cursor() as cursor:
+        with DBConnection().connection as connection:
+            with connection.cursor() as cursor:
                 cursor.execute(
                     """
                     SELECT id_scene, nom, description, date_creation
