@@ -8,6 +8,14 @@ from dao.user_dao import UserDAO
 from business_object.user import User
 
 
+@pytest.fixture(scope="session", autouse=True)
+def setup_test_environment():
+    """Initialisation des données de test"""
+    with patch.dict(os.environ, {"SCHEMA": "ProjetInfo"}):
+        ResetDatabase().lancer(test_dao=True)
+        yield
+
+
 def test_ajouter_user_succes():
     """Création d'un utilisateur réussie"""
 
