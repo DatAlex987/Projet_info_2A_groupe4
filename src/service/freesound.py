@@ -2,7 +2,7 @@ from typing import Optional, Dict, Any, Union
 import os
 from dotenv import load_dotenv
 import requests
-from service.singleton import Singleton
+from src.utils.singleton import Singleton
 
 
 class Freesound(metaclass=Singleton):

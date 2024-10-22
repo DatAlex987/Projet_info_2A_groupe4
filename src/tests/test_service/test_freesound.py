@@ -1,7 +1,7 @@
 from unittest.mock import MagicMock
 import pytest
 import re
-from service.freesound import Freesound
+from src.service.freesound import Freesound
 
 
 @pytest.mark.parametrize(
