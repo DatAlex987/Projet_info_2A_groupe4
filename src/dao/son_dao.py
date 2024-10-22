@@ -1,6 +1,6 @@
-from utils.singleton import Singleton
-from dao.db_connection import DBConnection
-from business_object.son import Son
+from src.utils.singleton import Singleton
+from src.dao.db_connection import DBConnection
+from src.business_object.son import Son
 
 
 class SonDAO:
@@ -31,13 +31,13 @@ class SonDAO:
                     """
                     UPDATE son
                     SET nom = %(nom)s, description = %(description)s, duree = %(duree)s
-                    WHERE id_son = %(id_son)s;
+                    WHERE id_son = %(id_freesound)s;
                     """,
                     {
                         "nom": son.nom,
                         "description": son.description,
                         "duree": son.duree,
-                        "id_son": son.id_son,
+                        "id_son": son.id_freesound,
                     },
                 )
         return son
@@ -71,7 +71,7 @@ class SonDAO:
                 for row in res:
                     sons.append(
                         Son(
-                            id_son=row["id_son"],
+                            id_freesound=row["id_son"],
                             nom=row["nom"],
                             description=row["description"],
                             duree=row["duree"],
@@ -96,7 +96,7 @@ class SonDAO:
                     return None
 
                 son = Son(
-                    id_son=res["id_son"],
+                    id_freesound=res["id_son"],
                     nom=res["nom"],
                     description=res["description"],
                     duree=res["duree"],
