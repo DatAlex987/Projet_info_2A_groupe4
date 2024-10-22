@@ -4,6 +4,7 @@ from src.business_object.personne import Personne
 from src.business_object.scene import Scene
 from datetime import date
 
+
 U = User("thierry", "villiers", date(1589, 1, 1), "458749", "mdp", [])
 print(type(U))
 S = Scene(

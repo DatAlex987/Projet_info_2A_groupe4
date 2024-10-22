@@ -1,5 +1,5 @@
-from utils.singleton import Singleton
-from dao.db_connection import DBConnection
+from src.utils.singleton import Singleton
+from src.dao.db_connection import DBConnection
 
 # from business_object.user import User
 
@@ -75,7 +75,8 @@ class UserDAO(metaclass=Singleton):
         Returns
         -------
         dict
-            Un dictionnaire contenant les informations de l'utilisateur, ou None si aucun utilisateur trouvé.
+            Un dictionnaire contenant les informations de l'utilisateur,
+            ou None si aucun utilisateur trouvé.
         """
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:
@@ -148,7 +149,8 @@ class UserDAO(metaclass=Singleton):
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:
                 cursor.execute(
-                    "DELETE FROM ProjetInfo.Sounddeck WHERE id_user = %(id_user)s AND nom = %(nom)s;",
+                    "DELETE FROM ProjetInfo.Sounddeck"
+                    + " WHERE id_user = %(id_user)s AND nom = %(nom)s;",
                     {"id_user": id_user, "nom": nom},
                 )
                 return cursor.rowcount > 0

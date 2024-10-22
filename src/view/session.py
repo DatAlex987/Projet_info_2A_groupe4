@@ -1,5 +1,5 @@
 from datetime import datetime
-
+from src.business_object.user import User
 from utils.singleton import Singleton
 
 
@@ -12,24 +12,15 @@ class Session(metaclass=Singleton):
 
     def __init__(self):
         """Création de la session"""
-        self.joueur = None
+        self.utilisateur: User = None
         self.debut_connexion = None
 
-    def connexion(self, joueur):
+    def connexion(self, utilisateur):
         """Enregistement des données en session"""
-        self.joueur = joueur
+        self.utilisateur = utilisateur
         self.debut_connexion = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 
     def deconnexion(self):
         """Suppression des données de la session"""
-        self.joueur = None
+        self.utilisateur = None
         self.debut_connexion = None
-
-    def afficher(self) -> str:
-        """Afficher les informations de connexion"""
-        res = "Actuellement en session :\n"
-        res += "-------------------------\n"
-        for att in list(self.__dict__.items()):
-            res += f"{att[0]} : {att[1]}\n"
-
-        return res

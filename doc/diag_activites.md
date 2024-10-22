@@ -13,8 +13,6 @@ Pour afficher ce diagramme dans VScode :
 - rechercher `mermaid`
   - installer l'extension **Markdown Preview Mermaid Support**
 - revenir sur ce fichier
-  - faire **CTRL + K**, puis **V**
-
 
 ```mermaid
 stateDiagram
