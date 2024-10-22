@@ -46,7 +46,7 @@ def utilisateur_kwargs():
         "prenom": "Noémie",
         "date_naissance": date(2003, 8, 8),
         "id_user": "noemie.b",
-        "mdp": "Mdpex@1",
+        "mdp": "Mdpexample@1",
         "SD_possedes": [],
     }
 

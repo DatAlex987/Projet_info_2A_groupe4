@@ -46,13 +46,8 @@ class User(Personne):
             raise TypeError("Le nom doit être une instance de str.")
         if not isinstance(prenom, str):
             raise TypeError("Le prénom doit être une instance de str.")
-        if not isinstance(date_naissance, str):
-            raise TypeError("La date de naissance doit être une instance de str.")
-        try:
-            datetime.strptime(date_naissance, "%Y-%m-%d")
-        except ValueError:
-            raise ValueError("La date de naissance doit être au format 'YYYY-MM-DD'.")
-
+        if not isinstance(date_naissance, datetime.date):
+            raise TypeError("La date de naissance doit être une instance datetime.")
         if not isinstance(id_user, str):
             raise TypeError("Le nom d'utilisateur doit être une instance de str.")
         if not isinstance(mdp, str):
@@ -73,11 +68,13 @@ class User(Personne):
         super().__init__(nom, prenom, date_naissance)
         self.id_user = id_user
         self.mot_de_passe_hash = self._hash_mdp(mdp)
-        self.SD_possedes = SD_possede
+        self.SD_possedes = SD_possedes
 
     def _hash_mdp(self, mdp):
         mdp_combine = mdp + self.id_user
-        return hashlib.pbkdf2_hmac("sha256", mdp_combine.encode("utf-8"), os.urandom(16), 100000)
+        return hashlib.pbkdf2_hmac(
+            "sha256", mdp_combine.encode("utf-8"), self.nom.encode("utf-8"), 100000
+        )
 
     def supprimer_utilisateur(self):
         self.id_user = None
