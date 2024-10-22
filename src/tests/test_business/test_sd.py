@@ -52,13 +52,8 @@ def test_ajouter_scene_succes(sd_kwargs, scene2_kwargs):
 @pytest.mark.parametrize(
     "new_scene, expected_error, error_type",
     [
-<<<<<<< HEAD
-        (123, "La scène doit etre une instance de Scene.", TypeError),
-        ({}, "La scène doit etre une instance de Scene.", TypeError),
-=======
         (123, "La nouvelle scène doit etre une instance de Scene.", TypeError),
         ({}, "La nouvelle scène doit etre une instance de Scene.", TypeError),
->>>>>>> ec7e2eb4b87fa21884df94adf346e2a7a433c4a8
     ],
 )
 def test_ajouter_scene_echec(sd_kwargs, new_scene, expected_error, error_type):
@@ -67,7 +62,6 @@ def test_ajouter_scene_echec(sd_kwargs, new_scene, expected_error, error_type):
         sd_test.ajouter_scene(new_scene)
 
 
-<<<<<<< HEAD
 def test_retirer_scene_succes(sd_kwargs, scene1_kwargs):
     sd_test = SD(**sd_kwargs)
     scene = Scene(**scene1_kwargs)
@@ -86,8 +80,3 @@ def test_retirer_scene_echec(sd_kwargs, scene, expected_error, error_type):
     with pytest.raises(error_type, match=re.escape(expected_error)):
         sd_test = SD(**sd_kwargs)
         sd_test.retirer_scene(scene)
-=======
-def test_ajouter_scene_echec(sd):
-    with pytest.raises(TypeError):
-        sd.ajouter_scene("invalid")
->>>>>>> ec7e2eb4b87fa21884df94adf346e2a7a433c4a8
