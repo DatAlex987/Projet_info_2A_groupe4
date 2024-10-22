@@ -3,6 +3,7 @@ import pytest
 from business_object.sd import SD
 from business_object.scene import Scene
 
+
 def test_modifier_nom_sd_succes(sd_kwargs):
     sd_test = SD(**sd_kwargs)
     sd_test.modifier_nom_sd("aventure foraine")
@@ -52,19 +53,15 @@ def test_ajouter_scene_succes(sd_kwargs, scene2_kwargs):
     "new_scene, expected_error, error_type",
     [
         (123, "La nouvelle scène doit etre une instance de Scene.", TypeError),
-        ({}, "La nouvelle scène doit etre une instance de Scene." , TypeError),
+        ({}, "La nouvelle scène doit etre une instance de Scene.", TypeError),
     ],
 )
-def test_ajouter_scene_echec(
-    sd_kwargs, new_scene, expected_error, error_type
-):
+def test_ajouter_scene_echec(sd_kwargs, new_scene, expected_error, error_type):
     with pytest.raises(error_type, match=re.escape(expected_error)):
         sd_test = SD(**sd_kwargs)
         sd_test.ajouter_scene(new_scene)
 
+
 def test_ajouter_scene_echec(sd):
     with pytest.raises(TypeError):
         sd.ajouter_scene("invalid")
-
-
-def test_retirer_scene()
