@@ -2,7 +2,8 @@ from typing import Optional, Dict, Any, Union
 import os
 from dotenv import load_dotenv
 import requests
-from src.utils.singleton import Singleton
+from service.singleton import Singleton
+import re
 
 
 class Freesound(metaclass=Singleton):
@@ -98,19 +99,22 @@ class Freesound(metaclass=Singleton):
         """
         Envoie une requête à l'API pour récupérer les informations d'un son
         spécifique via son id.
-
         Param
         -----------------
         id : str
-            Identifiant unique du son à rechercher.
+            Identifiant unique du son à rechercher (une suite de 6 chiffres).
 
         Returns
         -----------------
-        result : dict
-            Dictionnaire contenant les informations du son : id, nom, tags, licence, username
+        result : dict | str
+            Dictionnaire contenant les informations du son, ou un message d'erreur si l'ID n'existe pas ou est mal formé.
         """
         if not isinstance(id, str):
             raise TypeError("L'argument id n'est pas un str.")
+
+        # Vérification du format de l'ID (6 chiffres)
+        if not re.match(r"^\d{6}$", id):
+            return "L'ID doit être une chaîne de 6 chiffres."
 
         load_dotenv()
         URL: Optional[str] = os.getenv("URL_API")
@@ -129,6 +133,9 @@ class Freesound(metaclass=Singleton):
         # Vérifier la validité de la réponse JSON
         try:
             result = req.json()
+            # Vérifier si le résultat est vide ou invalide
+            if "id" not in result:
+                return "Aucun son ne porte cet identifiant"
         except requests.exceptions.JSONDecodeError as e:
             print("Erreur de décodage JSON :", e)
             return {}
