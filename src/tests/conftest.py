@@ -13,6 +13,7 @@ from business_object.son_manuel import Son_Manuel
 from business_object.user import User
 from business_object.scene import Scene
 from datetime import date
+from datetime import datetime
 
 
 @pytest.fixture
@@ -48,6 +49,19 @@ def utilisateur_kwargs():
         "id_user": "noemie.b",
         "mdp": "Mdpexample@1",
         "SD_possedes": [],
+    }
+
+
+@pytest.fixture
+def utilisateur2_kwargs():
+    """Mock data for User class."""
+    return {
+        "nom": "Bocquet",
+        "prenom": "Noémie",
+        "date_naissance": datetime(2003, 8, 8),
+        "id_user": "123",
+        "mdp": "Mdpexample@1",
+        "SD_possedes": ["My Sounddeck"],
     }
 
 
