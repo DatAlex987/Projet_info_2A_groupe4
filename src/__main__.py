@@ -16,7 +16,8 @@ U = User(
     SD_possedes=[],
     id_user="123456",
 )
-print(user_dao.ajouter_user(U))
+print(user_dao.ajouter_user(U, schema="ProjetInfo"))
+"""
 son_dao = SonDAO()
 Sound = Son(
     nom="moteur",
@@ -25,4 +26,4 @@ Sound = Son(
     id_freesound="481395",
     tags=["voiture", "moteur", "puissance"],
 )
-print(son_dao.ajouter_son(Sound))
+print(son_dao.ajouter_son(Sound))"""

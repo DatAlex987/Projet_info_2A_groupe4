@@ -30,6 +30,7 @@ class Son:
         self.duree = duree
         self.id_freesound = id_freesound
         self.tags = tags
+        self.charge = None
 
         if not isinstance(id_freesound, str):
             raise TypeError("L'identifiant son doit être une instance de string.")
@@ -37,18 +38,16 @@ class Son:
         # Initialisation de pygame et du mixer
         pygame.mixer.init()
 
-    def charger_son(self) -> None:
-        fichier_son = getenv("DOSSIER_SAUVEGARDE") + "/f'{self.id_freesound}.mp3'"
-        # Charger le son
-        pygame.mixer.music.load(fichier_son)
-
     def JouerSon(self) -> None:
         try:
-            self.charger_son()
+            fichier_son = getenv("DOSSIER_SAUVEGARDE") + "/" + f"{self.id_freesound}.mp3"
+            # Charger le son
+            self.charge = pygame.mixer.music.load(fichier_son)
             # Jouer le son
-            pygame.mixer.music.play()
+            (self.charge).play()
         except pygame.error as e:
             print(f"Erreur lors de la lecture du fichier son : {e}")
 
     def Arret_Son(self) -> None:
-        pygame.mixer.music.stop()
+        (self.charge).stop()
+        self.charge = None

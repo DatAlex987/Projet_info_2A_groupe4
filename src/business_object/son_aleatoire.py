@@ -1,4 +1,6 @@
 from business_object.son import Son
+import pygame
+import random
 
 
 class Son_Aleatoire(Son):
@@ -34,4 +36,22 @@ class Son_Aleatoire(Son):
         self.cooldown_max = new_cooldown_max
 
     def jouer_son_aléatoire(self):
-        pass
+        """Joue le son aléatoire comme attendu"""
+        # Générer un délai initial aléatoire
+        t = random.randint(self.cooldown_min, self.cooldown_max)
+        pygame.time.delay(t)  # Attendre le délai initial avant de jouer le son
+
+        running = True
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+            self.jouer_son()
+
+            # Attendre que le son se termine (environ sa durée)
+            # On suppose que le son ne change pas pendant l'exécution
+            pygame.time.delay(int(self.charge.get_length() * 1000))  # Délai en millisecondes
+
+            # Attendre un délai aléatoire avant de relancer le son
+            t_prime = random.randint(self.cooldown_min, self.cooldown_max)
+            pygame.time.delay(t_prime)

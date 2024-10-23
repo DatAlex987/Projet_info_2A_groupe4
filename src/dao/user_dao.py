@@ -21,11 +21,15 @@ class UserDAO(metaclass=Singleton):
         int
             L'ID de l'utilisateur ajouté.
         """
-        with DBConnection().connection as connection:
+        with DBConnection(schema="SchemaTest").connection as connection:
             with connection.cursor() as cursor:
+                query = f"""
+                INSERT INTO {schema}.utilisateur(id_user, mdp_hashe, date_naissance, nom, prenom)
+                VALUES (%(id_user)s, %(mdp_hashe)s, %(date_naissance)s, %(nom)s, %(prenom)s)
+                RETURNING id_user;
+                """
                 cursor.execute(
-                    "INSERT INTO %(schema)s.utilisateur(id_user, mdp_hashe, date_naissance, nom, prenom) VALUES"
-                    "(%(id_user)s, %(mdp_hashe)s, %(date_naissance)s, %(nom)s, %(prenom)s) RETURNING id_user;",
+                    query,
                     {
                         "schema": schema,
                         "id_user": user.id_user,

@@ -12,7 +12,7 @@ class DBConnection(metaclass=Singleton):
     Elle permet de n'ouvrir qu'une seule et unique connexion
     """
 
-    def __init__(self):
+    def __init__(self, schema):
         """Ouverture de la connexion"""
         dotenv.load_dotenv()
 
@@ -22,7 +22,7 @@ class DBConnection(metaclass=Singleton):
             database=os.environ["POSTGRES_DATABASE"],
             user=os.environ["POSTGRES_USER"],
             password=os.environ["POSTGRES_PASSWORD"],
-            options=f"-c search_path={os.environ['POSTGRES_SCHEMA']}",
+            options=f"-c search_path={schema}",
             cursor_factory=RealDictCursor,
         )
 

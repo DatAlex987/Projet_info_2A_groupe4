@@ -1,5 +1,4 @@
 from business_object.son import Son
-import re
 import pygame
 
 
@@ -31,8 +30,7 @@ class Son_Manuel(Son):
 
     def jouer_son_manuel(self):
         """lance le son après déclenchement"""
-        chaine = "K_" + self.start_key
-        chaine_sans_guillemets = re.sub(r'"', "", chaine)
+        kpg = ord(self.start_key)
         running = True
         while running:
             for event in pygame.event.get():
@@ -40,5 +38,18 @@ class Son_Manuel(Son):
                     running = False
                 # Vérifier si une touche du clavier est pressée
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.chaine_sans_guillemets:
+                    if event.key == kpg:
                         self.JouerSon()
+
+    # def jouer_son_manuel(self):                   #ancienne version
+    #   """lance le son après déclenchement"""
+    #    chaine = "K_" + self.start_key
+    #    running = True
+    #    while running:
+    #        for event in pygame.event.get():
+    #            if event.type == pygame.QUIT:
+    #                running = False
+    #            # Vérifier si une touche du clavier est pressée
+    #            if event.type == pygame.KEYDOWN:
+    #                if event.key == pygame.chaine:
+    #                    self.JouerSon()

@@ -14,7 +14,7 @@ class ResetDatabase(metaclass=Singleton):
         init_db_as_string = init_db.read()
 
         try:
-            with DBConnection().connection as connection:
+            with DBConnection(schema="ProjetInfo").connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(init_db_as_string)
         except Exception as e:
@@ -29,7 +29,7 @@ class ResetDatabase(metaclass=Singleton):
         init_db_test_as_string = init_db_test.read()
 
         try:
-            with DBConnection().connection as connection:
+            with DBConnection(schema="SchemaTest").connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(init_db_test_as_string)
         except Exception as e:
