@@ -37,10 +37,9 @@ class SceneDAO:
                 cursor.execute(
                     query,
                     {
-                        "schema": schema,
                         "nom": scene.nom,
                         "description": scene.description,
-                        "date_creation": scene.duree,
+                        "date_creation": scene.date_creation,
                         "id_scene": scene.id_scene,
                     },
                 )
@@ -55,7 +54,7 @@ class SceneDAO:
                 """
                 cursor.execute(
                     query,
-                    {"schema": schema, "id_scene": id_scene},
+                    {"id_scene": id_scene},
                 )
 
     def consulter_scenes(self, schema):
@@ -76,8 +75,11 @@ class SceneDAO:
                 for row in res:
                     scenes_trouvees.append(
                         Scene(
-                            id_scene=row["id_scene"],
+                            id_scene=str(row["id_scene"]),
                             nom=row["nom"],
+                            sons_aleatoires=[],  # SANS DOUTE A MODIFIER à L'AVENIR
+                            sons_continus=[],  # SANS DOUTE A MODIFIER à L'AVENIR
+                            sons_manuels=[],  # SANS DOUTE A MODIFIER à L'AVENIR
                             description=row["description"],
                             date_creation=row["date_creation"],
                         )
@@ -101,8 +103,11 @@ class SceneDAO:
                     return None
 
                 Scene_trouvee = Scene(
-                    id_scene=res["id_scene"],
+                    id_scene=str(res["id_scene"]),
                     nom=res["nom"],
+                    sons_aleatoires=[],  # SANS DOUTE A MODIFIER à L'AVENIR
+                    sons_continus=[],  # SANS DOUTE A MODIFIER à L'AVENIR
+                    sons_manuels=[],  # SANS DOUTE A MODIFIER à L'AVENIR
                     description=res["description"],
                     date_creation=res["date_creation"],
                 )
