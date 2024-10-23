@@ -1,6 +1,7 @@
 from utils.singleton import Singleton
 from dao.db_connection import DBConnection
 from business_object.sd import SD
+import datetime
 
 
 class SDDAO(metaclass=Singleton):
@@ -25,7 +26,7 @@ class SDDAO(metaclass=Singleton):
             return None
 
         try:
-            with DBConnection(schema=schema) as conn:
+            with DBConnection(schema=schema).connection as conn:
                 with conn.cursor() as cursor:
                     query = f"""
                      INSERT INTO {schema}.SoundDeck(nom, description, date_creation)
@@ -65,7 +66,7 @@ class SDDAO(metaclass=Singleton):
             return None
 
         try:
-            with DBConnection(schema=schema) as conn:
+            with DBConnection(schema=schema).connection as conn:
                 with conn.cursor() as cursor:
                     query = f"""
                     UPDATE {schema}.SoundDeck
@@ -105,7 +106,7 @@ class SDDAO(metaclass=Singleton):
             return False
 
         try:
-            with DBConnection(schema=schema) as conn:
+            with DBConnection(schema=schema).connection as conn:
                 with conn.cursor() as cursor:
                     query = f"""
                      DELETE FROM {schema}.SoundDeck
@@ -130,7 +131,7 @@ class SDDAO(metaclass=Singleton):
             Une liste d'objets SD contenant les informations des sound-decks.
         """
         try:
-            with DBConnection(schema=schema) as conn:
+            with DBConnection(schema=schema).connection as conn:
                 with conn.cursor() as cursor:
                     query = f"""
                     SELECT id_sd, nom, description, date_creation
@@ -175,7 +176,7 @@ class SDDAO(metaclass=Singleton):
             return None
 
         try:
-            with DBConnection(schema=schema) as conn:
+            with DBConnection(schema=schema).connection as conn:
                 with conn.cursor() as cursor:
                     query = f"""
                     SELECT id_sd, nom, description, date_creation
@@ -220,6 +221,6 @@ class SDDAO(metaclass=Singleton):
             return False
         if not isinstance(sd.description, str):
             return False
-        if not isinstance(sd.date_creation, str) or not sd.date_creation:
+        if not isinstance(sd.date_creation, datetime.date) or not sd.date_creation:
             return False
         return True

@@ -1,58 +1,165 @@
 import pytest
-from unittest.mock import patch, MagicMock
 from dao.sd_dao import SDDAO
 from business_object.sd import SD
+from dao.db_connection import DBConnection
 import datetime
 
 
-@pytest.fixture
-def mock_db_connection(mocker):
-    # Mock the DBConnection and its connection and cursor
-    mock_connection = MagicMock()
-    mock_cursor = MagicMock()
-    mock_connection.cursor.return_value.__enter__.return_value = mock_cursor
-    mock_db = mocker.patch("dao.db_connection.DBConnection")
-    mock_db().connection.__enter__.return_value = mock_connection
-    return mock_cursor
-
-
-def test_ajouter_sd(mock_db_connection, sd_kwargs):
-    # Mock the cursor's fetchone to return an ID for the inserted sd
-    mock_db_connection.fetchone.return_value = {"id_sd": 1}
-
-    # Initialize DAO and call ajouter_scene
-    dao = SDDAO()
-    Sd_ajoute = SD(**sd_kwargs)
-    returned_sd = dao.ajouter_sd(Sd_ajoute)
-
-    # Assertions
-    assert returned_sd.id == 1
-    mock_db_connection.execute.assert_called_once_with(
-        """
-        INSERT INTO ProjetInfo.SoundDeck(nom, description, date_creation)
-        VALUES (%(nom)s, %(description)s, %(date_creation)s)
-        RETURNING id_sd;
-        """,
-        {
-            "nom": Sd_ajoute.nom,
-            "description": Sd_ajoute.description,
-            "date_creation": Sd_ajoute.date_creation,
-        },
-    )
-
- @patch("dao.sd_dao.db_connection.DBConnection")
-def test_ajouter_sd_succes(mock_db, sd_kwargs):
-
-    # GIVEN un sd à ajouter et une base de données
-    mock_cursor = MagicMock()
-    mock_cursor.fetchone.return_value = (1,)  # Le sd est ajoutée avec succès
-    mock_db().connection.__enter__().cursor.return_value = mock_cursor
-
+def test_ajouter_sd_succes(sd_kwargs):
+    # GIVEN: A sd object to add and the test schema
+    schema = "SchemaTest"
     sd_to_add = SD(**sd_kwargs)
-    sd_dao = SDDAO()  # Create an instance of SDDAO
 
-    # WHEN : on tente d'ajouter le sd
-    res = sd_dao.ajouter_sd(sd_to_add)  # Use the instance to call the method
+    # WHEN: Adding the sd to the database
+    sd_dao = SDDAO()
+    added_sd = sd_dao.ajouter_sd(sd_to_add, schema)
 
-    # THEN
-    assert res == sd_to_add
+    # THEN: The returned sd should have the correct ID, and the data should match
+    assert added_sd.id_sd == sd_kwargs["id_sd"]
+    assert added_sd.nom == sd_kwargs["nom"]
+    assert added_sd.scenes == sd_kwargs["scenes"]
+    assert added_sd.description == sd_kwargs["description"]
+    assert added_sd.date_creation == sd_kwargs["date_creation"]
+
+    # THEN: Verify the sd was added to the database by querying it
+    with DBConnection(schema=schema).connection as connection:
+        with connection.cursor() as cursor:
+            query = f"SELECT * FROM {schema}.SoundDeck WHERE id_sd = %(id_sd)s"
+            cursor.execute(
+                query,
+                {"id_sd": added_sd.id_sd},
+            )
+            result = cursor.fetchone()
+
+            assert result is not None
+            assert result["id_sd"] == int(sd_kwargs["id_sd"])
+            assert result["nom"] == sd_kwargs["nom"]
+            assert result["description"] == sd_kwargs["description"]
+            assert result["date_creation"] == sd_kwargs["date_creation"]
+
+    # (Optional) Clean up the test data
+    with DBConnection(schema=schema).connection as connection:
+        with connection.cursor() as cursor:
+            query = f"DELETE FROM {schema}.SoundDeck WHERE id_sd = %(id_sd)s"
+            cursor.execute(
+                query,
+                {"id_sd": added_sd.id_sd},
+            )
+
+
+@pytest.mark.parametrize(
+    "new_nom, new_desc",
+    [
+        ("NouveauNom", "NouvelleDescription"),
+    ],
+)
+def test_modifier_sd_succes(sd_kwargs, new_nom, new_desc):
+    # GIVEN: A sd object already added in the test schema the test schema
+    schema = "SchemaTest"
+    sd_to_add = SD(**sd_kwargs)
+    sd_dao = SDDAO()
+    added_sd = sd_dao.ajouter_sd(sd_to_add, schema)
+    # WHEN: Adding the sdmodified to the database
+    added_sd.nom = new_nom
+    added_sd.description = new_desc
+    modified_added_sd = sd_dao.modifier_sd(added_sd, schema)
+    # THEN: The returned scene should have the correct ID, and the data should match
+    assert modified_added_sd.id_sd == sd_kwargs["id_sd"]
+    assert modified_added_sd.nom == sd_kwargs["nom"]
+    assert modified_added_sd.scenes == sd_kwargs["scenes"]
+    assert modified_added_sd.description == sd_kwargs["description"]
+    assert modified_added_sd.date_creation == sd_kwargs["date_creation"]
+
+    # THEN: Verify the sd correctly modified in the database by querying it
+    with DBConnection(schema=schema).connection as connection:
+        with connection.cursor() as cursor:
+            query = f"SELECT * FROM {schema}.SoundDeck WHERE id_sd = %(id_sd)s"
+            cursor.execute(
+                query,
+                {"id_sd": modified_added_sd.id_sd},
+            )
+            result = cursor.fetchone()
+
+            assert result is not None
+            assert result["id_sd"] == int(modified_added_sd.id_sd)
+            assert result["nom"] == modified_added_sd.nom
+            assert result["description"] == modified_added_sd.description
+            assert result["date_creation"] == modified_added_sd.date_creation
+
+    # (Optional) Clean up the test data
+    with DBConnection(schema=schema).connection as connection:
+        with connection.cursor() as cursor:
+            query = f"DELETE FROM {schema}.SoundDeck WHERE id_sd = %(id_sd)s"
+            cursor.execute(
+                query,
+                {"id_sd": modified_added_sd.id_sd},
+            )
+
+
+def test_supprimer_sd_succes(sd_kwargs):
+    # GIVEN: A Sd object already added in the test schema the test schema
+    schema = "SchemaTest"
+    sd_to_add = SD(**sd_kwargs)
+    sd_dao = SDDAO()
+    added_sd = sd_dao.ajouter_sd(sd_to_add, schema)
+    # WHEN: Deleting the sd from the database
+    sd_dao.supprimer_sd(added_sd.id_sd, schema)
+
+    # THEN: Verify the sd correctly removed from the database by querying it
+    with DBConnection(schema=schema).connection as connection:
+        with connection.cursor() as cursor:
+            query = f"SELECT * FROM {schema}.SoundDeck WHERE id_sd = %(id_sd)s"
+            cursor.execute(
+                query,
+                {"id_sd": added_sd.id_sd},
+            )
+            result = cursor.fetchall()
+
+            assert len(result) == 0
+
+
+def test_consulter_sds_succes(sd_kwargs):
+    # GIVEN: A sd already added in the test schema
+    schema = "SchemaTest"
+    sd1_to_add = SD(**sd_kwargs)
+    sd_dao = SDDAO()
+    sd_dao.ajouter_sd(sd1_to_add, schema)
+
+    # WHEN: Querying the sds in the database
+    all_found_sds = sd_dao.consulter_sds(schema)
+    # THEN: The returned sd should have the correct ID, and the data should match
+    assert len(all_found_sds) == 1
+    # (Optional) Clean up the test data
+    for found_sd in all_found_sds:
+        with DBConnection(schema=schema).connection as connection:
+            with connection.cursor() as cursor:
+                query = f"DELETE FROM {schema}.Scene WHERE id_sd = %(id_sd)s"
+                cursor.execute(
+                    query,
+                    {"id_sd": found_sd.id_sd},
+                )
+
+
+def test_rechercher_par_id_sd_succes(sd_kwargs):
+    # GIVEN: A Sd object already added in the test schema the test schema
+    schema = "SchemaTest"
+    sd_to_add = SD(**sd_kwargs)
+    sd_dao = SDDAO()
+    added_sd = sd_dao.ajouter_sd(sd_to_add, schema)
+    # WHEN: Searching for the sd id in the database
+    found_sd = sd_dao.rechercher_par_id_sd(added_sd.id_scene, schema)
+    # THEN: The returned sd should have the correct ID, and the data should match
+    assert found_sd.id_sd == str(added_sd.id_sd)
+    assert found_sd.nom == added_sd.nom
+    assert found_sd.description == added_sd.description
+    assert found_sd.date_creation == added_sd.date_creation
+    assert found_sd.scenes == added_sd.scenes
+
+    # (Optional) Clean up the test data
+    with DBConnection(schema=schema).connection as connection:
+        with connection.cursor() as cursor:
+            query = f"DELETE FROM {schema}.SoundDeck WHERE id_sd = %(id_sd)s"
+            cursor.execute(
+                query,
+                {"id_sd": added_sd.id_sd},
+            )
