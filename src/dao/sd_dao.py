@@ -69,7 +69,8 @@ class SDDAO(metaclass=Singleton):
                     cursor.execute(
                         """
                         UPDATE ProjetInfo.SoundDeck
-                        SET nom = %(nom)s, description = %(description)s, date_creation = %(date_creation)s
+                        SET nom = %(nom)s, description = %(description)s,
+                        date_creation = %(date_creation)s
                         WHERE id_sd = %(id_sd)s;
                         """,
                         {
@@ -165,7 +166,8 @@ class SDDAO(metaclass=Singleton):
         Returns
         -------
         SD
-            Un objet SD contenant les informations du sound-deck, ou None si aucun sound-deck trouvé.
+            Un objet SD contenant les informations du sound-deck, ou None
+            si aucun sound-deck trouvé.
         """
         if id_sd is None:
             print("ID sound-deck invalide fourni pour la recherche.")
