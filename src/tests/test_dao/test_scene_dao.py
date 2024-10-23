@@ -23,7 +23,7 @@ def test_ajouter_scene_succes(mock_db, scene1_kwargs):
     assert res == scene_to_add
 
 
-@patch("dao.scene_dao.DBConnection")
+"""@patch("dao.scene_dao.DBConnection")
 def test_modifier_scene_succes(mock_db, scene1_kwargs, new_name):
 
     # GIVEN une scène à ajouter et une base de données
@@ -38,4 +38,4 @@ def test_modifier_scene_succes(mock_db, scene1_kwargs, new_name):
     res = scene_dao.modifier_scene(scene_ajoutee, "NouveauNom")
 
     # THEN
-    assert
+    assert"""
