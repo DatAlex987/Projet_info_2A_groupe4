@@ -7,7 +7,7 @@ class SceneDAO:
     """Implémente les méthodes du CRUD pour accéder à la base de données des scènes"""
 
     def ajouter_scene(self, scene, schema):
-        with DBConnection().connection as connection:
+        with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
                 query = f"""
                 INSERT INTO {schema}.Scene(id_scene, nom, description, date_creation)
@@ -27,7 +27,7 @@ class SceneDAO:
         return scene
 
     def modifier_scene(self, scene, schema):
-        with DBConnection().connection as connection:
+        with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
                 query = f"""
                 UPDATE {schema}.Scene
@@ -37,17 +37,16 @@ class SceneDAO:
                 cursor.execute(
                     query,
                     {
-                        "schema": schema,
                         "nom": scene.nom,
                         "description": scene.description,
-                        "date_creation": scene.duree,
+                        "date_creation": scene.date_creation,
                         "id_scene": scene.id_scene,
                     },
                 )
         return scene
 
     def supprimer_scene(self, id_scene, schema):
-        with DBConnection().connection as connection:
+        with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
                 query = f"""
                 DELETE FROM {schema}.Scene
@@ -59,7 +58,7 @@ class SceneDAO:
                 )
 
     def consulter_scenes(self, schema):
-        with DBConnection().connection as connection:
+        with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
                 query = f"""
                 SELECT id_scene, nom, description, date_creation
@@ -76,8 +75,11 @@ class SceneDAO:
                 for row in res:
                     scenes_trouvees.append(
                         Scene(
-                            id_scene=row["id_scene"],
+                            id_scene=str(row["id_scene"]),
                             nom=row["nom"],
+                            sons_aleatoires=[],  # SANS DOUTE A MODIFIER à L'AVENIR
+                            sons_continus=[],  # SANS DOUTE A MODIFIER à L'AVENIR
+                            sons_manuels=[],  # SANS DOUTE A MODIFIER à L'AVENIR
                             description=row["description"],
                             date_creation=row["date_creation"],
                         )
@@ -85,7 +87,7 @@ class SceneDAO:
         return scenes_trouvees
 
     def rechercher_par_id_scenes(self, id_scene, schema):
-        with DBConnection().connection as connection:
+        with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
                 query = f"""
                 SELECT id_scene, nom, description, date_creation
@@ -101,8 +103,11 @@ class SceneDAO:
                     return None
 
                 Scene_trouvee = Scene(
-                    id_scene=res["id_scene"],
+                    id_scene=str(res["id_scene"]),
                     nom=res["nom"],
+                    sons_aleatoires=[],  # SANS DOUTE A MODIFIER à L'AVENIR
+                    sons_continus=[],  # SANS DOUTE A MODIFIER à L'AVENIR
+                    sons_manuels=[],  # SANS DOUTE A MODIFIER à L'AVENIR
                     description=res["description"],
                     date_creation=res["date_creation"],
                 )

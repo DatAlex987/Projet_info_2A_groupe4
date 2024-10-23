@@ -132,7 +132,6 @@ def scene1_kwargs(user1_kwargs, son_aleatoire1_kwargs, son_continu1_kwargs, son_
         "sons_aleatoires": [Son_Aleatoire(**son_aleatoire1_kwargs)],
         "sons_manuels": [Son_Manuel(**son_manuel1_kwargs)],
         "sons_continus": [Son_Continu(**son_continu1_kwargs)],
-        "auteur": User(**user1_kwargs),
         "date_creation": date(2024, 1, 1),
     }
 
@@ -146,7 +145,6 @@ def scene2_kwargs(user1_kwargs, son_aleatoire2_kwargs, son_continu2_kwargs, son_
         "sons_aleatoires": [Son_Aleatoire(**son_aleatoire2_kwargs)],
         "sons_manuels": [Son_Manuel(**son_manuel2_kwargs)],
         "sons_continus": [Son_Continu(**son_continu2_kwargs)],
-        "auteur": User(**user1_kwargs),
         "date_creation": date(2023, 10, 9),
     }
 

@@ -36,7 +36,6 @@ class Scene:
         sons_aleatoires,
         sons_manuels,
         sons_continus,
-        auteur,
         date_creation,
     ):
         """Constructeur"""
@@ -46,7 +45,6 @@ class Scene:
         self.sons_aleatoires = sons_aleatoires
         self.sons_manuels = sons_manuels
         self.sons_continus = sons_continus
-        self.auteur = auteur
         self.date_creation = date_creation
 
         if not isinstance(nom, str):
@@ -61,8 +59,6 @@ class Scene:
             raise TypeError("La liste des sons continus doit être une instance de list.")
         if not isinstance(sons_manuels, list):
             raise TypeError("La liste des sons manuels doit être une instance de list.")
-        if not isinstance(auteur, User):
-            raise TypeError("L'auteur doit être une instance de User.")
         if not isinstance(date_creation, datetime.date):
             raise TypeError("La date de création doit être une instance de datetime.")
 
