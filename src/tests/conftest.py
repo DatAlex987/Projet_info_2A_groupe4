@@ -128,7 +128,7 @@ def scene1_kwargs(user1_kwargs, son_aleatoire1_kwargs, son_continu1_kwargs, son_
     return {
         "nom": "Forêt Mystique",
         "description": "Une scène calme dans une forêt mystérieuse",
-        "id_scene": "123456",
+        "id_scene": "987654",
         "sons_aleatoires": [Son_Aleatoire(**son_aleatoire1_kwargs)],
         "sons_manuels": [Son_Manuel(**son_manuel1_kwargs)],
         "sons_continus": [Son_Continu(**son_continu1_kwargs)],

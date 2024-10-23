@@ -6,16 +6,17 @@ from business_object.scene import Scene
 class SceneDAO:
     """Implémente les méthodes du CRUD pour accéder à la base de données des scènes"""
 
-    def ajouter_scene(self, scene):
+    def ajouter_scene(self, scene, schema):
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:
                 cursor.execute(
                     """
-                    INSERT INTO ProjetInfo.Scene(id_scene, nom, description, date_creation)
+                    INSERT INTO %(schema)s.Scene(id_scene, nom, description, date_creation)
                     VALUES (%(id_scene)s, %(nom)s, %(description)s, %(date_creation)s)
                     RETURNING id_scene;
                     """,
                     {
+                        "schema": schema,
                         "id_scene": scene.id_scene,
                         "nom": scene.nom,
                         "description": scene.description,
@@ -25,16 +26,17 @@ class SceneDAO:
                 scene.id = cursor.fetchone()["id_scene"]
         return scene
 
-    def modifier_scene(self, scene):
+    def modifier_scene(self, scene, schema):
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:
                 cursor.execute(
                     """
-                    UPDATE scene
+                    UPDATE %(schema)s.Scene
                     SET nom = %(nom)s, description = %(description)s, date_creation = %(date_creation)s
                     WHERE id_scene = %(id_scene)s;
                     """,
                     {
+                        "schema": schema,
                         "nom": scene.nom,
                         "description": scene.description,
                         "date_creation": scene.duree,
@@ -43,25 +45,26 @@ class SceneDAO:
                 )
         return scene
 
-    def supprimer_scene(self, id_scene):
+    def supprimer_scene(self, id_scene, schema):
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:
                 cursor.execute(
                     """
-                    DELETE FROM ProjetInfo.Scene
+                    DELETE FROM %(schema)s.Scene
                     WHERE id_scene = %(id_scene)s;
                     """,
-                    {"id_scene": id_scene},
+                    {"schema": schema, "id_scene": id_scene},
                 )
 
-    def consulter_scenes(self, scene):
+    def consulter_scenes(self, scene, schema):
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:
                 cursor.execute(
                     """
                     SELECT id_scene, nom, description, date_creation
-                    FROM ProjetInfo.Scene;
-                    """
+                    FROM %(schema)s.Scene;
+                    """,
+                    {"schema": schema, "id_scene": id_scene},
                 )
                 res = cursor.fetchall()
 
@@ -81,16 +84,16 @@ class SceneDAO:
                     )
         return scenes_trouvees
 
-    def rechercher_par_id_scenes(self, id_scene):
+    def rechercher_par_id_scenes(self, id_scene, schema):
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:
                 cursor.execute(
                     """
                     SELECT id_scene, nom, description, date_creation
-                    FROM ProjetInfo.Scene
+                    FROM %(schema)s.Scene
                     WHERE id_scene = %(id_scene)s;
                     """,
-                    {"id_scene": id_scene},
+                    {"schema": schema, "id_scene": id_scene},
                 )
                 res = cursor.fetchone()
                 if res is None:

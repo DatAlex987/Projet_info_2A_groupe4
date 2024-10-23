@@ -23,6 +23,21 @@ class ResetDatabase(metaclass=Singleton):
 
         print("Ré-initialisation de la base de données - Terminée")
 
+        print("Ré-initialisation de la base de données test")
+
+        init_db_test = open("data/init_db_test.sql", encoding="utf-8")
+        init_db_test_as_string = init_db_test.read()
+
+        try:
+            with DBConnection().connection as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute(init_db_test_as_string)
+        except Exception as e:
+            print(e)
+            raise
+
+        print("Ré-initialisation de la base de données test - Terminée")
+
         return True
 
 
