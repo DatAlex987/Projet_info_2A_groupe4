@@ -1,4 +1,3 @@
-from tabulate import tabulate
 from utils.log_decorator import log
 from utils.securite import hash_password
 from src.business_object.son import Son
@@ -7,13 +6,17 @@ import requests
 import os
 import wget
 
+API_KEY = os.getenv("API_KEY")
+dossier_sauvegarde = os.getenv("DOSSIER_SAUVEGARDE")
+URL_API = os.getenv("URL_API")
+
 
 class SonService:
     """méthodes liées aux sons"""
 
     @log
     def télécharger_son(self, id_son):
-        url_sound = f"https://freesound.org/apiv2/sounds/{id_son}/?token={API_KEY}"
+        url_sound = f"{URL_API}/sounds/{id_son}/?token={API_KEY}"
         response_sound = requests.get(url_sound)
 
         if response_sound.status_code == 200:

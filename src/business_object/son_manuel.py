@@ -20,13 +20,12 @@ class Son_Manuel(Son):
     def __init__(self, nom, description, duree, id_freesound, tags, start_key):
         super().__init__(nom, description, duree, id_freesound, tags)
         self.start_key: str = start_key
+        if not isinstance(start_key, str):
+            raise TypeError("la touche doit être de type String")
 
     def modifier_key(self, new_key):
         """Modifier la touche pour lancer un son"""
         self.start_key = new_key
-
-    def get_pygame_key(self):
-        return f"K_{self.start_key}"
 
     def jouer_son_manuel(self):
         """lance le son après déclenchement"""

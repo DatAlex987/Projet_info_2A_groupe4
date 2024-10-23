@@ -52,6 +52,17 @@ def utilisateur_kwargs():
 
 
 @pytest.fixture
+def son_vador_kwargs():
+    return {
+        "nom": "The Imperial March",
+        "description": "Luke, I am your father",
+        "duree": "datetime.timedelta(seconds=45)",
+        "id_freesound": "039450",
+        "tags": ["starwars", "Vador", "JW"],
+    }
+
+
+@pytest.fixture
 def son_aleatoire1_kwargs():
     return {
         "nom": "Ambiance de forêt",
@@ -107,7 +118,7 @@ def son_manuel1_kwargs():
         "duree": 5,
         "id_freesound": "bell_5678",
         "tags": ["bell", "chime"],
-        "start_key": "C",
+        "start_key": "c",
     }
 
 
@@ -119,7 +130,7 @@ def son_manuel2_kwargs():
         "duree": 3,
         "id_freesound": "458726",
         "tags": ["step", "approaching"],
-        "start_key": "P",
+        "start_key": "p",
     }
 
 
