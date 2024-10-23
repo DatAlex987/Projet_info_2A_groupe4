@@ -7,16 +7,16 @@ class SonDAO:
     """Implémente les méthodes du CRUD pour accéder à la base de données des sons"""
 
     def ajouter_son(self, son, schema):
-        with DBConnection().connection as connection:
+        with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
-                cursor.execute(
-                    """
-                    INSERT INTO %(schema)s.Son (id_freesound, nom, description, duree)
+                query = f"""
+                INSERT INTO {schema}.Son (id_freesound, nom, description, duree)
                     VALUES (%(id_freesound)s, %(nom)s, %(description)s, %(duree)s)
                     RETURNING id_freesound;
-                    """,
+                 """
+                cursor.execute(
+                    query,
                     {
-                        "schema": schema,
                         "id_freesound": son.id_freesound,
                         "nom": son.nom,
                         "description": son.description,
@@ -27,16 +27,17 @@ class SonDAO:
         return son
 
     def modifier_son(self, son, schema):
-        with DBConnection().connection as connection:
+        with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
-                cursor.execute(
-                    """
-                    UPDATE %(schema)s.Son
+                query = f"""
+                UPDATE {schema}.Son
                     SET nom = %(nom)s, description = %(description)s, duree = %(duree)s
                     WHERE id_freesound = %(id_freesound)s;
-                    """,
+                """
+
+                cursor.execute(
+                    query,
                     {
-                        "schema": schema,
                         "nom": son.nom,
                         "description": son.description,
                         "duree": son.duree,
@@ -46,25 +47,26 @@ class SonDAO:
         return son
 
     def supprimer_son(self, id_freesound, schema):
-        with DBConnection().connection as connection:
+        with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
-                cursor.execute(
-                    """
-                    DELETE FROM %(schema)s.Son
+                query = f"""
+                DELETE FROM {schema}.Son
                     WHERE id_freesound = %(id_freesound)s;
-                    """,
-                    {"schema": schema, "id_freesound": id_freesound},
+                """
+
+                cursor.execute(
+                    query,
+                    {"id_freesound": id_freesound},
                 )
 
     def consulter_sons(self, schema) -> list["Son"]:
-        with DBConnection().connection as connection:
+        with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
-                cursor.execute(
-                    """
-                    SELECT id_freesound, nom, description, duree
-                    FROM %(schema)s.Son;
-                    """
-                )
+                query = f""""
+                 SELECT id_freesound, nom, description, duree
+                    FROM {schema}.Son;
+                """
+                cursor.execute(query)
                 res = cursor.fetchall()
 
                 if not res:
@@ -83,14 +85,15 @@ class SonDAO:
         return sons
 
     def rechercher_par_id_sons(self, id_freesound, schema):
-        with DBConnection().connection as connection:
+        with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
-                cursor.execute(
-                    """
-                    SELECT id_freesound, nom, description, duree
-                    FROM %(schema)s.Son
+                query = f"""
+                SELECT id_freesound, nom, description, duree
+                    FROM {schema}.Son
                     WHERE id_freesound = %(id_freesound)s;
-                    """,
+                """
+                cursor.execute(
+                    query,
                     {"id_freesound": id_freesound},
                 )
                 res = cursor.fetchone()

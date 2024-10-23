@@ -25,16 +25,16 @@ class SDDAO(metaclass=Singleton):
             return None
 
         try:
-            with DBConnection() as conn:
+            with DBConnection(schema=schema) as conn:
                 with conn.cursor() as cursor:
-                    cursor.execute(
-                        """
-                        INSERT INTO %(schema)s.SoundDeck(nom, description, date_creation)
+                    query = f"""
+                     INSERT INTO {schema}.SoundDeck(nom, description, date_creation)
                         VALUES (%(nom)s, %(description)s, %(date_creation)s)
                         RETURNING id_sd;
-                        """,
+                    """
+                    cursor.execute(
+                        query,
                         {
-                            "schema": schema,
                             "nom": sd.nom,
                             "description": sd.description,
                             "date_creation": sd.date_creation,
@@ -65,16 +65,16 @@ class SDDAO(metaclass=Singleton):
             return None
 
         try:
-            with DBConnection() as conn:
+            with DBConnection(schema=schema) as conn:
                 with conn.cursor() as cursor:
-                    cursor.execute(
-                        """
-                        UPDATE %(schema)s.SoundDeck
+                    query = f"""
+                    UPDATE {schema}.SoundDeck
                         SET nom = %(nom)s, description = %(description)s, date_creation = %(date_creation)s
                         WHERE id_sd = %(id_sd)s;
-                        """,
+                    """
+                    cursor.execute(
+                        query,
                         {
-                            "schema": schema,
                             "nom": sd.nom,
                             "description": sd.description,
                             "date_creation": sd.date_creation,
@@ -105,14 +105,15 @@ class SDDAO(metaclass=Singleton):
             return False
 
         try:
-            with DBConnection() as conn:
+            with DBConnection(schema=schema) as conn:
                 with conn.cursor() as cursor:
-                    cursor.execute(
-                        """
-                        DELETE FROM %(schema)s.SoundDeck
+                    query = f"""
+                     DELETE FROM {schema}.SoundDeck
                         WHERE id_sd = %(id_sd)s;
-                        """,
-                        {"schema": schema, "id_sd": id_sd},
+                    """
+                    cursor.execute(
+                        query,
+                        {"id_sd": id_sd},
                     )
                     return cursor.rowcount > 0
         except Exception as e:
@@ -129,14 +130,14 @@ class SDDAO(metaclass=Singleton):
             Une liste d'objets SD contenant les informations des sound-decks.
         """
         try:
-            with DBConnection() as conn:
+            with DBConnection(schema=schema) as conn:
                 with conn.cursor() as cursor:
-                    cursor.execute(
-                        """
-                        SELECT id_sd, nom, description, date_creation
-                        FROM %(schema)s.SoundDeck;
-                        """
-                    )
+                    query = f"""
+                    SELECT id_sd, nom, description, date_creation
+                        FROM {schema}.SoundDeck;
+                    """
+
+                    cursor.execute(query)
                     res = cursor.fetchall()
 
                     if not res:
@@ -174,16 +175,19 @@ class SDDAO(metaclass=Singleton):
             return None
 
         try:
-            with DBConnection() as conn:
+            with DBConnection(schema=schema) as conn:
                 with conn.cursor() as cursor:
-                    cursor.execute(
-                        """
-                        SELECT id_sd, nom, description, date_creation
-                        FROM %(schema)s.SoundDeck
+                    query = f"""
+                    SELECT id_sd, nom, description, date_creation
+                        FROM {schema}.SoundDeck
                         WHERE id_sd = %(id_sd)s;
-                        """,
+                    """
+
+                    cursor.execute(
+                        query,
                         {"id_sd": id_sd},
                     )
+
                     res = cursor.fetchone()
                     if res is None:
                         return None

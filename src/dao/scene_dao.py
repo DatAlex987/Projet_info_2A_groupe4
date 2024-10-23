@@ -55,7 +55,7 @@ class SceneDAO:
                 """
                 cursor.execute(
                     query,
-                    {"schema": schema, "id_scene": id_scene},
+                    {"id_scene": id_scene},
                 )
 
     def consulter_scenes(self, schema):
