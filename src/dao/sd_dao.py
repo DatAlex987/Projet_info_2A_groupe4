@@ -1,12 +1,13 @@
 from utils.singleton import Singleton
 from dao.db_connection import DBConnection
 from business_object.sd import SD
+import datetime
 
 
 class SDDAO(metaclass=Singleton):
     """Implémente les méthodes du CRUD pour accéder à la base de données des sound-decks"""
 
-    def ajouter_sd(self, sd: SD) -> SD:
+    def ajouter_sd(self, sd: SD, schema) -> SD:
         """
         Ajoute un nouveau sound-deck à la base de données.
 
@@ -25,14 +26,15 @@ class SDDAO(metaclass=Singleton):
             return None
 
         try:
-            with DBConnection() as conn:
+            with DBConnection(schema=schema).connection as conn:
                 with conn.cursor() as cursor:
-                    cursor.execute(
-                        """
-                        INSERT INTO ProjetInfo.SoundDeck(nom, description, date_creation)
+                    query = f"""
+                     INSERT INTO {schema}.SoundDeck(nom, description, date_creation)
                         VALUES (%(nom)s, %(description)s, %(date_creation)s)
                         RETURNING id_sd;
-                        """,
+                    """
+                    cursor.execute(
+                        query,
                         {
                             "nom": sd.nom,
                             "description": sd.description,
@@ -45,7 +47,7 @@ class SDDAO(metaclass=Singleton):
             print(f"Erreur lors de l'ajout du sound-deck : {e}")
             return None
 
-    def modifier_sd(self, sd: SD) -> SD:
+    def modifier_sd(self, sd: SD, schema) -> SD:
         """
         Modifie les informations d'un sound-deck existant.
 
@@ -64,15 +66,16 @@ class SDDAO(metaclass=Singleton):
             return None
 
         try:
-            with DBConnection() as conn:
+            with DBConnection(schema=schema).connection as conn:
                 with conn.cursor() as cursor:
-                    cursor.execute(
-                        """
-                        UPDATE ProjetInfo.SoundDeck
-                        SET nom = %(nom)s, description = %(description)s,
-                        date_creation = %(date_creation)s
+
+                    query = f"""
+                    UPDATE {schema}.SoundDeck
+                        SET nom = %(nom)s, description = %(description)s, date_creation = %(date_creation)s
                         WHERE id_sd = %(id_sd)s;
-                        """,
+                    """
+                    cursor.execute(
+                        query,
                         {
                             "nom": sd.nom,
                             "description": sd.description,
@@ -85,7 +88,7 @@ class SDDAO(metaclass=Singleton):
             print(f"Erreur lors de la modification du sound-deck avec ID {sd.id_sd} : {e}")
             return None
 
-    def supprimer_sd(self, id_sd: int) -> bool:
+    def supprimer_sd(self, id_sd: int, schema) -> bool:
         """
         Supprime un sound-deck par son ID.
 
@@ -104,13 +107,14 @@ class SDDAO(metaclass=Singleton):
             return False
 
         try:
-            with DBConnection() as conn:
+            with DBConnection(schema=schema).connection as conn:
                 with conn.cursor() as cursor:
-                    cursor.execute(
-                        """
-                        DELETE FROM ProjetInfo.SoundDeck
+                    query = f"""
+                     DELETE FROM {schema}.SoundDeck
                         WHERE id_sd = %(id_sd)s;
-                        """,
+                    """
+                    cursor.execute(
+                        query,
                         {"id_sd": id_sd},
                     )
                     return cursor.rowcount > 0
@@ -118,7 +122,7 @@ class SDDAO(metaclass=Singleton):
             print(f"Erreur lors de la suppression du sound-deck avec ID {id_sd} : {e}")
             return False
 
-    def consulter_sds(self) -> list:
+    def consulter_sds(self, schema) -> list:
         """
         Récupère la liste de tous les sound-decks dans la base de données.
 
@@ -128,14 +132,14 @@ class SDDAO(metaclass=Singleton):
             Une liste d'objets SD contenant les informations des sound-decks.
         """
         try:
-            with DBConnection() as conn:
+            with DBConnection(schema=schema).connection as conn:
                 with conn.cursor() as cursor:
-                    cursor.execute(
-                        """
-                        SELECT id_sd, nom, description, date_creation
-                        FROM ProjetInfo.SoundDeck;
-                        """
-                    )
+                    query = f"""
+                    SELECT id_sd, nom, description, date_creation
+                        FROM {schema}.SoundDeck;
+                    """
+
+                    cursor.execute(query)
                     res = cursor.fetchall()
 
                     if not res:
@@ -154,7 +158,7 @@ class SDDAO(metaclass=Singleton):
             print(f"Erreur lors de la récupération des sound-decks : {e}")
             return []
 
-    def rechercher_par_id_sd(self, id_sd: int) -> SD:
+    def rechercher_par_id_sd(self, id_sd: int, schema) -> SD:
         """
         Recherche un sound-deck dans la base de données par son ID.
 
@@ -174,16 +178,19 @@ class SDDAO(metaclass=Singleton):
             return None
 
         try:
-            with DBConnection() as conn:
+            with DBConnection(schema=schema).connection as conn:
                 with conn.cursor() as cursor:
-                    cursor.execute(
-                        """
-                        SELECT id_sd, nom, description, date_creation
-                        FROM ProjetInfo.SoundDeck
+                    query = f"""
+                    SELECT id_sd, nom, description, date_creation
+                        FROM {schema}.SoundDeck
                         WHERE id_sd = %(id_sd)s;
-                        """,
+                    """
+
+                    cursor.execute(
+                        query,
                         {"id_sd": id_sd},
                     )
+
                     res = cursor.fetchone()
                     if res is None:
                         return None
@@ -216,6 +223,6 @@ class SDDAO(metaclass=Singleton):
             return False
         if not isinstance(sd.description, str):
             return False
-        if not isinstance(sd.date_creation, str) or not sd.date_creation:
+        if not isinstance(sd.date_creation, datetime.date) or not sd.date_creation:
             return False
         return True

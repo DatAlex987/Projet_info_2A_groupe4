@@ -33,6 +33,7 @@ class UserDAO(metaclass=Singleton):
                 cursor.execute(
                     query,
                     {
+                        "schema": schema,
                         "id_user": user.id_user,
                         "mdp_hashe": user.mot_de_passe_hash,
                         "date_naissance": user.date_naissance.strftime("%Y-%m-%d"),
@@ -43,7 +44,11 @@ class UserDAO(metaclass=Singleton):
                 res = cursor.fetchone()
         return res["id_user"] if res else None
 
+<<<<<<< HEAD
     def supprimer_user(self, id_user: int, schema: str) -> bool:
+=======
+    def supprimer_user(self, id_user: int, schema) -> bool:
+>>>>>>> 7deb7d7681ffcb71e97a441c852f5eed7665dd0e
         """
         Supprime un utilisateur par son ID.
 
@@ -62,12 +67,21 @@ class UserDAO(metaclass=Singleton):
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
                 cursor.execute(
+<<<<<<< HEAD
                     f"DELETE FROM {schema}.Utilisateur WHERE id_user = %(id_user)s;",
                     {"id_user": id_user},
                 )
                 return cursor.rowcount > 0
 
     def consulter_users(self, schema: str) -> list:
+=======
+                    "DELETE FROM %(schema)s.Utilisateur WHERE id_user = %(id_user)s;",
+                    {"schema": schema, "id_user": id_user},
+                )
+                return cursor.rowcount > 0
+
+    def consulter_users(self, schema) -> list:
+>>>>>>> 7deb7d7681ffcb71e97a441c852f5eed7665dd0e
         """
         Récupère la liste de tous les utilisateurs dans la base de données.
 
@@ -83,7 +97,9 @@ class UserDAO(metaclass=Singleton):
         """
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
+
                 cursor.execute(f"SELECT * FROM {schema}.Utilisateur;")
+
                 users = cursor.fetchall()
                 if users:
                     for user in users:
@@ -92,7 +108,10 @@ class UserDAO(metaclass=Singleton):
                         )
                 return users if users else []
 
-    def rechercher_par_id_user(self, id_user: int, schema: str) -> User:
+
+
+    def rechercher_par_id_user(self, id_user: int, schema) -> dict:
+
         """
         Recherche un utilisateur dans la base de données par son ID.
 
@@ -114,8 +133,10 @@ class UserDAO(metaclass=Singleton):
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
                 cursor.execute(
+
                     f"SELECT * FROM {schema}.Utilisateur WHERE id_user = %(id_user)s;",
                     {"id_user": id_user},
+
                 )
                 user_data = cursor.fetchone()
                 if user_data:
@@ -126,6 +147,7 @@ class UserDAO(metaclass=Singleton):
                     return user_data
                 return None
 
+<<<<<<< HEAD
     # ###"def ajouter_sounddeck(self, user: User, nom: str, schema) -> None:
     #     """
     #     Ajoute un sounddeck pour un utilisateur.
@@ -147,10 +169,7 @@ class UserDAO(metaclass=Singleton):
     #     """
     #     Récupère tous les sounddecks d'un utilisateur.
 
-    #     Parameters
-    #     ----------
-    #     user : User
-    #         Instance de la classe User pour laquelle récupérer les sounddecks.
+
 
     #     Returns
     #     -------
@@ -163,12 +182,14 @@ class UserDAO(metaclass=Singleton):
     #     """
     #     Supprime un sounddeck d'un utilisateur.
 
+
     #     Parameters
     #     ----------
     #     user : User
     #         Instance de la classe User à partir de laquelle supprimer le sounddeck.
     #     nom : str
     #         Le nom du sounddeck à supprimer.
+
 
     #     Returns
     #     -------
@@ -182,3 +203,4 @@ class UserDAO(metaclass=Singleton):
     #     else:
     #         print(f"Le sounddeck '{nom}' n'existe pas pour l'utilisateur {user.id_user}.")
     #         return False
+

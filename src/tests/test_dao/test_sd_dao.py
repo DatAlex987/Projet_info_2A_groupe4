@@ -1,164 +1,165 @@
-import os
 import pytest
-from unittest.mock import patch
-from utils.reset_database import ResetDatabase
-from utils.securite import hash_password
-
-from dao.user_dao import UserDAO
-from business_object.user import User
+from dao.sd_dao import SDDAO
+from business_object.sd import SD
+from dao.db_connection import DBConnection
+import datetime
 
 
-import os
-import pytest
-from unittest.mock import patch
-from utils.reset_database import ResetDatabase
-from utils.securite import hash_password
+def test_ajouter_sd_succes(sd_kwargs):
+    # GIVEN: A sd object to add and the test schema
+    schema = "SchemaTest"
+    sd_to_add = SD(**sd_kwargs)
 
-from dao.user_dao import UserDAO
-from business_object.user import User
+    # WHEN: Adding the sd to the database
+    sd_dao = SDDAO()
+    added_sd = sd_dao.ajouter_sd(sd_to_add, schema)
 
+    # THEN: The returned sd should have the correct ID, and the data should match
+    assert added_sd.id_sd == sd_kwargs["id_sd"]
+    assert added_sd.nom == sd_kwargs["nom"]
+    assert added_sd.scenes == sd_kwargs["scenes"]
+    assert added_sd.description == sd_kwargs["description"]
+    assert added_sd.date_creation == sd_kwargs["date_creation"]
 
-@pytest.fixture(scope="session", autouse=True)
-def setup_test_environment():
-    """Initialisation des données de test"""
-    with patch.dict(os.environ, {"SCHEMA": "ProjetInfo"}):
-        ResetDatabase().lancer(test_dao=True)
-        yield
+    # THEN: Verify the sd was added to the database by querying it
+    with DBConnection(schema=schema).connection as connection:
+        with connection.cursor() as cursor:
+            query = f"SELECT * FROM {schema}.SoundDeck WHERE id_sd = %(id_sd)s"
+            cursor.execute(
+                query,
+                {"id_sd": added_sd.id_sd},
+            )
+            result = cursor.fetchone()
 
+            assert result is not None
+            assert result["id_sd"] == int(sd_kwargs["id_sd"])
+            assert result["nom"] == sd_kwargs["nom"]
+            assert result["description"] == sd_kwargs["description"]
+            assert result["date_creation"] == sd_kwargs["date_creation"]
 
-def test_ajouter_user_succes():
-    """Création d'un utilisateur réussie"""
-
-    # GIVEN
-    user = User(
-        nom="Bocquet",
-        prenom="Noémie",
-        date_naissance=date(2003, 8, 8),
-        id_user="Noemie",
-        mdp="password",
-        SD_possedes=[],
-    )
-
-    # WHEN
-    user_id = UserDAO().ajouter_user(user)
-
-    # THEN
-    assert user_id is not None
-    assert isinstance(user_id, int)
-
-
-def test_ajouter_user_echec():
-    """Création d'un utilisateur échouée"""
-
-    # GIVEN
-    user = User(
-        nom="Bocquet",
-        prenom="Noémie",
-        date_naissance=date(2003, 8, 8),
-        id_user="",
-        mdp="password",
-        SD_possedes=[],
-    )
-
-    # WHEN
-    user_id = UserDAO().ajouter_user(user)
-
-    # THEN
-    assert user_id is None
+    # (Optional) Clean up the test data
+    with DBConnection(schema=schema).connection as connection:
+        with connection.cursor() as cursor:
+            query = f"DELETE FROM {schema}.SoundDeck WHERE id_sd = %(id_sd)s"
+            cursor.execute(
+                query,
+                {"id_sd": added_sd.id_sd},
+            )
 
 
-def test_rechercher_par_id_user_existant():
-    """Recherche par ID d'un utilisateur existant"""
+@pytest.mark.parametrize(
+    "new_nom, new_desc",
+    [
+        ("NouveauNom", "NouvelleDescription"),
+    ],
+)
+def test_modifier_sd_succes(sd_kwargs, new_nom, new_desc):
+    # GIVEN: A sd object already added in the test schema the test schema
+    schema = "SchemaTest"
+    sd_to_add = SD(**sd_kwargs)
+    sd_dao = SDDAO()
+    added_sd = sd_dao.ajouter_sd(sd_to_add, schema)
+    # WHEN: Adding the sdmodified to the database
+    added_sd.nom = new_nom
+    added_sd.description = new_desc
+    modified_added_sd = sd_dao.modifier_sd(added_sd, schema)
+    # THEN: The returned scene should have the correct ID, and the data should match
+    assert modified_added_sd.id_sd == sd_kwargs["id_sd"]
+    assert modified_added_sd.nom == sd_kwargs["nom"]
+    assert modified_added_sd.scenes == sd_kwargs["scenes"]
+    assert modified_added_sd.description == sd_kwargs["description"]
+    assert modified_added_sd.date_creation == sd_kwargs["date_creation"]
 
-    # GIVEN
-    user = User(
-        nom="Bocquet",
-        prenom="Noémie",
-        date_naissance=date(2003, 8, 8),
-        id_user="Noemie",
-        mdp="password",
-        SD_possedes=[],
-    )
-    user_id = UserDAO().ajouter_user(user)
+    # THEN: Verify the sd correctly modified in the database by querying it
+    with DBConnection(schema=schema).connection as connection:
+        with connection.cursor() as cursor:
+            query = f"SELECT * FROM {schema}.SoundDeck WHERE id_sd = %(id_sd)s"
+            cursor.execute(
+                query,
+                {"id_sd": modified_added_sd.id_sd},
+            )
+            result = cursor.fetchone()
 
-    # WHEN
-    found_user = UserDAO().rechercher_par_id_user(user_id)
+            assert result is not None
+            assert result["id_sd"] == int(modified_added_sd.id_sd)
+            assert result["nom"] == modified_added_sd.nom
+            assert result["description"] == modified_added_sd.description
+            assert result["date_creation"] == modified_added_sd.date_creation
 
-    # THEN
-    assert found_user is not None
-
-
-def test_rechercher_par_id_user_non_existant():
-    """Recherche par ID d'un utilisateur n'existant pas"""
-
-    # GIVEN
-    id_user = 999999
-
-    # WHEN
-    user = UserDAO().rechercher_par_id_user(id_user)
-
-    # THEN
-    assert user is None
-
-
-def test_supprimer_user_succes():
-    """Suppression d'un utilisateur réussie"""
-
-    # GIVEN
-    user = User(
-        nom="Bocquet",
-        prenom="Noémie",
-        date_naissance=date(2003, 8, 8),
-        id_user="Noemie",
-        mdp="password",
-        SD_possedes=[],
-    )
-    user_id = UserDAO().ajouter_user(user)
-
-    # WHEN
-    suppression_reussie = UserDAO().supprimer_user(user_id)
-
-    # THEN
-    assert suppression_reussie
+    # (Optional) Clean up the test data
+    with DBConnection(schema=schema).connection as connection:
+        with connection.cursor() as cursor:
+            query = f"DELETE FROM {schema}.SoundDeck WHERE id_sd = %(id_sd)s"
+            cursor.execute(
+                query,
+                {"id_sd": modified_added_sd.id_sd},
+            )
 
 
-def test_supprimer_user_echec():
-    """Suppression d'un utilisateur échouée (ID inconnu)"""
+def test_supprimer_sd_succes(sd_kwargs):
+    # GIVEN: A Sd object already added in the test schema the test schema
+    schema = "SchemaTest"
+    sd_to_add = SD(**sd_kwargs)
+    sd_dao = SDDAO()
+    added_sd = sd_dao.ajouter_sd(sd_to_add, schema)
+    # WHEN: Deleting the sd from the database
+    sd_dao.supprimer_sd(added_sd.id_sd, schema)
 
-    # GIVEN
-    user_id = 999999  # ID qui n'existe pas
+    # THEN: Verify the sd correctly removed from the database by querying it
+    with DBConnection(schema=schema).connection as connection:
+        with connection.cursor() as cursor:
+            query = f"SELECT * FROM {schema}.SoundDeck WHERE id_sd = %(id_sd)s"
+            cursor.execute(
+                query,
+                {"id_sd": added_sd.id_sd},
+            )
+            result = cursor.fetchall()
 
-    # WHEN
-    suppression_reussie = UserDAO().supprimer_user(user_id)
-
-    # THEN
-    assert not suppression_reussie
-
-
-def test_rechercher_par_id_user_existant():
-    """Recherche par ID d'un utilisateur existant"""
-
-    # GIVEN
-    user = User(
-        nom="Bocquet",
-        prenom="Noémie",
-        date_naissance=date(2003, 8, 8),
-        id_user="Noemie",
-        mdp="password",
-        SD_possedes=[],
-    )
-    user_id = UserDAO().ajouter_user(user)
-
-    # WHEN
-    found_user = UserDAO().rechercher_par_id_user(user_id)
-
-    # THEN
-    assert found_user is not None
-    assert found_user.nom == user.nom
-    assert found_user.prenom == user.prenom
-    assert found_user.date_naissance == user.date_naissance
-    assert found_user.id_user == user.id_user
+            assert len(result) == 0
 
 
-if __name__ == "__main__":
-    pytest.main([__file__])
+def test_consulter_sds_succes(sd_kwargs):
+    # GIVEN: A sd already added in the test schema
+    schema = "SchemaTest"
+    sd1_to_add = SD(**sd_kwargs)
+    sd_dao = SDDAO()
+    sd_dao.ajouter_sd(sd1_to_add, schema)
+
+    # WHEN: Querying the sds in the database
+    all_found_sds = sd_dao.consulter_sds(schema)
+    # THEN: The returned sd should have the correct ID, and the data should match
+    assert len(all_found_sds) == 1
+    # (Optional) Clean up the test data
+    for found_sd in all_found_sds:
+        with DBConnection(schema=schema).connection as connection:
+            with connection.cursor() as cursor:
+                query = f"DELETE FROM {schema}.Scene WHERE id_sd = %(id_sd)s"
+                cursor.execute(
+                    query,
+                    {"id_sd": found_sd.id_sd},
+                )
+
+
+def test_rechercher_par_id_sd_succes(sd_kwargs):
+    # GIVEN: A Sd object already added in the test schema the test schema
+    schema = "SchemaTest"
+    sd_to_add = SD(**sd_kwargs)
+    sd_dao = SDDAO()
+    added_sd = sd_dao.ajouter_sd(sd_to_add, schema)
+    # WHEN: Searching for the sd id in the database
+    found_sd = sd_dao.rechercher_par_id_sd(added_sd.id_scene, schema)
+    # THEN: The returned sd should have the correct ID, and the data should match
+    assert found_sd.id_sd == str(added_sd.id_sd)
+    assert found_sd.nom == added_sd.nom
+    assert found_sd.description == added_sd.description
+    assert found_sd.date_creation == added_sd.date_creation
+    assert found_sd.scenes == added_sd.scenes
+
+    # (Optional) Clean up the test data
+    with DBConnection(schema=schema).connection as connection:
+        with connection.cursor() as cursor:
+            query = f"DELETE FROM {schema}.SoundDeck WHERE id_sd = %(id_sd)s"
+            cursor.execute(
+                query,
+                {"id_sd": added_sd.id_sd},
+            )

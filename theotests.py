@@ -13,7 +13,13 @@ def test_db_connection():
     except Exception as e:
         print(f"Error: {e}")
 
+<<<<<<< HEAD
 
 test_db_connection()
 
 python -m pytest src/tests/
+=======
+print(S)
+print(S.modifier_nom(12))
+print(ord("A"))
+>>>>>>> 7deb7d7681ffcb71e97a441c852f5eed7665dd0e
