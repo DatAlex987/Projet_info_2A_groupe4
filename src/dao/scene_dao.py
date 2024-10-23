@@ -9,14 +9,14 @@ class SceneDAO:
     def ajouter_scene(self, scene, schema):
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:
-                cursor.execute(
-                    """
-                    INSERT INTO %(schema)s.Scene(id_scene, nom, description, date_creation)
+                query = f"""
+                INSERT INTO {schema}.Scene(id_scene, nom, description, date_creation)
                     VALUES (%(id_scene)s, %(nom)s, %(description)s, %(date_creation)s)
                     RETURNING id_scene;
-                    """,
+                """
+                cursor.execute(
+                    query,
                     {
-                        "schema": schema,
                         "id_scene": scene.id_scene,
                         "nom": scene.nom,
                         "description": scene.description,
@@ -29,12 +29,13 @@ class SceneDAO:
     def modifier_scene(self, scene, schema):
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:
-                cursor.execute(
-                    """
-                    UPDATE %(schema)s.Scene
+                query = f"""
+                UPDATE {schema}.Scene
                     SET nom = %(nom)s, description = %(description)s, date_creation = %(date_creation)s
                     WHERE id_scene = %(id_scene)s;
-                    """,
+                """
+                cursor.execute(
+                    query,
                     {
                         "schema": schema,
                         "nom": scene.nom,
@@ -48,24 +49,23 @@ class SceneDAO:
     def supprimer_scene(self, id_scene, schema):
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:
-                cursor.execute(
-                    """
-                    DELETE FROM %(schema)s.Scene
+                query = f"""
+                DELETE FROM {schema}.Scene
                     WHERE id_scene = %(id_scene)s;
-                    """,
+                """
+                cursor.execute(
+                    query,
                     {"schema": schema, "id_scene": id_scene},
                 )
 
-    def consulter_scenes(self, scene, schema):
+    def consulter_scenes(self, schema):
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:
-                cursor.execute(
-                    """
-                    SELECT id_scene, nom, description, date_creation
-                    FROM %(schema)s.Scene;
-                    """,
-                    {"schema": schema, "id_scene": id_scene},
-                )
+                query = f"""
+                SELECT id_scene, nom, description, date_creation
+                    FROM {schema}.Scene;
+                """
+                cursor.execute(query)
                 res = cursor.fetchall()
 
                 if not res:
@@ -87,13 +87,14 @@ class SceneDAO:
     def rechercher_par_id_scenes(self, id_scene, schema):
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:
-                cursor.execute(
-                    """
-                    SELECT id_scene, nom, description, date_creation
-                    FROM %(schema)s.Scene
+                query = f"""
+                SELECT id_scene, nom, description, date_creation
+                    FROM {schema}.Scene
                     WHERE id_scene = %(id_scene)s;
-                    """,
-                    {"schema": schema, "id_scene": id_scene},
+                """
+                cursor.execute(
+                    query,
+                    {"id_scene": id_scene},
                 )
                 res = cursor.fetchone()
                 if res is None:
