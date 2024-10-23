@@ -1,4 +1,3 @@
-from utils.singleton import Singleton
 from dao.db_connection import DBConnection
 from business_object.scene import Scene
 
@@ -31,7 +30,8 @@ class SceneDAO:
             with connection.cursor() as cursor:
                 query = f"""
                 UPDATE {schema}.Scene
-                    SET nom = %(nom)s, description = %(description)s, date_creation = %(date_creation)s
+                    SET nom = %(nom)s, description = %(description)s,
+                    date_creation = %(date_creation)s
                     WHERE id_scene = %(id_scene)s;
                 """
                 cursor.execute(
