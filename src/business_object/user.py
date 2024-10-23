@@ -1,4 +1,3 @@
-import os
 import hashlib
 from business_object.personne import Personne
 import datetime
@@ -27,7 +26,8 @@ class User(Personne):
 
     def __init__(self, nom, prenom, date_naissance, id_user, mdp, SD_possedes):
         """
-        Initialise un nouvel utilisateur avec les attributs de la classe Personne et ceux propre à un utilisateur.
+        Initialise un nouvel utilisateur avec les attributs de la classe
+        Personne et ceux propre à un utilisateur.
 
         Parameters
         ----------

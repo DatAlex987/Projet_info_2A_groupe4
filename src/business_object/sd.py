@@ -1,5 +1,4 @@
 from business_object.scene import Scene
-from business_object.user import User
 import datetime
 
 

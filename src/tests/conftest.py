@@ -1,17 +1,8 @@
-from business_object.personne import Personne
-from business_object.user import User
-from business_object.son import Son
 from business_object.scene import Scene
-from business_object.sd import SD
 from business_object.son_aleatoire import Son_Aleatoire
 from business_object.son_manuel import Son_Manuel
 from business_object.son_continu import Son_Continu
 import pytest
-from business_object.son_aleatoire import Son_Aleatoire
-from business_object.son_continu import Son_Continu
-from business_object.son_manuel import Son_Manuel
-from business_object.user import User
-from business_object.scene import Scene
 from datetime import date
 from datetime import datetime
 
@@ -146,7 +137,6 @@ def scene1_kwargs(user1_kwargs, son_aleatoire1_kwargs, son_continu1_kwargs, son_
         "sons_aleatoires": [Son_Aleatoire(**son_aleatoire1_kwargs)],
         "sons_manuels": [Son_Manuel(**son_manuel1_kwargs)],
         "sons_continus": [Son_Continu(**son_continu1_kwargs)],
-        "auteur": User(**user1_kwargs),
         "date_creation": date(2024, 1, 1),
     }
 
@@ -160,7 +150,6 @@ def scene2_kwargs(user1_kwargs, son_aleatoire2_kwargs, son_continu2_kwargs, son_
         "sons_aleatoires": [Son_Aleatoire(**son_aleatoire2_kwargs)],
         "sons_manuels": [Son_Manuel(**son_manuel2_kwargs)],
         "sons_continus": [Son_Continu(**son_continu2_kwargs)],
-        "auteur": User(**user1_kwargs),
         "date_creation": date(2023, 10, 9),
     }
 

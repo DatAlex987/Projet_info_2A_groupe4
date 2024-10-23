@@ -107,6 +107,9 @@ class UserDAO(metaclass=Singleton):
         -------
         User
             Une instance de la classe User contenant les informations de l'utilisateur, ou None si aucun utilisateur trouvé.
+        dict
+            Un dictionnaire contenant les informations de l'utilisateur,
+            ou None si aucun utilisateur trouvé.
         """
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
