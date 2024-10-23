@@ -7,23 +7,22 @@ from business_object.user import User
 import datetime
 
 ResetDatabase().lancer()
-print(
-    UserDAO.ajouter_user(
-        User(
-            pseudo="PseudoEXEMPLE",
-            mdp_hashe="Mdpasse!123",
-            age=99,
-            nom="TheOne",
-            prenom="Neo",
-        )
-    )
+user_dao = UserDAO()
+U = User(
+    mdp="Mdpasse!123",
+    date_naissance=datetime.date(1990, 2, 2),
+    nom="TheOne",
+    prenom="Neo",
+    SD_possedes=[],
+    id_user="123456",
 )
+print(user_dao.ajouter_user(U))
 son_dao = SonDAO()
 Sound = Son(
-    "moteur",
-    "bruit d'un moteur V8",
-    datetime.time(0, 3, 52),
-    "481395",
-    ["voiture", "moteur", "puissance"],
+    nom="moteur",
+    description="bruit d'un moteur V8",
+    duree=datetime.time(0, 3, 52),
+    id_freesound="481395",
+    tags=["voiture", "moteur", "puissance"],
 )
 print(son_dao.ajouter_son(Sound))

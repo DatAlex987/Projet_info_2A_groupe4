@@ -24,11 +24,11 @@ class UserDAO(metaclass=Singleton):
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:
                 cursor.execute(
-                    "INSERT INTO ProjetInfo.User(id_user, mdp_hash, date_naissance, nom, prenom) VALUES"
-                    "(%(id_user)s, %(mdp_hash)s, %(date_naissance)s, %(nom)s, %(prenom)s) RETURNING id_user;",
+                    "INSERT INTO ProjetInfo.utilisateur(id_user, mdp_hashe, date_naissance, nom, prenom) VALUES"
+                    "(%(id_user)s, %(mdp_hashe)s, %(date_naissance)s, %(nom)s, %(prenom)s) RETURNING id_user;",
                     {
                         "id_user": user.id_user,
-                        "mdp_hash": user.mot_de_passe_hash,
+                        "mdp_hashe": user.mot_de_passe_hash,
                         "date_naissance": user.date_naissance,
                         "nom": user.nom,
                         "prenom": user.prenom,
@@ -54,7 +54,7 @@ class UserDAO(metaclass=Singleton):
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:
                 cursor.execute(
-                    "DELETE FROM ProjetInfo.User WHERE id_user = %(id_user)s;",
+                    "DELETE FROM ProjetInfo.Utilisateur WHERE id_user = %(id_user)s;",
                     {"id_user": id_user},
                 )
                 return cursor.rowcount > 0
@@ -70,7 +70,7 @@ class UserDAO(metaclass=Singleton):
         """
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:
-                cursor.execute("SELECT * FROM ProjetInfo.User;")
+                cursor.execute("SELECT * FROM ProjetInfo.Utilisateur;")
                 users = cursor.fetchall()
                 return users if users else []
 
@@ -91,7 +91,7 @@ class UserDAO(metaclass=Singleton):
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:
                 cursor.execute(
-                    "SELECT * FROM ProjetInfo.User WHERE id_user = %(id_user)s;",
+                    "SELECT * FROM ProjetInfo.Utilisateur WHERE id_user = %(id_user)s;",
                     {"id_user": id_user},
                 )
                 user = cursor.fetchone()

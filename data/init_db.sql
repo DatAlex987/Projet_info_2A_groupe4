@@ -6,12 +6,11 @@ CREATE SCHEMA ProjetInfo;
 
 DROP TABLE IF EXISTS ProjetInfo.Utilisateur CASCADE ;
 CREATE TABLE ProjetInfo.Utilisateur (
-    id_user      SERIAL PRIMARY KEY,
-    pseudo       VARCHAR(30) UNIQUE,
-    mdp_hashe    VARCHAR(256),
-    age          INTEGER,
-    nom          VARCHAR(30),
-    prenom       VARCHAR(30)
+    id_user        SERIAL PRIMARY KEY,
+    mdp_hashe      VARCHAR(256),
+    date_naissance VARCHAR(10),
+    nom            VARCHAR(30),
+    prenom         VARCHAR(30)
 
 );
 
@@ -33,10 +32,10 @@ CREATE TABLE ProjetInfo.Scene (
 
 DROP TABLE IF EXISTS ProjetInfo.Son CASCADE ;
 CREATE TABLE ProjetInfo.Son (
-    id_son INTEGER PRIMARY KEY,
+    id_freesound INTEGER PRIMARY KEY,
     nom TEXT,
     description TEXT,
-    duree INTEGER
+    duree TIME
 );
 
 DROP TABLE IF EXISTS ProjetInfo.Tag CASCADE ;
@@ -68,19 +67,19 @@ CREATE TABLE ProjetInfo.Sounddeck_Scene(
 DROP TABLE IF EXISTS ProjetInfo.Scene_Son CASCADE ;
 CREATE TABLE ProjetInfo.Scene_Son(
     id_scene INTEGER,
-    id_son INTEGER,
+    id_freesound INTEGER,
     type_param TEXT,
-    PRIMARY KEY (id_scene, id_son),
+    PRIMARY KEY (id_scene, id_freesound),
     FOREIGN KEY (id_scene) REFERENCES Scene(id_scene),
-    FOREIGN KEY (id_son) REFERENCES Son(id_son)
+    FOREIGN KEY (id_freesound) REFERENCES Son(id_freesound)
 );
 
 
 DROP TABLE IF EXISTS ProjetInfo.Son_Tag CASCADE ;
 CREATE TABLE  ProjetInfo.Son_Tag(
-    id_son INTEGER,
+    id_freesound INTEGER,
     nom_tag TEXT,
-    PRIMARY KEY (id_son, nom_tag),
-    FOREIGN KEY (id_son) REFERENCES Son(id_son),
+    PRIMARY KEY (id_freesound, nom_tag),
+    FOREIGN KEY (id_freesound) REFERENCES Son(id_freesound),
     FOREIGN KEY (nom_tag) REFERENCES Tag(nom_tag)
 );
