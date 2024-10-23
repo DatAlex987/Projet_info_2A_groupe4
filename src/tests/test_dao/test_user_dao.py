@@ -1,5 +1,6 @@
 from unittest.mock import MagicMock, patch
 import pytest
+import datetime
 from dao.user_dao import UserDAO
 from business_object.user import User
 
@@ -23,9 +24,9 @@ def test_ajouter_user(mock_db_connection):
     user = User(
         nom="Bocquet",
         prenom="Noémie",
-        date_naissance="2003-08-08",
+        date_naissance=datetime.date(2003, 8, 8),
         id_user="Noemie",
-        mdp="password",
+        mdp="passWord0@",
         SD_possedes=[],
     )
 

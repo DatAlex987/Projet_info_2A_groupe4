@@ -50,11 +50,12 @@ class Son:
         if not all(isinstance(t, str) for t in tags):
             raise TypeError("Les éléments de la liste des tags doivent etre des scènes.")
         if not isinstance(duree, datetime.timedelta):
-            raise TypeError("La durée doit etre une durée format datetime.time.")
+            raise TypeError("La durée doit etre une durée format datetime.timedelta.")
         if not isinstance(id_freesound, str):
             raise TypeError("L'identifiant freesound du son doit être une instance de string.")
 
     def JouerSon(self) -> None:
+        """Méthode globale pour charger puis jouer un son avec Pygame"""
         try:
             fichier_son = os.path.join(os.getenv("DOSSIER_SAUVEGARDE"), f"{self.id_freesound}.mp3")
             # Charger le son
