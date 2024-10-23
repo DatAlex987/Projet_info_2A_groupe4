@@ -6,7 +6,7 @@ from business_object.sd import SD
 class SDDAO(metaclass=Singleton):
     """Implémente les méthodes du CRUD pour accéder à la base de données des sound-decks"""
 
-    def ajouter_sd(self, sd: SD) -> SD:
+    def ajouter_sd(self, sd: SD, schema) -> SD:
         """
         Ajoute un nouveau sound-deck à la base de données.
 
@@ -29,11 +29,12 @@ class SDDAO(metaclass=Singleton):
                 with conn.cursor() as cursor:
                     cursor.execute(
                         """
-                        INSERT INTO ProjetInfo.SoundDeck(nom, description, date_creation)
+                        INSERT INTO %(schema)s.SoundDeck(nom, description, date_creation)
                         VALUES (%(nom)s, %(description)s, %(date_creation)s)
                         RETURNING id_sd;
                         """,
                         {
+                            "schema": schema,
                             "nom": sd.nom,
                             "description": sd.description,
                             "date_creation": sd.date_creation,
@@ -45,7 +46,7 @@ class SDDAO(metaclass=Singleton):
             print(f"Erreur lors de l'ajout du sound-deck : {e}")
             return None
 
-    def modifier_sd(self, sd: SD) -> SD:
+    def modifier_sd(self, sd: SD, schema) -> SD:
         """
         Modifie les informations d'un sound-deck existant.
 
@@ -68,11 +69,12 @@ class SDDAO(metaclass=Singleton):
                 with conn.cursor() as cursor:
                     cursor.execute(
                         """
-                        UPDATE ProjetInfo.SoundDeck
+                        UPDATE %(schema)s.SoundDeck
                         SET nom = %(nom)s, description = %(description)s, date_creation = %(date_creation)s
                         WHERE id_sd = %(id_sd)s;
                         """,
                         {
+                            "schema": schema,
                             "nom": sd.nom,
                             "description": sd.description,
                             "date_creation": sd.date_creation,
@@ -84,7 +86,7 @@ class SDDAO(metaclass=Singleton):
             print(f"Erreur lors de la modification du sound-deck avec ID {sd.id_sd} : {e}")
             return None
 
-    def supprimer_sd(self, id_sd: int) -> bool:
+    def supprimer_sd(self, id_sd: int, schema) -> bool:
         """
         Supprime un sound-deck par son ID.
 
@@ -107,17 +109,17 @@ class SDDAO(metaclass=Singleton):
                 with conn.cursor() as cursor:
                     cursor.execute(
                         """
-                        DELETE FROM ProjetInfo.SoundDeck
+                        DELETE FROM %(schema)s.SoundDeck
                         WHERE id_sd = %(id_sd)s;
                         """,
-                        {"id_sd": id_sd},
+                        {"schema": schema, "id_sd": id_sd},
                     )
                     return cursor.rowcount > 0
         except Exception as e:
             print(f"Erreur lors de la suppression du sound-deck avec ID {id_sd} : {e}")
             return False
 
-    def consulter_sds(self) -> list:
+    def consulter_sds(self, schema) -> list:
         """
         Récupère la liste de tous les sound-decks dans la base de données.
 
@@ -132,7 +134,7 @@ class SDDAO(metaclass=Singleton):
                     cursor.execute(
                         """
                         SELECT id_sd, nom, description, date_creation
-                        FROM ProjetInfo.SoundDeck;
+                        FROM %(schema)s.SoundDeck;
                         """
                     )
                     res = cursor.fetchall()
@@ -153,7 +155,7 @@ class SDDAO(metaclass=Singleton):
             print(f"Erreur lors de la récupération des sound-decks : {e}")
             return []
 
-    def rechercher_par_id_sd(self, id_sd: int) -> SD:
+    def rechercher_par_id_sd(self, id_sd: int, schema) -> SD:
         """
         Recherche un sound-deck dans la base de données par son ID.
 
@@ -177,7 +179,7 @@ class SDDAO(metaclass=Singleton):
                     cursor.execute(
                         """
                         SELECT id_sd, nom, description, date_creation
-                        FROM ProjetInfo.SoundDeck
+                        FROM %(schema)s.SoundDeck
                         WHERE id_sd = %(id_sd)s;
                         """,
                         {"id_sd": id_sd},
