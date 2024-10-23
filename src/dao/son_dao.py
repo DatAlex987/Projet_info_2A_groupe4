@@ -1,4 +1,3 @@
-from utils.singleton import Singleton
 from dao.db_connection import DBConnection
 from business_object.son import Son
 
