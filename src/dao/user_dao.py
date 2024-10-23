@@ -6,7 +6,11 @@ from business_object.user import User
 class UserDAO(metaclass=Singleton):
     """Implémente les méthodes du CRUD pour accéder à la base de données des utilisateurs."""
 
+<<<<<<< HEAD
     def ajouter_user(self, user: User, schema: str) -> int:
+=======
+    def ajouter_user(self, user: User, schema) -> int:
+>>>>>>> a509623f61239fccc8d7176a98f523035c11ae99
         """
         Ajoute un utilisateur dans la base de données.
 
@@ -22,12 +26,15 @@ class UserDAO(metaclass=Singleton):
         int
             L'ID de l'utilisateur ajouté.
         """
-        with DBConnection().connection as connection:
+        with DBConnection(schema="SchemaTest").connection as connection:
             with connection.cursor() as cursor:
-
+                query = f"""
+                INSERT INTO {schema}.utilisateur(id_user, mdp_hashe, date_naissance, nom, prenom)
+                VALUES (%(id_user)s, %(mdp_hashe)s, %(date_naissance)s, %(nom)s, %(prenom)s)
+                RETURNING id_user;
+                """
                 cursor.execute(
-                    f"INSERT INTO {schema}.utilisateur(id_user, mdp_hashe, date_naissance, nom, prenom) VALUES"
-                    "(%(id_user)s, %(mdp_hashe)s, %(date_naissance)s, %(nom)s, %(prenom)s) RETURNING id_user;",
+                    query,
                     {
                         "id_user": user.id_user,
                         "mdp_hashe": user.mot_de_passe_hash,
