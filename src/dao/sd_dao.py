@@ -68,6 +68,7 @@ class SDDAO(metaclass=Singleton):
         try:
             with DBConnection(schema=schema).connection as conn:
                 with conn.cursor() as cursor:
+
                     query = f"""
                     UPDATE {schema}.SoundDeck
                         SET nom = %(nom)s, description = %(description)s, date_creation = %(date_creation)s
@@ -169,7 +170,8 @@ class SDDAO(metaclass=Singleton):
         Returns
         -------
         SD
-            Un objet SD contenant les informations du sound-deck, ou None si aucun sound-deck trouvé.
+            Un objet SD contenant les informations du sound-deck, ou None
+            si aucun sound-deck trouvé.
         """
         if id_sd is None:
             print("ID sound-deck invalide fourni pour la recherche.")

@@ -18,3 +18,4 @@ S = Scene(
 
 print(S)
 print(S.modifier_nom(12))
+print(ord("A"))

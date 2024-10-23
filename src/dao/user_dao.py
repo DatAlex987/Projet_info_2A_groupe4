@@ -1,7 +1,6 @@
 from utils.singleton import Singleton
 from dao.db_connection import DBConnection
 from business_object.user import User
-from datetime import date
 
 
 class UserDAO(metaclass=Singleton):
@@ -91,7 +90,8 @@ class UserDAO(metaclass=Singleton):
         Returns
         -------
         dict
-            Un dictionnaire contenant les informations de l'utilisateur, ou None si aucun utilisateur trouvé.
+            Un dictionnaire contenant les informations de l'utilisateur,
+            ou None si aucun utilisateur trouvé.
         """
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:

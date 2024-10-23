@@ -1,7 +1,5 @@
 # from dao.db_connection import DBConnection
 from dao.user_dao import UserDAO
-from dao.son_dao import SonDAO
-from business_object.son import Son
 from utils.reset_database import ResetDatabase
 from business_object.user import User
 import datetime
@@ -17,13 +15,3 @@ U = User(
     id_user="123456",
 )
 print(user_dao.ajouter_user(U, schema="ProjetInfo"))
-"""
-son_dao = SonDAO()
-Sound = Son(
-    nom="moteur",
-    description="bruit d'un moteur V8",
-    duree=datetime.time(0, 3, 52),
-    id_freesound="481395",
-    tags=["voiture", "moteur", "puissance"],
-)
-print(son_dao.ajouter_son(Sound))"""

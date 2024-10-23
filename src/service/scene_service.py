@@ -1,8 +1,4 @@
-from tabulate import tabulate
-
 from utils.log_decorator import log
-from utils.securite import hash_password
-
 from business_object.scene import Scene
 from dao.scene_dao import SceneDAO
 

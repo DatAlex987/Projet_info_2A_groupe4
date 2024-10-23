@@ -2,7 +2,6 @@ import pytest
 from dao.scene_dao import SceneDAO
 from business_object.scene import Scene
 from dao.db_connection import DBConnection
-import datetime
 
 
 def test_ajouter_scene_succes(scene1_kwargs):
@@ -39,7 +38,7 @@ def test_ajouter_scene_succes(scene1_kwargs):
             assert result["description"] == scene1_kwargs["description"]
             assert result["date_creation"] == scene1_kwargs["date_creation"]
 
-    # (Optional) Clean up the test data
+    # Clean up the test data
     with DBConnection(schema=schema).connection as connection:
         with connection.cursor() as cursor:
             query = f"DELETE FROM {schema}.Scene WHERE id_scene = %(id_scene)s"
@@ -90,7 +89,7 @@ def test_modifier_scene_succes(scene1_kwargs, new_nom, new_desc):
             assert result["description"] == modified_added_scene.description
             assert result["date_creation"] == modified_added_scene.date_creation
 
-    # (Optional) Clean up the test data
+    # Clean up the test data
     with DBConnection(schema=schema).connection as connection:
         with connection.cursor() as cursor:
             query = f"DELETE FROM {schema}.Scene WHERE id_scene = %(id_scene)s"
@@ -101,7 +100,7 @@ def test_modifier_scene_succes(scene1_kwargs, new_nom, new_desc):
 
 
 def test_supprimer_scene_succes(scene1_kwargs):
-    # GIVEN: A Scene object already added in the test schema the test schema
+    # GIVEN: A Scene object already added in the test schema
     schema = "SchemaTest"
     scene_to_add = Scene(**scene1_kwargs)
     scene_dao = SceneDAO()
@@ -109,7 +108,7 @@ def test_supprimer_scene_succes(scene1_kwargs):
     # WHEN: Deleting the scene from the database
     scene_dao.supprimer_scene(added_scene.id_scene, schema)
 
-    # THEN: Verify the scene correctly removed from the database by querying it
+    # THEN: Verify the scene is correctly removed from the database by querying it
     with DBConnection(schema=schema).connection as connection:
         with connection.cursor() as cursor:
             query = f"SELECT * FROM {schema}.Scene WHERE id_scene = %(id_scene)s"
@@ -123,7 +122,7 @@ def test_supprimer_scene_succes(scene1_kwargs):
 
 
 def test_consulter_scenes_succes(scene1_kwargs, scene2_kwargs):
-    # GIVEN: A 2 scenes already added in the test schema
+    # GIVEN: 2 scenes already added in the test schema
     schema = "SchemaTest"
     scene1_to_add = Scene(**scene1_kwargs)
     scene2_to_add = Scene(**scene2_kwargs)
@@ -132,9 +131,9 @@ def test_consulter_scenes_succes(scene1_kwargs, scene2_kwargs):
     scene_dao.ajouter_scene(scene2_to_add, schema)
     # WHEN: Querying the scenes in the database
     all_found_scenes = scene_dao.consulter_scenes(schema)
-    # THEN: The returned scene should have the correct ID, and the data should match
+    # THEN: The returned list of scenes should have the correct length
     assert len(all_found_scenes) == 2
-    # (Optional) Clean up the test data
+    # Clean up the test data
     for found_scene in all_found_scenes:
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
@@ -162,7 +161,7 @@ def test_rechercher_par_id_scenes_succes(scene1_kwargs):
     assert found_scene.description == added_scene.description
     assert found_scene.date_creation == added_scene.date_creation
 
-    # (Optional) Clean up the test data
+    # Clean up the test data
     with DBConnection(schema=schema).connection as connection:
         with connection.cursor() as cursor:
             query = f"DELETE FROM {schema}.Scene WHERE id_scene = %(id_scene)s"
