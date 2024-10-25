@@ -44,11 +44,7 @@ class UserDAO(metaclass=Singleton):
                 res = cursor.fetchone()
         return res["id_user"] if res else None
 
-<<<<<<< HEAD
     def supprimer_user(self, id_user: int, schema: str) -> bool:
-=======
-    def supprimer_user(self, id_user: int, schema) -> bool:
->>>>>>> 7deb7d7681ffcb71e97a441c852f5eed7665dd0e
         """
         Supprime un utilisateur par son ID.
 
@@ -67,21 +63,12 @@ class UserDAO(metaclass=Singleton):
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
                 cursor.execute(
-<<<<<<< HEAD
                     f"DELETE FROM {schema}.Utilisateur WHERE id_user = %(id_user)s;",
                     {"id_user": id_user},
                 )
                 return cursor.rowcount > 0
 
     def consulter_users(self, schema: str) -> list:
-=======
-                    "DELETE FROM %(schema)s.Utilisateur WHERE id_user = %(id_user)s;",
-                    {"schema": schema, "id_user": id_user},
-                )
-                return cursor.rowcount > 0
-
-    def consulter_users(self, schema) -> list:
->>>>>>> 7deb7d7681ffcb71e97a441c852f5eed7665dd0e
         """
         Récupère la liste de tous les utilisateurs dans la base de données.
 
