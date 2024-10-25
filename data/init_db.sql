@@ -6,7 +6,7 @@ CREATE SCHEMA ProjetInfo;
 
 DROP TABLE IF EXISTS ProjetInfo.Utilisateur CASCADE ;
 CREATE TABLE ProjetInfo.Utilisateur (
-    id_user        SERIAL PRIMARY KEY,
+    id_user        INTEGER PRIMARY KEY,
     mdp_hashe      VARCHAR(256),
     date_naissance DATE,
     nom            VARCHAR(30),
@@ -16,7 +16,7 @@ CREATE TABLE ProjetInfo.Utilisateur (
 
 DROP TABLE IF EXISTS ProjetInfo.Sounddeck CASCADE ;
 CREATE TABLE ProjetInfo.Sounddeck(
-    id_sd SERIAL PRIMARY KEY,
+    id_sd INTEGER PRIMARY KEY,
     nom TEXT,
     description TEXT,
     date_creation DATE
@@ -25,7 +25,7 @@ CREATE TABLE ProjetInfo.Sounddeck(
 
 DROP TABLE IF EXISTS ProjetInfo.Scene CASCADE ;
 CREATE TABLE ProjetInfo.Scene (
-    id_scene SERIAL PRIMARY KEY,
+    id_scene INTEGER PRIMARY KEY,
     nom TEXT,
     description TEXT,
     date_creation DATE

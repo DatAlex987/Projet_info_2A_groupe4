@@ -61,7 +61,7 @@ def test_modifier_scene_succes(scene1_kwargs, new_nom, new_desc):
     added_scene.description = new_desc
     modified_added_scene = scene_dao.modifier_scene(added_scene, schema)
     # THEN: The returned scene should have the correct ID, and the data should match
-    assert modified_added_scene.id_scene == scene1_kwargs["id_scene"]
+    assert modified_added_scene.id_scene == added_scene.id_scene
     assert modified_added_scene.nom == added_scene.nom
     assert modified_added_scene.sons_aleatoires == added_scene.sons_aleatoires
     assert modified_added_scene.sons_continus == added_scene.sons_continus

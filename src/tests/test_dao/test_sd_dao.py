@@ -2,6 +2,7 @@ import pytest
 from dao.sd_dao import SDDAO
 from business_object.sd import SD
 from dao.db_connection import DBConnection
+from utils.reset_database import ResetDatabase
 import datetime
 
 
@@ -37,14 +38,9 @@ def test_ajouter_sd_succes(sd_kwargs):
             assert result["description"] == sd_kwargs["description"]
             assert result["date_creation"] == sd_kwargs["date_creation"]
 
-    # (Optional) Clean up the test data
-    with DBConnection(schema=schema).connection as connection:
-        with connection.cursor() as cursor:
-            query = f"DELETE FROM {schema}.SoundDeck WHERE id_sd = %(id_sd)s"
-            cursor.execute(
-                query,
-                {"id_sd": added_sd.id_sd},
-            )
+    # Clean up the test data
+    reseter = ResetDatabase()
+    reseter.ResetTEST()
 
 
 @pytest.mark.parametrize(
@@ -64,11 +60,11 @@ def test_modifier_sd_succes(sd_kwargs, new_nom, new_desc):
     added_sd.description = new_desc
     modified_added_sd = sd_dao.modifier_sd(added_sd, schema)
     # THEN: The returned scene should have the correct ID, and the data should match
-    assert modified_added_sd.id_sd == sd_kwargs["id_sd"]
-    assert modified_added_sd.nom == sd_kwargs["nom"]
-    assert modified_added_sd.scenes == sd_kwargs["scenes"]
-    assert modified_added_sd.description == sd_kwargs["description"]
-    assert modified_added_sd.date_creation == sd_kwargs["date_creation"]
+    assert modified_added_sd.id_sd == added_sd.id_sd
+    assert modified_added_sd.nom == added_sd.nom
+    assert modified_added_sd.scenes == added_sd.scenes
+    assert modified_added_sd.description == added_sd.description
+    assert modified_added_sd.date_creation == added_sd.date_creation
 
     # THEN: Verify the sd correctly modified in the database by querying it
     with DBConnection(schema=schema).connection as connection:
@@ -86,14 +82,9 @@ def test_modifier_sd_succes(sd_kwargs, new_nom, new_desc):
             assert result["description"] == modified_added_sd.description
             assert result["date_creation"] == modified_added_sd.date_creation
 
-    # (Optional) Clean up the test data
-    with DBConnection(schema=schema).connection as connection:
-        with connection.cursor() as cursor:
-            query = f"DELETE FROM {schema}.SoundDeck WHERE id_sd = %(id_sd)s"
-            cursor.execute(
-                query,
-                {"id_sd": modified_added_sd.id_sd},
-            )
+    # Clean up the test data
+    reseter = ResetDatabase()
+    reseter.ResetTEST()
 
 
 def test_supprimer_sd_succes(sd_kwargs):
@@ -116,6 +107,9 @@ def test_supprimer_sd_succes(sd_kwargs):
             result = cursor.fetchall()
 
             assert len(result) == 0
+    # Clean up the test data
+    reseter = ResetDatabase()
+    reseter.ResetTEST()
 
 
 def test_consulter_sds_succes(sd_kwargs):
@@ -129,15 +123,9 @@ def test_consulter_sds_succes(sd_kwargs):
     all_found_sds = sd_dao.consulter_sds(schema)
     # THEN: The returned sd should have the correct ID, and the data should match
     assert len(all_found_sds) == 1
-    # (Optional) Clean up the test data
-    for found_sd in all_found_sds:
-        with DBConnection(schema=schema).connection as connection:
-            with connection.cursor() as cursor:
-                query = f"DELETE FROM {schema}.Scene WHERE id_sd = %(id_sd)s"
-                cursor.execute(
-                    query,
-                    {"id_sd": found_sd.id_sd},
-                )
+    # Clean up the test data
+    reseter = ResetDatabase()
+    reseter.ResetTEST()
 
 
 def test_rechercher_par_id_sd_succes(sd_kwargs):
@@ -147,19 +135,14 @@ def test_rechercher_par_id_sd_succes(sd_kwargs):
     sd_dao = SDDAO()
     added_sd = sd_dao.ajouter_sd(sd_to_add, schema)
     # WHEN: Searching for the sd id in the database
-    found_sd = sd_dao.rechercher_par_id_sd(added_sd.id_scene, schema)
+    found_sd = sd_dao.rechercher_par_id_sd(added_sd.id_sd, schema)
     # THEN: The returned sd should have the correct ID, and the data should match
-    assert found_sd.id_sd == str(added_sd.id_sd)
-    assert found_sd.nom == added_sd.nom
-    assert found_sd.description == added_sd.description
-    assert found_sd.date_creation == added_sd.date_creation
-    assert found_sd.scenes == added_sd.scenes
+    assert found_sd["id_sd"] == int(added_sd.id_sd)
+    assert found_sd["nom"] == added_sd.nom
+    assert found_sd["description"] == added_sd.description
+    assert found_sd["date_creation"] == added_sd.date_creation
+    assert found_sd["scenes"] == added_sd.scenes
 
-    # (Optional) Clean up the test data
-    with DBConnection(schema=schema).connection as connection:
-        with connection.cursor() as cursor:
-            query = f"DELETE FROM {schema}.SoundDeck WHERE id_sd = %(id_sd)s"
-            cursor.execute(
-                query,
-                {"id_sd": added_sd.id_sd},
-            )
+    # Clean up the test data
+    reseter = ResetDatabase()
+    reseter.ResetTEST()

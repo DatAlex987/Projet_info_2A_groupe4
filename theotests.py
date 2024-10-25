@@ -5,4 +5,4 @@ import datetime
 from utils.reset_database import ResetDatabase
 from src.dao.user_dao import UserDAO
 
-ResetDatabase().ResetTEST()
+ResetDatabase().ResetALL()

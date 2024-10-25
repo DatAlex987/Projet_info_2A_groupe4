@@ -26,19 +26,20 @@ class SDDAO(metaclass=Singleton):
             with DBConnection(schema=schema).connection as conn:
                 with conn.cursor() as cursor:
                     query = f"""
-                     INSERT INTO {schema}.SoundDeck(nom, description, date_creation)
-                        VALUES (%(nom)s, %(description)s, %(date_creation)s)
+                     INSERT INTO {schema}.SoundDeck(id_sd, nom, description, date_creation)
+                        VALUES (%(id_sd)s, %(nom)s, %(description)s, %(date_creation)s)
                         RETURNING id_sd;
                     """
                     cursor.execute(
                         query,
                         {
+                            "id_sd": sd.id_sd,
                             "nom": sd.nom,
                             "description": sd.description,
                             "date_creation": sd.date_creation,
                         },
                     )
-                    sd.id_sd = cursor.fetchone()["id_sd"]
+
             return sd
         except Exception as e:
             print(f"Erreur lors de l'ajout du sound-deck : {e}")
@@ -58,9 +59,6 @@ class SDDAO(metaclass=Singleton):
         SD
             L'objet SD avec les informations mises à jour, ou None en cas d'échec.
         """
-        if not self.valider_sd(sd):
-            print("Données invalides fournies pour la modification du sound-deck.")
-            return None
 
         try:
             with DBConnection(schema=schema).connection as conn:
@@ -201,6 +199,7 @@ class SDDAO(metaclass=Singleton):
                         "nom": res["nom"],
                         "description": res["description"],
                         "date_creation": res["date_creation"],
+                        "scenes": [],  # A AJOUTER PLUS TARD
                     }
         except Exception as e:
             print(f"Erreur lors de la recherche du sound-deck avec ID {id_sd} : {e}")

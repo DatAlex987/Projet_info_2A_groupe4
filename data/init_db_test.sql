@@ -6,7 +6,7 @@ CREATE SCHEMA SchemaTest;
 
 DROP TABLE IF EXISTS SchemaTest.Utilisateur CASCADE ;
 CREATE TABLE SchemaTest.Utilisateur (
-    id_user        SERIAL PRIMARY KEY,
+    id_user        INTEGER PRIMARY KEY,
     mdp_hashe      VARCHAR(256),
     date_naissance DATE,
     nom            VARCHAR(30),
@@ -16,7 +16,7 @@ CREATE TABLE SchemaTest.Utilisateur (
 
 DROP TABLE IF EXISTS SchemaTest.Sounddeck CASCADE ;
 CREATE TABLE SchemaTest.Sounddeck(
-    id_sd SERIAL PRIMARY KEY,
+    id_sd INTEGER PRIMARY KEY,
     nom TEXT,
     description TEXT,
     date_creation DATE
@@ -25,7 +25,7 @@ CREATE TABLE SchemaTest.Sounddeck(
 
 DROP TABLE IF EXISTS SchemaTest.Scene CASCADE ;
 CREATE TABLE SchemaTest.Scene (
-    id_scene SERIAL PRIMARY KEY,
+    id_scene INTEGER PRIMARY KEY,
     nom TEXT,
     description TEXT,
     date_creation DATE

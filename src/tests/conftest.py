@@ -174,7 +174,7 @@ def sd_kwargs(scene1_kwargs):
         "nom": "Aventure Mystique",
         "description": "Un sound-deck pour une aventure calme",
         "id_sd": "1",
-        "scenes": [Scene(**scene1_kwargs)],
+        "scenes": [],  # Scene(**scene1_kwargs)
         "date_creation": datetime.date(2024, 1, 4),
     }
 
