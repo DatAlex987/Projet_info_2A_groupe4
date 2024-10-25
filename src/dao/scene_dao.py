@@ -74,15 +74,15 @@ class SceneDAO:
 
                 for row in res:
                     scenes_trouvees.append(
-                        Scene(
-                            id_scene=str(row["id_scene"]),
-                            nom=row["nom"],
-                            sons_aleatoires=[],  # SANS DOUTE A MODIFIER à L'AVENIR
-                            sons_continus=[],  # SANS DOUTE A MODIFIER à L'AVENIR
-                            sons_manuels=[],  # SANS DOUTE A MODIFIER à L'AVENIR
-                            description=row["description"],
-                            date_creation=row["date_creation"],
-                        )
+                        {
+                            "id_scene": str(row["id_scene"]),
+                            "nom": row["nom"],
+                            "sons_aleatoires": [],  # SANS DOUTE A MODIFIER à L'AVENIR
+                            "sons_continus": [],  # SANS DOUTE A MODIFIER à L'AVENIR
+                            "sons_manuels": [],  # SANS DOUTE A MODIFIER à L'AVENIR
+                            "description": row["description"],
+                            "date_creation": row["date_creation"],
+                        }
                     )
         return scenes_trouvees
 
@@ -102,13 +102,13 @@ class SceneDAO:
                 if res is None:
                     return None
 
-                Scene_trouvee = Scene(
-                    id_scene=str(res["id_scene"]),
-                    nom=res["nom"],
-                    sons_aleatoires=[],  # SANS DOUTE A MODIFIER à L'AVENIR
-                    sons_continus=[],  # SANS DOUTE A MODIFIER à L'AVENIR
-                    sons_manuels=[],  # SANS DOUTE A MODIFIER à L'AVENIR
-                    description=res["description"],
-                    date_creation=res["date_creation"],
-                )
+                Scene_trouvee = {
+                    "id_scene": str(res["id_scene"]),
+                    "nom": res["nom"],
+                    "sons_aleatoires": [],  # SANS DOUTE A MODIFIER à L'AVENIR
+                    "sons_continus": [],  # SANS DOUTE A MODIFIER à L'AVENIR
+                    "sons_manuels": [],  # SANS DOUTE A MODIFIER à L'AVENIR
+                    "description": res["description"],
+                    "date_creation": res["date_creation"],
+                }
         return Scene_trouvee

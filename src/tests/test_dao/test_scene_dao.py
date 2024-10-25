@@ -2,6 +2,7 @@ import pytest
 from dao.scene_dao import SceneDAO
 from business_object.scene import Scene
 from dao.db_connection import DBConnection
+from utils.reset_database import ResetDatabase
 
 
 def test_ajouter_scene_succes(scene1_kwargs):
@@ -39,13 +40,8 @@ def test_ajouter_scene_succes(scene1_kwargs):
             assert result["date_creation"] == scene1_kwargs["date_creation"]
 
     # Clean up the test data
-    with DBConnection(schema=schema).connection as connection:
-        with connection.cursor() as cursor:
-            query = f"DELETE FROM {schema}.Scene WHERE id_scene = %(id_scene)s"
-            cursor.execute(
-                query,
-                {"id_scene": added_scene.id_scene},
-            )
+    reseter = ResetDatabase()
+    reseter.ResetTEST()
 
 
 @pytest.mark.parametrize(
@@ -90,13 +86,8 @@ def test_modifier_scene_succes(scene1_kwargs, new_nom, new_desc):
             assert result["date_creation"] == modified_added_scene.date_creation
 
     # Clean up the test data
-    with DBConnection(schema=schema).connection as connection:
-        with connection.cursor() as cursor:
-            query = f"DELETE FROM {schema}.Scene WHERE id_scene = %(id_scene)s"
-            cursor.execute(
-                query,
-                {"id_scene": modified_added_scene.id_scene},
-            )
+    reseter = ResetDatabase()
+    reseter.ResetTEST()
 
 
 def test_supprimer_scene_succes(scene1_kwargs):
@@ -119,6 +110,9 @@ def test_supprimer_scene_succes(scene1_kwargs):
             result = cursor.fetchall()
 
             assert len(result) == 0
+    # Clean up the test data
+    reseter = ResetDatabase()
+    reseter.ResetTEST()
 
 
 def test_consulter_scenes_succes(scene1_kwargs, scene2_kwargs):
@@ -134,14 +128,16 @@ def test_consulter_scenes_succes(scene1_kwargs, scene2_kwargs):
     # THEN: The returned list of scenes should have the correct length
     assert len(all_found_scenes) == 2
     # Clean up the test data
-    for found_scene in all_found_scenes:
+    reseter = ResetDatabase()
+    reseter.ResetTEST()
+    """for found_scene in all_found_scenes:
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
                 query = f"DELETE FROM {schema}.Scene WHERE id_scene = %(id_scene)s"
                 cursor.execute(
                     query,
-                    {"id_scene": found_scene.id_scene},
-                )
+                    {"id_scene": found_scene["id_scene"]},
+                )"""
 
 
 def test_rechercher_par_id_scenes_succes(scene1_kwargs):
@@ -153,19 +149,21 @@ def test_rechercher_par_id_scenes_succes(scene1_kwargs):
     # WHEN: Searching for the scene id in the database
     found_scene = scene_dao.rechercher_par_id_scenes(added_scene.id_scene, schema)
     # THEN: The returned scene should have the correct ID, and the data should match
-    assert found_scene.id_scene == str(added_scene.id_scene)
-    assert found_scene.nom == added_scene.nom
-    # assert found_scene.sons_aleatoires == added_scene.sons_aleatoires
-    # assert found_scene.sons_continus == added_scene.sons_continus
-    # assert found_scene.sons_manuels == added_scene.sons_manuels
-    assert found_scene.description == added_scene.description
-    assert found_scene.date_creation == added_scene.date_creation
+    assert found_scene["id_scene"] == str(added_scene.id_scene)
+    assert found_scene["nom"] == added_scene.nom
+    # assert found_scene["sons_aleatoires"] == added_scene.sons_aleatoires
+    # assert found_scene["sons_continus"] == added_scene.sons_continus
+    # assert found_scene["sons_manuels"] == added_scene.sons_manuels
+    assert found_scene["description"] == added_scene.description
+    assert found_scene["date_creation"] == added_scene.date_creation
 
     # Clean up the test data
-    with DBConnection(schema=schema).connection as connection:
+    reseter = ResetDatabase()
+    reseter.ResetTEST()
+    """with DBConnection(schema=schema).connection as connection:
         with connection.cursor() as cursor:
             query = f"DELETE FROM {schema}.Scene WHERE id_scene = %(id_scene)s"
             cursor.execute(
                 query,
                 {"id_scene": added_scene.id_scene},
-            )
+            )"""

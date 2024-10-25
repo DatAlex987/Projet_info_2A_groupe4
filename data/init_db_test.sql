@@ -8,7 +8,7 @@ DROP TABLE IF EXISTS SchemaTest.Utilisateur CASCADE ;
 CREATE TABLE SchemaTest.Utilisateur (
     id_user        SERIAL PRIMARY KEY,
     mdp_hashe      VARCHAR(256),
-    date_naissance VARCHAR(10),
+    date_naissance DATE,
     nom            VARCHAR(30),
     prenom         VARCHAR(30)
 
@@ -18,7 +18,8 @@ DROP TABLE IF EXISTS SchemaTest.Sounddeck CASCADE ;
 CREATE TABLE SchemaTest.Sounddeck(
     id_sd SERIAL PRIMARY KEY,
     nom TEXT,
-    description TEXT
+    description TEXT,
+    date_creation DATE
 );
 
 

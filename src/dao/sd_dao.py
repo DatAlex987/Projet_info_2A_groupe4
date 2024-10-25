@@ -21,9 +21,6 @@ class SDDAO(metaclass=Singleton):
         SD
             L'objet SD avec son ID mis à jour, ou None en cas d'échec.
         """
-        if not self.valider_sd(sd):
-            print("Données invalides fournies pour l'ajout du sound-deck.")
-            return None
 
         try:
             with DBConnection(schema=schema).connection as conn:
@@ -145,15 +142,19 @@ class SDDAO(metaclass=Singleton):
                     if not res:
                         return []
 
-                    return [
-                        SD(
-                            id_sd=row["id_sd"],
-                            nom=row["nom"],
-                            description=row["description"],
-                            date_creation=row["date_creation"],
+                    sd_trouves = []
+
+                    for row in res:
+                        sd_trouves.append(
+                            {
+                                "id_sd": str(row["id_sd"]),
+                                "nom": row["nom"],
+                                "scenes": [],  # A AJOUTER PLUS TARD
+                                "description": row["description"],
+                                "date_creation": row["date_creation"],
+                            }
                         )
-                        for row in res
-                    ]
+                    return sd_trouves
         except Exception as e:
             print(f"Erreur lors de la récupération des sound-decks : {e}")
             return []
@@ -195,34 +196,12 @@ class SDDAO(metaclass=Singleton):
                     if res is None:
                         return None
 
-                    return SD(
-                        id_sd=res["id_sd"],
-                        nom=res["nom"],
-                        description=res["description"],
-                        date_creation=res["date_creation"],
-                    )
+                    return {
+                        "id_sd": res["id_sd"],
+                        "nom": res["nom"],
+                        "description": res["description"],
+                        "date_creation": res["date_creation"],
+                    }
         except Exception as e:
             print(f"Erreur lors de la recherche du sound-deck avec ID {id_sd} : {e}")
             return None
-
-    def valider_sd(self, sd: SD) -> bool:
-        """
-        Valide les données d'entrée pour l'ajout ou la modification d'un sound-deck.
-
-        Parameters
-        ----------
-        sd : SD
-            L'objet SD à valider.
-
-        Returns
-        -------
-        bool
-            True si les données sont valides, False pour des données incorrects.
-        """
-        if not isinstance(sd.nom, str) or not sd.nom:
-            return False
-        if not isinstance(sd.description, str):
-            return False
-        if not isinstance(sd.date_creation, datetime.date) or not sd.date_creation:
-            return False
-        return True

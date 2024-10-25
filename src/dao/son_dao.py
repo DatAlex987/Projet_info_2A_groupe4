@@ -71,19 +71,19 @@ class SonDAO:
                 if not res:
                     return []
 
-                sons = []
+                sons_trouves = []
                 for row in res:
-                    sons.append(
-                        Son(
-                            id_freesound=row["id_freesound"],
-                            nom=row["nom"],
-                            description=row["description"],
-                            duree=row["duree"],
-                        )
+                    sons_trouves.append(
+                        {
+                            "id_freesound": str(row["id_freesound"]),
+                            "nom": row["nom"],
+                            "description": row["description"],
+                            "duree": row["duree"],
+                        }
                     )
-        return sons
+        return sons_trouves
 
-    def rechercher_par_id_sons(self, id_freesound, schema):
+    def rechercher_par_id_son(self, id_freesound, schema):
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
                 query = f"""
@@ -100,13 +100,15 @@ class SonDAO:
                 if res is None:
                     return None
 
-                son = Son(
-                    id_freesound=res["id_freesound"],
-                    nom=res["nom"],
-                    description=res["description"],
-                    duree=res["duree"],
-                )
-        return son
+                son_trouve = {
+                    "id_freesound": str(res["id_freesound"]),
+                    "nom": res["nom"],
+                    "description": res["description"],
+                    "duree": res["duree"],
+                }
+        return son_trouve
 
-    def rechercher_par_tags_sons():
-        pass
+
+# Méthode inutile au final
+# def rechercher_par_tags_sons():
+#     pass

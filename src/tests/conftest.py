@@ -52,7 +52,7 @@ def utilisateur2_kwargs():
     return {
         "nom": "Bocquet",
         "prenom": "Noémie",
-        "date_naissance": datetime(2003, 8, 8),
+        "date_naissance": datetime.date(2003, 8, 8),
         "id_user": "123",
         "mdp": "Mdpexample@1",
         "SD_possedes": ["My Sounddeck"],
