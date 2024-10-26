@@ -10,9 +10,9 @@ from datetime import date
         (
             123,
             "Noémie",
-            "2003-08-08",
+            date(2003, 8, 8),
             "noemie.b",
-            "Mdpex@1",
+            "Mdpexample@1",
             [],
             "Le nom doit être une instance de str.",
             TypeError,
@@ -20,9 +20,9 @@ from datetime import date
         (
             "Bocquet",
             456,
-            "2003-08-08",
+            date(2003, 8, 8),
             "noemie.b",
-            "Mdpex@1",
+            "Mdpexample@1",
             [],
             "Le prénom doit être une instance de str.",
             TypeError,
@@ -32,25 +32,25 @@ from datetime import date
             "Noémie",
             789,
             "noemie.b",
-            "Mdpex@1",
+            "Mdpexample@1",
             [],
-            "La date de naissance doit être une instance de str.",
+            "La date de naissance doit être une instance datetime.",
             TypeError,
         ),
         (
             "Bocquet",
             "Noémie",
-            "2003-08-08",
+            date(2003, 8, 8),
             123,
-            "Mdpex@1",
+            "Mdpexample@1",
             [],
-            "Le nom d'utilisateur doit être une instance de str.",
+            "L'identifiant de l'utilisateur doit être une instance de str.",
             TypeError,
         ),
         (
             "Bocquet",
             "Noémie",
-            "2003-08-08",
+            date(2003, 8, 8),
             "noemie.b",
             456,
             [],
@@ -60,9 +60,9 @@ from datetime import date
         (
             "Bocquet",
             "Noémie",
-            "2003-08-08",
+            date(2003, 8, 8),
             "noemie.b",
-            "Mdpex@1",
+            "Mdpexample@1",
             "not_a_list",
             "La liste des Sound-decks possédées doit être une instance de list.",
             TypeError,
@@ -72,10 +72,10 @@ from datetime import date
             "Noémie",
             "invalid_date",
             "noemie.b",
-            "Mdpex@1",
+            "Mdpexample@1",
             [],
-            "La date de naissance doit être au format 'YYYY-MM-DD'.",
-            ValueError,
+            "La date de naissance doit être une instance datetime.",
+            TypeError,
         ),
     ],
 )
@@ -87,31 +87,15 @@ def test_initialisation_erreurs(
         User(nom, prenom, date_naissance, id_user, mdp, SD_possedes)
 
 
-@pytest.mark.parametrize(
-    "nom, prenom, date_naissance, id_user, mdp, SD_possedes",
-    [
-        ("Bocquet", "Noémie", "2003-08-08", "noemie.b", "Mdpex@1", []),
-        ("Doe", "John", "1990-05-15", "john.doe", "Password@1", []),
-    ],
-)
-def test_initialisation_succes(nom, prenom, date_naissance, id_user, mdp, SD_possedes):
+def test_initialisation_succes(user1_kwargs):
     """Test l'initialisation de l'utilisateur avec succès."""
-    utilisateur = User(nom, prenom, date_naissance, id_user, mdp, SD_possedes)
-    assert utilisateur.nom == nom
-    assert utilisateur.prenom == prenom
-    assert utilisateur.date_naissance == date_naissance
-    assert utilisateur.id_user == id_user
+    utilisateur = User(**user1_kwargs)
+    assert utilisateur.nom == user1_kwargs["nom"]
+    assert utilisateur.prenom == user1_kwargs["prenom"]
+    assert utilisateur.date_naissance == user1_kwargs["date_naissance"]
+    assert utilisateur.id_user == user1_kwargs["id_user"]
     assert utilisateur.mot_de_passe_hash is not None
-    assert utilisateur.SD_possedes == []
-
-
-def test_mot_de_passe_hash(utilisateur_kwargs):
-    """Test le hachage du mot de passe."""
-    utilisateur = User(**utilisateur_kwargs)
-    mdp_combine = utilisateur_kwargs["mdp"] + utilisateur_kwargs["id_user"]
-    sel_fixe = b"\x00" * 16
-    hash_test = hashlib.pbkdf2_hmac("sha256", mdp_combine.encode("utf-8"), sel_fixe, 100000)
-    assert utilisateur.mot_de_passe_hash == hash_test
+    assert utilisateur.SD_possedes == user1_kwargs["SD_possedes"]
 
 
 def test_supprimer_utilisateur(utilisateur_kwargs):
@@ -121,3 +105,13 @@ def test_supprimer_utilisateur(utilisateur_kwargs):
     assert utilisateur.id_user is None
     assert utilisateur.mot_de_passe_hash is None
     assert utilisateur.SD_possedes == []
+
+
+def test_mot_de_passe_hash(utilisateur_kwargs):
+    """Test le hachage du mot de passe."""
+    utilisateur = User(**utilisateur_kwargs)
+    mdp_combine = utilisateur_kwargs["mdp"] + utilisateur_kwargs["id_user"]
+    hash_test = hashlib.pbkdf2_hmac(
+        "sha256", mdp_combine.encode("utf-8"), utilisateur.nom.encode("utf-8"), 100000
+    )
+    assert utilisateur.mot_de_passe_hash == hash_test

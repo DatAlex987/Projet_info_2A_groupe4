@@ -1,5 +1,6 @@
-from pygame import *
-from os import getenv
+import datetime
+import pygame
+import os
 
 
 class Son:
@@ -21,6 +22,13 @@ class Son:
 
     Examples
     --------
+    son = Son(
+        nom="The Imperial March",
+        description="Luke, I am your father",
+        duree=datetime.timedelta(seconds=45),
+        id_freesound="039450",
+        tags=["starwars", "Vador", "JW"]
+    )
     """
 
     def __init__(self, nom, description, duree, id_freesound, tags):
@@ -30,22 +38,35 @@ class Son:
         self.duree = duree
         self.id_freesound = id_freesound
         self.tags = tags
+        self.charge = None
+        self.lp = 0
 
+        if not isinstance(nom, str):
+            raise TypeError("Le nom doit etre une instance de str.")
+        if not isinstance(description, str):
+            raise TypeError("La description doit etre une instance de str.")
+        if not isinstance(tags, list):
+            raise TypeError("tags doit etre une liste de scènes.")
+        if not all(isinstance(t, str) for t in tags):
+            raise TypeError("Les éléments de la liste des tags doivent etre des scènes.")
+        if not isinstance(duree, datetime.timedelta):
+            raise TypeError("La durée doit etre une durée format datetime.timedelta.")
         if not isinstance(id_freesound, str):
-            raise TypeError("L'identifiant son doit être une instance de string.")
+            raise TypeError("L'identifiant freesound du son doit être une instance de string.")
 
-        # Initialisation de pygame et du mixer
-        pygame.mixer.init()
-
-    def JouerSon(self):
+    def JouerSon(self) -> None:
+        """Méthode globale pour charger puis jouer un son avec Pygame"""
         try:
-            fichier_son = getenv("DOSSIER_SAUVEGARDE") + "/f'{self.id_freesound}.mp3'"
+            fichier_son = os.path.join(os.getenv("DOSSIER_SAUVEGARDE"), f"{self.id_freesound}.mp3")
             # Charger le son
-            pygame.mixer.music.load(fichier_son)
+            self.charge = pygame.mixer.Sound(fichier_son)
             # Jouer le son
-            pygame.mixer.music.play()
-            # Attendre que le son soit terminé
-            while pygame.mixer.music.get_busy():
-                pygame.time.Clock().tick(10)  # Attendre 10ms pour éviter un usage excessif du CPU
+            (self.charge).play(loop=self.lp)
         except pygame.error as e:
             print(f"Erreur lors de la lecture du fichier son : {e}")
+        except FileNotFoundError:
+            print(f"Le fichier son '{fichier_son}' n'a pas été trouvé.")
+
+    def Arret_Son(self) -> None:
+        (self.charge).stop()
+        self.charge = None

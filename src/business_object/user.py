@@ -1,7 +1,6 @@
-import os
 import hashlib
 from business_object.personne import Personne
-from datetime import date, datetime
+import datetime
 import re
 
 
@@ -25,9 +24,13 @@ class User(Personne):
         Supprime l'utilisateur en réinitialisant ses données.
     """
 
-    def __init__(self, nom, prenom, date_naissance, id_user, mdp, SD_possedes):
+    def __init__(self, nom, prenom, date_naissance, id_user, SD_possedes, mdp=None):
+        # mdp optionel. N'est précisé que lors de la première instantiation
+        # (pour éviter de hasher le mdp déjà hashé lors de l'instantiation après
+        # requête dans la bdd par exemple)
         """
-        Initialise un nouvel utilisateur avec les attributs de la classe Personne et ceux propre à un utilisateur.
+        Initialise un nouvel utilisateur avec les attributs de la classe
+        Personne et ceux propre à un utilisateur.
 
         Parameters
         ----------
@@ -46,38 +49,41 @@ class User(Personne):
             raise TypeError("Le nom doit être une instance de str.")
         if not isinstance(prenom, str):
             raise TypeError("Le prénom doit être une instance de str.")
-        if not isinstance(date_naissance, str):
-            raise TypeError("La date de naissance doit être une instance de str.")
-        try:
-            datetime.strptime(date_naissance, "%Y-%m-%d")
-        except ValueError:
-            raise ValueError("La date de naissance doit être au format 'YYYY-MM-DD'.")
-
+        if not isinstance(date_naissance, datetime.date):
+            raise TypeError("La date de naissance doit être une instance datetime.")
         if not isinstance(id_user, str):
-            raise TypeError("Le nom d'utilisateur doit être une instance de str.")
-        if not isinstance(mdp, str):
-            raise TypeError("Le mot de passe doit être une instance de str.")
-        if not isinstance(SD_possedes, list):
-            raise TypeError("La liste des Sound-decks possédées doit être une instance de list.")
-        if len(mdp) < 8:
-            raise ValueError("Le mot de passe doit contenir au moins 8 caractères.")
-        if not re.search(r"[A-Z]", mdp):
-            raise ValueError("Le mot de passe doit contenir au moins une lettre majuscule.")
-        if not re.search(r"[a-z]", mdp):
-            raise ValueError("Le mot de passe doit contenir au moins une lettre minuscule.")
-        if not re.search(r"[0-9]", mdp):
-            raise ValueError("Le mot de passe doit contenir au moins un chiffre.")
-        if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", mdp):
-            raise ValueError("Le mot de passe doit contenir au moins un caractère spécial.")
+            raise TypeError("L'identifiant de l'utilisateur doit être une instance de str.")
+        if mdp is not None:
+            # Pour traiter le cas discuté plus haut, un mot de passe est désormais facultatif
+            # Néanmoins, chaque instance de User utilisée pour ajouter un user dans la bdd
+            # devra comporter un mot de passe (pour s'assurer qu'un user a bel et bien un mdp).
+            if not isinstance(mdp, str):
+                raise TypeError("Le mot de passe doit être une instance de str.")
+            if not isinstance(SD_possedes, list):
+                raise TypeError(
+                    "La liste des Sound-decks possédées doit être une instance de list."
+                )
+            if len(mdp) < 8:
+                raise ValueError("Le mot de passe doit contenir au moins 8 caractères.")
+            if not re.search(r"[A-Z]", mdp):
+                raise ValueError("Le mot de passe doit contenir au moins une lettre majuscule.")
+            if not re.search(r"[a-z]", mdp):
+                raise ValueError("Le mot de passe doit contenir au moins une lettre minuscule.")
+            if not re.search(r"[0-9]", mdp):
+                raise ValueError("Le mot de passe doit contenir au moins un chiffre.")
+            if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", mdp):
+                raise ValueError("Le mot de passe doit contenir au moins un caractère spécial.")
 
         super().__init__(nom, prenom, date_naissance)
         self.id_user = id_user
-        self.mot_de_passe_hash = self._hash_mdp(mdp)
-        self.SD_possedes = SD_possede
+        self.mot_de_passe_hash = self._hash_mdp(mdp) if mdp else None
+        self.SD_possedes = SD_possedes
 
     def _hash_mdp(self, mdp):
         mdp_combine = mdp + self.id_user
-        return hashlib.pbkdf2_hmac("sha256", mdp_combine.encode("utf-8"), os.urandom(16), 100000)
+        return hashlib.pbkdf2_hmac(
+            "sha256", mdp_combine.encode("utf-8"), self.nom.encode("utf-8"), 100000
+        )
 
     def supprimer_utilisateur(self):
         self.id_user = None

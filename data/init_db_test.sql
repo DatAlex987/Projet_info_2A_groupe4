@@ -1,11 +1,11 @@
 -----------------------------------------------------
 -- User
 -----------------------------------------------------
-DROP SCHEMA IF EXISTS ProjetInfo CASCADE;
-CREATE SCHEMA ProjetInfo;
+DROP SCHEMA IF EXISTS SchemaTest CASCADE;
+CREATE SCHEMA SchemaTest;
 
-DROP TABLE IF EXISTS ProjetInfo.Utilisateur CASCADE ;
-CREATE TABLE ProjetInfo.Utilisateur (
+DROP TABLE IF EXISTS SchemaTest.Utilisateur CASCADE ;
+CREATE TABLE SchemaTest.Utilisateur (
     id_user        INTEGER PRIMARY KEY,
     mdp_hashe      VARCHAR(256),
     date_naissance DATE,
@@ -14,8 +14,8 @@ CREATE TABLE ProjetInfo.Utilisateur (
 
 );
 
-DROP TABLE IF EXISTS ProjetInfo.Sounddeck CASCADE ;
-CREATE TABLE ProjetInfo.Sounddeck(
+DROP TABLE IF EXISTS SchemaTest.Sounddeck CASCADE ;
+CREATE TABLE SchemaTest.Sounddeck(
     id_sd INTEGER PRIMARY KEY,
     nom TEXT,
     description TEXT,
@@ -23,30 +23,30 @@ CREATE TABLE ProjetInfo.Sounddeck(
 );
 
 
-DROP TABLE IF EXISTS ProjetInfo.Scene CASCADE ;
-CREATE TABLE ProjetInfo.Scene (
+DROP TABLE IF EXISTS SchemaTest.Scene CASCADE ;
+CREATE TABLE SchemaTest.Scene (
     id_scene INTEGER PRIMARY KEY,
     nom TEXT,
     description TEXT,
     date_creation DATE
 );
 
-DROP TABLE IF EXISTS ProjetInfo.Son CASCADE ;
-CREATE TABLE ProjetInfo.Son (
+DROP TABLE IF EXISTS SchemaTest.Son CASCADE ;
+CREATE TABLE SchemaTest.Son (
     id_freesound INTEGER PRIMARY KEY,
     nom TEXT,
     description TEXT,
     duree TIME
 );
 
-DROP TABLE IF EXISTS ProjetInfo.Tag CASCADE ;
-CREATE TABLE ProjetInfo.Tag(
+DROP TABLE IF EXISTS SchemaTest.Tag CASCADE ;
+CREATE TABLE SchemaTest.Tag(
     nom_tag TEXT PRIMARY KEY
 );
 
 
-DROP TABLE IF EXISTS ProjetInfo.User_Sounddeck CASCADE ;
-CREATE TABLE ProjetInfo.User_Sounddeck (
+DROP TABLE IF EXISTS SchemaTest.User_Sounddeck CASCADE ;
+CREATE TABLE SchemaTest.User_Sounddeck (
     id_user INTEGER,
     id_sd INTEGER,
     PRIMARY KEY (id_user, id_sd),
@@ -55,8 +55,8 @@ CREATE TABLE ProjetInfo.User_Sounddeck (
 );
 
 
-DROP TABLE IF EXISTS ProjetInfo.Sounddeck_Scene CASCADE ;
-CREATE TABLE ProjetInfo.Sounddeck_Scene(
+DROP TABLE IF EXISTS SchemaTest.Sounddeck_Scene CASCADE ;
+CREATE TABLE SchemaTest.Sounddeck_Scene(
     id_scene INTEGER,
     id_sd INTEGER,
     PRIMARY KEY (id_scene, id_sd),
@@ -65,8 +65,8 @@ CREATE TABLE ProjetInfo.Sounddeck_Scene(
 );
 
 
-DROP TABLE IF EXISTS ProjetInfo.Scene_Son CASCADE ;
-CREATE TABLE ProjetInfo.Scene_Son(
+DROP TABLE IF EXISTS SchemaTest.Scene_Son CASCADE ;
+CREATE TABLE SchemaTest.Scene_Son(
     id_scene INTEGER,
     id_freesound INTEGER,
     type_param TEXT,
@@ -76,8 +76,8 @@ CREATE TABLE ProjetInfo.Scene_Son(
 );
 
 
-DROP TABLE IF EXISTS ProjetInfo.Son_Tag CASCADE ;
-CREATE TABLE  ProjetInfo.Son_Tag(
+DROP TABLE IF EXISTS SchemaTest.Son_Tag CASCADE ;
+CREATE TABLE  SchemaTest.Son_Tag(
     id_freesound INTEGER,
     nom_tag TEXT,
     PRIMARY KEY (id_freesound, nom_tag),

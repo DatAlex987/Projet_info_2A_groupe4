@@ -7,22 +7,17 @@ from business_object.son_aleatoire import Son_Aleatoire
 from business_object.son_manuel import Son_Manuel
 from business_object.son_continu import Son_Continu
 import pytest
-from business_object.son_aleatoire import Son_Aleatoire
-from business_object.son_continu import Son_Continu
-from business_object.son_manuel import Son_Manuel
-from business_object.user import User
-from business_object.scene import Scene
-from datetime import date
+import datetime
 
 
 @pytest.fixture
 def personne1_kwargs():
-    return {"nom": "Doe", "prenom": "John", "date_naissance": date(1990, 1, 1)}
+    return {"nom": "Doe", "prenom": "John", "date_naissance": datetime.date(1990, 1, 1)}
 
 
 @pytest.fixture
 def personne2_kwargs():
-    return {"nom": "TheRipper", "prenom": "Jack", "date_naissance": date(1962, 3, 5)}
+    return {"nom": "TheRipper", "prenom": "Jack", "date_naissance": datetime.date(1962, 3, 5)}
 
 
 @pytest.fixture
@@ -31,9 +26,9 @@ def user1_kwargs():
     return {
         "nom": "Doe",
         "prenom": "Jane",
-        "date_naissance": date(1995, 5, 5),
+        "date_naissance": datetime.date(1995, 5, 5),
         "id_user": "jdoe",
-        "mdp": "password123",
+        "mdp": "Password!123",
         "SD_possedes": [],
     }
 
@@ -44,10 +39,33 @@ def utilisateur_kwargs():
     return {
         "nom": "Bocquet",
         "prenom": "Noémie",
-        "date_naissance": date(2003, 8, 8),
+        "date_naissance": datetime.date(2003, 8, 8),
         "id_user": "noemie.b",
-        "mdp": "Mdpex@1",
+        "mdp": "Mdpexample@1",
         "SD_possedes": [],
+    }
+
+
+@pytest.fixture
+def utilisateur2_kwargs():
+    """Mock data for User class."""
+    return {
+        "nom": "Bocquet",
+        "prenom": "Noémie",
+        "date_naissance": datetime.date(2003, 8, 8),
+        "id_user": "123",
+        "mdp": "Mdpexample@1",
+        "SD_possedes": ["My Sounddeck"],
+    }
+
+
+def son_vador_kwargs():
+    return {
+        "nom": "The Imperial March",
+        "description": "Luke, I am your father",
+        "duree": datetime.timedelta(seconds=45),
+        "id_freesound": "039450",
+        "tags": ["starwars", "Vador", "JW"],
     }
 
 
@@ -56,7 +74,7 @@ def son_aleatoire1_kwargs():
     return {
         "nom": "Ambiance de forêt",
         "description": "Son de fond de forêt calme",
-        "duree": 60,
+        "duree": datetime.timedelta(seconds=60),
         "id_freesound": "787956",
         "tags": ["nature", "calm", "forest"],
         "cooldown_min": 5,
@@ -69,7 +87,7 @@ def son_aleatoire2_kwargs():
     return {
         "nom": "Manoir hanté",
         "description": "Son de fantome dans un manoir",
-        "duree": 40,
+        "duree": datetime.timedelta(seconds=30),
         "id_freesound": "445936",
         "tags": ["manoir", "fantome", "scary"],
         "cooldown_min": 3,
@@ -82,7 +100,7 @@ def son_continu1_kwargs():
     return {
         "nom": "Ambiance de forêt",
         "description": "Son de fond de forêt calme",
-        "duree": 60,
+        "duree": datetime.timedelta(seconds=46),
         "id_freesound": "forest_1234",
         "tags": ["nature", "calm", "forest"],
     }
@@ -93,7 +111,7 @@ def son_continu2_kwargs():
     return {
         "nom": "Musique douce",
         "description": "Musique douce au piano",
-        "duree": 120,
+        "duree": datetime.timedelta(minutes=15),
         "id_freesound": "125489",
         "tags": ["piano", "calm", "soft"],
     }
@@ -104,10 +122,10 @@ def son_manuel1_kwargs():
     return {
         "nom": "Cloche",
         "description": "Cloche qui sonne",
-        "duree": 5,
+        "duree": datetime.timedelta(seconds=52),
         "id_freesound": "bell_5678",
         "tags": ["bell", "chime"],
-        "start_key": "C",
+        "start_key": "c",
     }
 
 
@@ -116,10 +134,10 @@ def son_manuel2_kwargs():
     return {
         "nom": "Bruits de pas",
         "description": "Bruits de pas qui s'approchent",
-        "duree": 3,
+        "duree": datetime.timedelta(seconds=59),
         "id_freesound": "458726",
         "tags": ["step", "approaching"],
-        "start_key": "P",
+        "start_key": "p",
     }
 
 
@@ -128,26 +146,24 @@ def scene1_kwargs(user1_kwargs, son_aleatoire1_kwargs, son_continu1_kwargs, son_
     return {
         "nom": "Forêt Mystique",
         "description": "Une scène calme dans une forêt mystérieuse",
-        "id_scene": "scene_001",
+        "id_scene": "987654",
         "sons_aleatoires": [Son_Aleatoire(**son_aleatoire1_kwargs)],
         "sons_manuels": [Son_Manuel(**son_manuel1_kwargs)],
         "sons_continus": [Son_Continu(**son_continu1_kwargs)],
-        "auteur": User(**user1_kwargs),
-        "date_creation": date(2024, 1, 1),
+        "date_creation": datetime.date(2024, 1, 1),
     }
 
 
 @pytest.fixture
-def scene2_kwargs(user2_kwargs, son_aleatoire2_kwargs, son_continu2_kwargs, son_manuel2_kwargs):
+def scene2_kwargs(user1_kwargs, son_aleatoire2_kwargs, son_continu2_kwargs, son_manuel2_kwargs):
     return {
         "nom": "Forêt Mystique",
         "description": "Une scène calme dans une forêt mystérieuse",
-        "id_scene": "scene_001",
+        "id_scene": "234567",
         "sons_aleatoires": [Son_Aleatoire(**son_aleatoire2_kwargs)],
         "sons_manuels": [Son_Manuel(**son_manuel2_kwargs)],
         "sons_continus": [Son_Continu(**son_continu2_kwargs)],
-        "auteur": User(**user2_kwargs),
-        "date_creation": date(2023, 10, 9),
+        "date_creation": datetime.date(2023, 10, 9),
     }
 
 
@@ -157,9 +173,9 @@ def sd_kwargs(scene1_kwargs):
     return {
         "nom": "Aventure Mystique",
         "description": "Un sound-deck pour une aventure calme",
-        "id_sd": 1,
-        "scenes": [Scene(**scene1_kwargs)],
-        "date_creation": date(2024, 1, 4),
+        "id_sd": "1",
+        "scenes": [],  # Scene(**scene1_kwargs)
+        "date_creation": datetime.date(2024, 1, 4),
     }
 
 

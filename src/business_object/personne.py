@@ -11,14 +11,6 @@ class Personne:
         prenom
     date_naissance : date
         date de naissance
-
-    Examples
-    --------
-    >>> personne = Personne("Bocquet", "Noémie", "2003-08-08")
-    >>> personne.modifier_prenom("Théo")
-    >>> print(personne.prenom)
-    Théo
-
     """
 
     def __init__(self, nom, prenom, date_naissance):
@@ -29,14 +21,12 @@ class Personne:
 
     def modifier_nom_personne(self, nouveau_nom):
         """Modifier le nom de la personne"""
+        if not isinstance(nouveau_nom, str):
+            raise TypeError("Le nouveau nom doit être une instance de str.")
         self.nom = nouveau_nom
 
     def modifier_prenom_personne(self, nouveau_prenom):
         """Modifier le prénom de la personne"""
+        if not isinstance(nouveau_prenom, str):
+            raise TypeError("Le nouveau prenom doit être une instance de str.")
         self.prenom = nouveau_prenom
-
-
-if __name__ == "__main__":
-    import doctest
-
-    doctest.testmod()

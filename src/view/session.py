@@ -1,6 +1,7 @@
 from datetime import datetime
 from src.business_object.user import User
 from utils.singleton import Singleton
+import pygame
 
 
 class Session(metaclass=Singleton):
@@ -14,6 +15,7 @@ class Session(metaclass=Singleton):
         """Création de la session"""
         self.utilisateur: User = None
         self.debut_connexion = None
+        self.mixer = pygame.mixer.init()
 
     def connexion(self, utilisateur):
         """Enregistement des données en session"""

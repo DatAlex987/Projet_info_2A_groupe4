@@ -11,9 +11,9 @@ class UserService:
     """Classe contenant les méthodes de service des Utilisateurs"""
 
     @log
-    def creer(**kwargs):
+    def creer(self, nom, prenom, date_naissance, id_user, mdp, SD_possedes):
         """Création d'un utilisateur à partir de ses attributs"""
-        new_user = User(**kwargs)
+        new_user = User(nom, prenom, date_naissance, id_user, mdp, SD_possedes)
         return new_user if UserDAO().ajouter_user(new_user) else None
 
     @log
