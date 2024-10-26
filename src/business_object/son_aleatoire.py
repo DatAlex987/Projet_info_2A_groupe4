@@ -19,6 +19,15 @@ class Son_Aleatoire(Son):
         self.cooldown_min = cooldown_min
         self.cooldown_max = cooldown_max
 
+        if not isinstance(cooldown_min, int) or not isinstance(cooldown_max, int):
+            raise TypeError("Les cooldowns doivent être des entiers.")
+
+        if cooldown_min < 0 or cooldown_max < 0:
+            raise ValueError("Les cooldowns ne peuvent pas être négatifs.")
+
+        if cooldown_min > cooldown_max:
+            raise ValueError("Le cooldown minimum ne peut pas être supérieur au cooldown maximum.")
+
     def modifier_cooldown(self, new_cooldown_min, new_cooldown_max):
         """Modifier les paramètres de cooldown d'un son aléatoire."""
         if not isinstance(new_cooldown_min, int) or not isinstance(new_cooldown_max, int):
