@@ -69,8 +69,10 @@ DROP TABLE IF EXISTS ProjetInfo.Scene_Son CASCADE ;
 CREATE TABLE ProjetInfo.Scene_Son(
     id_scene VARCHAR(30),
     id_freesound VARCHAR(30),
-    type_param TEXT,
-    PRIMARY KEY (id_scene, id_freesound),
+    param1 TEXT,
+    param2 TEXT,
+    type VARCHAR(30),
+    PRIMARY KEY (id_scene, id_freesound, type),
     FOREIGN KEY (id_scene) REFERENCES Scene(id_scene) ON DELETE CASCADE,
     FOREIGN KEY (id_freesound) REFERENCES Son(id_freesound) ON DELETE CASCADE
 );

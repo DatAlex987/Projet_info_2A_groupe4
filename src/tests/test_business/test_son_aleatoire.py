@@ -1,5 +1,6 @@
 import pytest
 from business_object.son_aleatoire import Son_Aleatoire
+import datetime
 
 
 def test_initialisation_son_aleatoire(son_aleatoire1_kwargs):
@@ -8,7 +9,7 @@ def test_initialisation_son_aleatoire(son_aleatoire1_kwargs):
 
     assert son.nom == "Ambiance de forêt"
     assert son.description == "Son de fond de forêt calme"
-    assert son.duree == 60
+    assert son.duree == datetime.timedelta(seconds=60)
     assert son.id_freesound == "787956"
     assert son.tags == ["nature", "calm", "forest"]
     assert son.cooldown_min == 5
@@ -45,7 +46,15 @@ def test_initialisation_cooldown_exceptions(
     cooldown_min, cooldown_max, expected_exception, expected_message
 ):
     with pytest.raises(expected_exception, match=expected_message):
-        Son_Aleatoire("Nom", "Description", 60, "787956", ["tag"], cooldown_min, cooldown_max)
+        Son_Aleatoire(
+            "Nom",
+            "Description",
+            datetime.timedelta(seconds=60),
+            "787956",
+            ["tag"],
+            cooldown_min,
+            cooldown_max,
+        )
 
 
 # Test pour vérifier les erreurs de type lors de la modification des cooldowns

@@ -113,7 +113,7 @@ class SceneDAO:
                 }
         return Scene_trouvee
 
-    def rechercher_scenes_par_sd(self, id_sd: str, schema):  # NOT CHECKED YET
+    def rechercher_scenes_par_sd(self, id_sd: str, schema):
         """
         Recherche les scenes appartenant à un SD.
 
@@ -171,7 +171,7 @@ class SceneDAO:
             print(f"Erreur lors de la récupération des sound-decks : {e}")
             return []
 
-    def ajouter_association_sd_scene(self, id_sd: str, id_scene: str, schema):  # NOT CHECKED YET
+    def ajouter_association_sd_scene(self, id_sd: str, id_scene: str, schema):
         """
         Ajoute une nouvelle association SD - Scene dans la table d'association.
 
@@ -193,7 +193,7 @@ class SceneDAO:
                 with conn.cursor() as cursor:
                     query = f"""
                         INSERT INTO {schema}.Sounddeck_Scene(id_sd, id_scene)
-                        VALUES (%(id_sd)s, %(id_d=scene)s);
+                        VALUES (%(id_sd)s, %(id_scene)s);
                         """
                     cursor.execute(
                         query,
@@ -202,7 +202,7 @@ class SceneDAO:
                             "id_scene": id_scene,
                         },
                     )
-                    nb_lignes_add = cursor.rowcount
+            nb_lignes_add = cursor.rowcount
             if nb_lignes_add == 1:
                 return True
 
@@ -210,7 +210,7 @@ class SceneDAO:
             print(f"Erreur lors de l'ajout de l'association : {e}")
             return None
 
-    def supprimer_association_sd_scene(self, id_sd: str, id_scene: str, schema):  # NOT CHECKED YET
+    def supprimer_association_sd_scene(self, id_sd: str, id_scene: str, schema):
         """
         Supprimer une association SD - Scene dans la table d'association.
 
@@ -247,7 +247,7 @@ class SceneDAO:
             print(f"Erreur lors de la suppression de l'association : {e}")
             return None
 
-    def check_if_scene_in_sd(self, id_sd: str, id_scene: str, schema):  # NOT CHECKED YET
+    def check_if_scene_in_sd(self, id_sd: str, id_scene: str, schema):
         """
         Vérifie si une scène appartient à un SD.
 

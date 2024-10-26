@@ -69,8 +69,10 @@ DROP TABLE IF EXISTS SchemaTest.Scene_Son CASCADE ;
 CREATE TABLE SchemaTest.Scene_Son(
     id_scene VARCHAR(30),
     id_freesound VARCHAR(30),
-    type_param TEXT,
-    PRIMARY KEY (id_scene, id_freesound),
+    param1 TEXT,
+    param2 TEXT,
+    type VARCHAR(30),
+    PRIMARY KEY (id_scene, id_freesound, type),
     FOREIGN KEY (id_scene) REFERENCES SchemaTest.Scene(id_scene) ON DELETE CASCADE,
     FOREIGN KEY (id_freesound) REFERENCES SchemaTest.Son(id_freesound) ON DELETE CASCADE
 );

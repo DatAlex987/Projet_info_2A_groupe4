@@ -1,11 +1,13 @@
 from src.dao.db_connection import DBConnection
 from src.business_object.user import User
 from src.business_object.personne import Personne
+from src.business_object.scene import Scene
 from src.business_object.sd import SD
 import datetime
 from utils.reset_database import ResetDatabase
 from src.dao.user_dao import UserDAO
 from src.dao.sd_dao import SDDAO
+from src.dao.scene_dao import SceneDAO
 
 ResetDatabase().ResetALL()
 
@@ -57,22 +59,74 @@ sounddeck4 = SD(
     date_creation=datetime.date.today(),
 )
 
-sd_dao = SDDAO()
+# Scene class instantiation
+
+scene1 = Scene(
+    nom="Scene1",
+    description="Description de la Scene1",
+    id_scene="123123",
+    sons_aleatoires=[],
+    sons_continus=[],
+    sons_manuels=[],
+    date_creation=datetime.date.today(),
+)
+scene2 = Scene(
+    nom="Scene2",
+    description="Description de la Scene2",
+    id_scene="234234",
+    sons_aleatoires=[],
+    sons_continus=[],
+    sons_manuels=[],
+    date_creation=datetime.date.today(),
+)
+scene3 = Scene(
+    nom="Scene3",
+    description="Description de la Scene3",
+    id_scene="345345",
+    sons_aleatoires=[],
+    sons_continus=[],
+    sons_manuels=[],
+    date_creation=datetime.date.today(),
+)
+scene4 = Scene(
+    nom="Scene4",
+    description="Description de la Scene4",
+    id_scene="456456",
+    sons_aleatoires=[],
+    sons_continus=[],
+    sons_manuels=[],
+    date_creation=datetime.date.today(),
+)
+"""sd_dao = SDDAO()
 user_dao = UserDAO()
+scene_dao = SceneDAO()
 user_dao.ajouter_user(user1, "SchemaTest")
 user_dao.ajouter_user(user2, "SchemaTest")
 sd_dao.ajouter_sd(sounddeck1, "SchemaTest")
 sd_dao.ajouter_sd(sounddeck2, "SchemaTest")
 sd_dao.ajouter_sd(sounddeck3, "SchemaTest")
 sd_dao.ajouter_sd(sounddeck4, "SchemaTest")
+scene_dao.ajouter_scene(scene1, "Schematest")
+scene_dao.ajouter_scene(scene2, "Schematest")
+scene_dao.ajouter_scene(scene3, "Schematest")
+scene_dao.ajouter_scene(scene4, "Schematest")
 all_users = user_dao.consulter_users(schema="SchemaTest")
 all_sds = sd_dao.consulter_sds(schema="SchemaTest")
+all_scenes = scene_dao.consulter_scenes(schema="SchemaTest")
 # print(all_users)
 # print(all_sds)
-sd_dao.ajouter_association_user_sd(id_user="123", id_sd="101", schema="SchemaTest")
-sd_dao.ajouter_association_user_sd(id_user="123", id_sd="102", schema="SchemaTest")
-sd_dao.ajouter_association_user_sd(id_user="222222", id_sd="103", schema="SchemaTest")
-sd_dao.ajouter_association_user_sd(id_user="222222", id_sd="104", schema="SchemaTest")
-print(sd_dao.supprimer_association_user_sd(id_user="123", id_sd="102", schema="SchemaTest"))
-print(sd_dao.rechercher_sds_par_user(id_user="123", schema="SchemaTest"))
-print(sd_dao.check_if_sd_in_user(id_user="123", id_sd="102", schema="SchemaTest"))
+print(all_scenes)
+scene_dao.ajouter_association_sd_scene(id_sd="101", id_scene="123123", schema="SchemaTest")
+scene_dao.ajouter_association_sd_scene(id_sd="101", id_scene="234234", schema="SchemaTest")
+scene_dao.ajouter_association_sd_scene(id_sd="101", id_scene="345345", schema="SchemaTest")
+scene_dao.ajouter_association_sd_scene(id_sd="102", id_scene="234234", schema="SchemaTest")
+scene_dao.ajouter_association_sd_scene(id_sd="103", id_scene="345345", schema="SchemaTest")
+scene_dao.ajouter_association_sd_scene(id_sd="104", id_scene="456456", schema="SchemaTest")
+
+print(scene_dao.check_if_scene_in_sd(id_sd="101", id_scene="234234", schema="SchemaTest"))
+print(scene_dao.rechercher_scenes_par_sd(id_sd="101", schema="SchemaTest"))
+print(scene_dao.supprimer_association_sd_scene(id_sd="101", id_scene="234234", schema="SchemaTest"))
+print(scene_dao.check_if_scene_in_sd(id_sd="101", id_scene="234234", schema="SchemaTest"))
+print(scene_dao.rechercher_scenes_par_sd(id_sd="101", schema="SchemaTest"))"""
+
+ResetDatabase().ResetALL()
