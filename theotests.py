@@ -1,20 +1,28 @@
-from src.dao.db_connection import DBConnection
-from src.business_object.user import User
-from src.business_object.personne import Personne
-from src.business_object.scene import Scene
-from src.business_object.sd import SD
+from dao.db_connection import DBConnection
+from business_object.user import User
+from business_object.personne import Personne
+from business_object.scene import Scene
+from business_object.sd import SD
 import datetime
 from utils.reset_database import ResetDatabase
-from src.dao.user_dao import UserDAO
-from src.dao.sd_dao import SDDAO
-from src.dao.scene_dao import SceneDAO
-from src.dao.son_dao import SonDAO
-from src.business_object.son import Son
-from src.business_object.son_aleatoire import Son_Aleatoire
-from src.business_object.son_manuel import Son_Manuel
-from src.business_object.son_continu import Son_Continu
+from dao.user_dao import UserDAO
+from dao.sd_dao import SDDAO
+from dao.scene_dao import SceneDAO
+from dao.son_dao import SonDAO
+from business_object.son import Son
+from business_object.son_aleatoire import Son_Aleatoire
+from business_object.son_manuel import Son_Manuel
+from business_object.son_continu import Son_Continu
 
 ResetDatabase().ResetALL()
+
+
+def f(son):
+    if isinstance(son, Son_Aleatoire):
+        return "alea"
+    if isinstance(son, Son_Continu):
+        return "continu"
+
 
 # User class instantiation
 user1 = User(
@@ -123,6 +131,7 @@ son_manuel2 = Son_Manuel(
     "SonManuel2", "Description du SonManuel2", datetime.timedelta(seconds=8), "258258", [], "b"
 )
 
+
 son_dao = SonDAO()
 sd_dao = SDDAO()
 user_dao = UserDAO()
@@ -158,14 +167,13 @@ scene_dao.ajouter_association_sd_scene(id_sd="101", id_scene="345345", schema="S
 scene_dao.ajouter_association_sd_scene(id_sd="102", id_scene="234234", schema="SchemaTest")
 scene_dao.ajouter_association_sd_scene(id_sd="103", id_scene="345345", schema="SchemaTest")
 scene_dao.ajouter_association_sd_scene(id_sd="104", id_scene="456456", schema="SchemaTest")
-print(type(son_alea1))
-# son_dao.ajouter_association_scene_son(id_scene="123123", son=son_alea1, schema="SchemaTest")
-# son_dao.ajouter_association_scene_son(id_scene="123123", id_freesound="123456", schema="SchemaTest")
-# son_dao.ajouter_association_scene_son(id_scene="123123", id_freesound="134679", schema="SchemaTest")
-# son_dao.ajouter_association_scene_son(id_scene="234234", id_freesound="249135", schema="SchemaTest")
-# son_dao.ajouter_association_scene_son(id_scene="234234", id_freesound="234567", schema="SchemaTest")
-# son_dao.ajouter_association_scene_son(id_scene="234234", id_freesound="258258", schema="SchemaTest")
-# son_dao.ajouter_association_scene_son(id_scene="234234", id_freesound="123456", schema="SchemaTest")
+son_dao.ajouter_association_scene_son(id_scene="123123", son=son_alea1, schema="SchemaTest")
+son_dao.ajouter_association_scene_son(id_scene="123123", son=son_continu1, schema="SchemaTest")
+son_dao.ajouter_association_scene_son(id_scene="123123", son=son_manuel1, schema="SchemaTest")
+son_dao.ajouter_association_scene_son(id_scene="234234", son=son_alea2, schema="SchemaTest")
+son_dao.ajouter_association_scene_son(id_scene="234234", son=son_continu2, schema="SchemaTest")
+son_dao.ajouter_association_scene_son(id_scene="234234", son=son_manuel2, schema="SchemaTest")
+son_dao.ajouter_association_scene_son(id_scene="234234", son=son_continu1, schema="SchemaTest")
 
 
 print(

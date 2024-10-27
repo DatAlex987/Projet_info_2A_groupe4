@@ -8,22 +8,20 @@ from business_object.son_continu import Son_Continu
 class SonDAO:
     """Implémente les méthodes du CRUD pour accéder à la base de données des sons"""
 
-    def param_of_son(self, son):  # NOT WORKING (ne reconnait pas les types)
+    def param_of_son(self, son):
         if isinstance(son, Son_Aleatoire):
             return [son.cooldown_min, son.cooldown_max]
         elif isinstance(son, Son_Continu):
-            return []
+            return [None, None]
         elif isinstance(son, Son_Manuel):
-            return [son.start_key]
-        else:
-            return ["unknown type of sound"]
+            return [son.start_key, None]
 
-    def type_of_son(self, son):  # NOT WORKING (ne reconnait pas les types)
+    def type_of_son(self, son):
         if isinstance(son, Son_Aleatoire):
             return "aleatoire"
         elif isinstance(son, Son_Continu):
             return "continu"
-        else:
+        elif isinstance(son, Son_Manuel):
             return "manuel"
 
     def ajouter_son(self, son, schema):
@@ -129,7 +127,7 @@ class SonDAO:
                 }
         return son_trouve
 
-    def rechercher_sons_par_scene(self, id_scene: str, schema):  # NOT CHECKED YET
+    def rechercher_sons_par_scene(self, id_scene: str, schema):
         """
         Recherche les sons appartenant à une scène.
 
@@ -195,7 +193,7 @@ class SonDAO:
             print(f"Erreur lors de la récupération des sound-decks : {e}")
             return []
 
-    def ajouter_association_scene_son(self, id_scene: str, son: Son, schema):  # NCY
+    def ajouter_association_scene_son(self, id_scene: str, son: Son, schema):
         """
         Ajoute une nouvelle association Scene - Son dans la table d'association.
 
@@ -239,7 +237,7 @@ class SonDAO:
 
     def supprimer_association_scene_son(
         self, id_scene: str, id_freesound: str, type_son: str, schema
-    ):  # NCY
+    ):
         """
         Supprimer une association Scene - Son dans la table d'association.
 
@@ -275,7 +273,7 @@ class SonDAO:
             print(f"Erreur lors de la suppression de l'association : {e}")
             return None
 
-    def check_if_son_in_scene(self, id_scene: str, id_freesound: str, type_son: str, schema):  # NCY
+    def check_if_son_in_scene(self, id_scene: str, id_freesound: str, type_son: str, schema):
         """
         Vérifie si un son appartient à une scène
 
