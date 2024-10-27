@@ -8,7 +8,17 @@ from business_object.son_continu import Son_Continu
 class SonDAO:
     """Implémente les méthodes du CRUD pour accéder à la base de données des sons"""
 
-    def type_of_son(self, son):
+    def param_of_son(self, son):  # NOT WORKING (ne reconnait pas les types)
+        if isinstance(son, Son_Aleatoire):
+            return [son.cooldown_min, son.cooldown_max]
+        elif isinstance(son, Son_Continu):
+            return []
+        elif isinstance(son, Son_Manuel):
+            return [son.start_key]
+        else:
+            return ["unknown type of sound"]
+
+    def type_of_son(self, son):  # NOT WORKING (ne reconnait pas les types)
         if isinstance(son, Son_Aleatoire):
             return "aleatoire"
         elif isinstance(son, Son_Continu):
@@ -72,7 +82,7 @@ class SonDAO:
     def consulter_sons(self, schema):
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
-                query = f""""
+                query = f"""
                  SELECT id_freesound, nom, description, duree
                     FROM {schema}.Son;
                 """
@@ -185,16 +195,16 @@ class SonDAO:
             print(f"Erreur lors de la récupération des sound-decks : {e}")
             return []
 
-    def ajouter_association_sd_scene(self, id_sd: str, id_scene: str, schema):  # NOT MODIFIED YET
+    def ajouter_association_scene_son(self, id_scene: str, son: Son, schema):  # NCY
         """
-        Ajoute une nouvelle association SD - Scene dans la table d'association.
+        Ajoute une nouvelle association Scene - Son dans la table d'association.
 
         Parameters
         ----------
-        id_sd : str
-            ID du Sound-deck concerné
         id_scene : str
             ID de la scène concernée
+        Son : Son
+            Son concerné
 
         Returns
         -------
@@ -206,14 +216,17 @@ class SonDAO:
             with DBConnection(schema=schema).connection as conn:
                 with conn.cursor() as cursor:
                     query = f"""
-                        INSERT INTO {schema}.Sounddeck_Scene(id_sd, id_scene)
-                        VALUES (%(id_sd)s, %(id_scene)s);
+                        INSERT INTO {schema}.Scene_Son(id_scene, id_freesound, type, param1, param2)
+                        VALUES (%(id_scene)s, %(id_freesound)s, %(type)s, %(param1)s, %(param2)s);
                         """
                     cursor.execute(
                         query,
                         {
-                            "id_sd": id_sd,
                             "id_scene": id_scene,
+                            "id_freesound": son.id_freesound,
+                            "type": SonDAO().type_of_son(son),
+                            "param1": SonDAO().param_of_son(son)[0],
+                            "param2": SonDAO().param_of_son(son)[1],
                         },
                     )
             nb_lignes_add = cursor.rowcount
@@ -224,16 +237,20 @@ class SonDAO:
             print(f"Erreur lors de l'ajout de l'association : {e}")
             return None
 
-    def supprimer_association_sd_scene(self, id_sd: str, id_scene: str, schema):  # NOT MODIFIED YET
+    def supprimer_association_scene_son(
+        self, id_scene: str, id_freesound: str, type_son: str, schema
+    ):  # NCY
         """
-        Supprimer une association SD - Scene dans la table d'association.
+        Supprimer une association Scene - Son dans la table d'association.
 
         Parameters
         ----------
-        id_sd : str
-            ID du Sound-deck concerné
         id_scene : str
             ID de la scène concernée
+        id_freesound : str
+            ID du son concerné
+        type_son : str
+            Type du son dont l'appartenance doit être supprimée
 
         Returns
         -------
@@ -245,15 +262,12 @@ class SonDAO:
             with DBConnection(schema=schema).connection as conn:
                 with conn.cursor() as cursor:
                     query = f"""
-                        DELETE FROM {schema}.Sounddeck_Scene
-                        WHERE id_sd = %(id_sd)s and id_scene = %(id_scene)s;
+                        DELETE FROM {schema}.Scene_Son
+                        WHERE id_scene = %(id_scene)s and id_freesound = %(id_freesound)s and type = %(type)s ;
                         """
                     cursor.execute(
                         query,
-                        {
-                            "id_sd": id_sd,
-                            "id_scene": id_scene,
-                        },
+                        {"id_scene": id_scene, "id_freesound": id_freesound, "type": type_son},
                     )
                     nb_lignes_supp = cursor.rowcount
             return nb_lignes_supp  # Permet notamment de savoir si aucune ligne n'a été trouvée
@@ -261,36 +275,39 @@ class SonDAO:
             print(f"Erreur lors de la suppression de l'association : {e}")
             return None
 
-    def check_if_scene_in_sd(self, id_sd: str, id_scene: str, schema):  # NOT MODIFIED YET
+    def check_if_son_in_scene(self, id_scene: str, id_freesound: str, type_son: str, schema):  # NCY
         """
-        Vérifie si une scène appartient à un SD.
+        Vérifie si un son appartient à une scène
 
         Parameters
         ----------
-        id_sd : str
-            L'ID du SD à vérifier.
         id_scene : str
-            L'ID de la scène à vérifier.
+            L'ID de la scène à vérifier
+        id_freesound : str
+            L'ID du son à vérifier
+        type_son : str
+            Type du son dont l'appartenance à la scène est vérifiée
 
         Returns
         -------
         bool
-            True si la scène appartient au SD, False sinon.
+            True si le son appartient à la scène, False sinon.
         """
         try:
             with DBConnection(schema=schema).connection as conn:
                 with conn.cursor() as cursor:
                     query = f"""
                     SELECT COUNT(*) AS count
-                    FROM {schema}.Sounddeck_Scene
-                    WHERE id_sd = %(id_sd)s AND id_scene = %(id_scene)s;
+                    FROM {schema}.Scene_Son
+                    WHERE id_scene = %(id_scene)s AND id_freesound = %(id_freesound)s AND type = %(type)s ;
                     """
 
                     cursor.execute(
                         query,
                         {
-                            "id_sd": id_sd,
                             "id_scene": id_scene,
+                            "id_freesound": id_freesound,
+                            "type": type_son,
                         },
                     )
 
@@ -300,10 +317,5 @@ class SonDAO:
                     return res["count"] > 0
 
         except Exception as e:
-            print(f"Erreur lors de la vérification : {id_scene},{id_sd} : {e}")
+            print(f"Erreur lors de la vérification : {id_scene},{id_freesound},{type_son} : {e}")
             return False
-
-
-# Méthode inutile au final
-# def rechercher_par_tags_sons():
-#     pass

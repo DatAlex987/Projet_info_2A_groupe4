@@ -8,6 +8,11 @@ from utils.reset_database import ResetDatabase
 from src.dao.user_dao import UserDAO
 from src.dao.sd_dao import SDDAO
 from src.dao.scene_dao import SceneDAO
+from src.dao.son_dao import SonDAO
+from src.business_object.son import Son
+from src.business_object.son_aleatoire import Son_Aleatoire
+from src.business_object.son_manuel import Son_Manuel
+from src.business_object.son_continu import Son_Continu
 
 ResetDatabase().ResetALL()
 
@@ -97,7 +102,29 @@ scene4 = Scene(
     sons_manuels=[],
     date_creation=datetime.date.today(),
 )
-"""sd_dao = SDDAO()
+# Scene class instantiation
+
+son_alea1 = Son_Aleatoire(
+    "SonAlea1", "Description du SonAlea1", datetime.timedelta(seconds=1), "194863", [], 10, 15
+)
+son_alea2 = Son_Aleatoire(
+    "SonAlea2", "Description du SonAlea2", datetime.timedelta(seconds=2), "249135", [], 20, 25
+)
+son_continu1 = Son_Continu(
+    "SonContinu1", "Description du SonContinu1", datetime.timedelta(seconds=5), "123456", []
+)
+son_continu2 = Son_Continu(
+    "SonContinu2", "Description du SonContinu2", datetime.timedelta(seconds=10), "234567", []
+)
+son_manuel1 = Son_Manuel(
+    "SonManuel1", "Description du SonManuel1", datetime.timedelta(seconds=4), "134679", [], "a"
+)
+son_manuel2 = Son_Manuel(
+    "SonManuel2", "Description du SonManuel2", datetime.timedelta(seconds=8), "258258", [], "b"
+)
+
+son_dao = SonDAO()
+sd_dao = SDDAO()
 user_dao = UserDAO()
 scene_dao = SceneDAO()
 user_dao.ajouter_user(user1, "SchemaTest")
@@ -110,23 +137,69 @@ scene_dao.ajouter_scene(scene1, "Schematest")
 scene_dao.ajouter_scene(scene2, "Schematest")
 scene_dao.ajouter_scene(scene3, "Schematest")
 scene_dao.ajouter_scene(scene4, "Schematest")
+son_dao.ajouter_son(son_alea1, "SchemaTest")
+son_dao.ajouter_son(son_alea2, "SchemaTest")
+son_dao.ajouter_son(son_continu1, "SchemaTest")
+son_dao.ajouter_son(son_continu2, "SchemaTest")
+son_dao.ajouter_son(son_manuel1, "SchemaTest")
+son_dao.ajouter_son(son_manuel2, "SchemaTest")
+
 all_users = user_dao.consulter_users(schema="SchemaTest")
 all_sds = sd_dao.consulter_sds(schema="SchemaTest")
 all_scenes = scene_dao.consulter_scenes(schema="SchemaTest")
+all_sons = son_dao.consulter_sons(schema="Schematest")
 # print(all_users)
 # print(all_sds)
-print(all_scenes)
+# print(all_scenes)
+print(all_sons)
 scene_dao.ajouter_association_sd_scene(id_sd="101", id_scene="123123", schema="SchemaTest")
 scene_dao.ajouter_association_sd_scene(id_sd="101", id_scene="234234", schema="SchemaTest")
 scene_dao.ajouter_association_sd_scene(id_sd="101", id_scene="345345", schema="SchemaTest")
 scene_dao.ajouter_association_sd_scene(id_sd="102", id_scene="234234", schema="SchemaTest")
 scene_dao.ajouter_association_sd_scene(id_sd="103", id_scene="345345", schema="SchemaTest")
 scene_dao.ajouter_association_sd_scene(id_sd="104", id_scene="456456", schema="SchemaTest")
+print(type(son_alea1))
+# son_dao.ajouter_association_scene_son(id_scene="123123", son=son_alea1, schema="SchemaTest")
+# son_dao.ajouter_association_scene_son(id_scene="123123", id_freesound="123456", schema="SchemaTest")
+# son_dao.ajouter_association_scene_son(id_scene="123123", id_freesound="134679", schema="SchemaTest")
+# son_dao.ajouter_association_scene_son(id_scene="234234", id_freesound="249135", schema="SchemaTest")
+# son_dao.ajouter_association_scene_son(id_scene="234234", id_freesound="234567", schema="SchemaTest")
+# son_dao.ajouter_association_scene_son(id_scene="234234", id_freesound="258258", schema="SchemaTest")
+# son_dao.ajouter_association_scene_son(id_scene="234234", id_freesound="123456", schema="SchemaTest")
 
-print(scene_dao.check_if_scene_in_sd(id_sd="101", id_scene="234234", schema="SchemaTest"))
-print(scene_dao.rechercher_scenes_par_sd(id_sd="101", schema="SchemaTest"))
-print(scene_dao.supprimer_association_sd_scene(id_sd="101", id_scene="234234", schema="SchemaTest"))
-print(scene_dao.check_if_scene_in_sd(id_sd="101", id_scene="234234", schema="SchemaTest"))
-print(scene_dao.rechercher_scenes_par_sd(id_sd="101", schema="SchemaTest"))"""
 
+print(
+    son_dao.check_if_son_in_scene(
+        id_scene="123123", id_freesound="194863", type_son="aleatoire", schema="SchemaTest"
+    )
+)  # T
+print(
+    son_dao.check_if_son_in_scene(
+        id_scene="123123", id_freesound="123456", type_son="continu", schema="SchemaTest"
+    )
+)  # T
+print(
+    son_dao.check_if_son_in_scene(
+        id_scene="123123", id_freesound="134679", type_son="manuel", schema="SchemaTest"
+    )
+)  # T
+print(
+    son_dao.check_if_son_in_scene(
+        id_scene="234234", id_freesound="123456", type_son="continu", schema="SchemaTest"
+    )
+)  # T
+print(
+    son_dao.check_if_son_in_scene(
+        id_scene="234234", id_freesound="134679", type_son="manuel", schema="SchemaTest"
+    )
+)  # F
+
+print(son_dao.rechercher_sons_par_scene(id_scene="123123", schema="SchemaTest"))
+print(son_dao.rechercher_sons_par_scene(id_scene="234234", schema="SchemaTest"))
+print(
+    son_dao.supprimer_association_scene_son(
+        id_scene="123123", id_freesound="194863", type_son="aleatoire", schema="SchemaTest"
+    )
+)
+print(son_dao.rechercher_sons_par_scene(id_scene="123123", schema="SchemaTest"))
 ResetDatabase().ResetALL()
