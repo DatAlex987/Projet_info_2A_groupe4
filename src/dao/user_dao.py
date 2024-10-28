@@ -2,6 +2,7 @@ import datetime
 from utils.singleton import Singleton
 from dao.db_connection import DBConnection
 from business_object.user import User
+from dao.sd_dao import SDDAO
 
 
 class UserDAO(metaclass=Singleton):
@@ -103,7 +104,9 @@ class UserDAO(metaclass=Singleton):
                                 "prenom": user["prenom"],
                                 "date_naissance": user["date_naissance"],
                                 "id_user": str(user["id_user"]),
-                                "SD_possedes": [],  # A AJOUTER ENSUITE
+                                "SD_possedes": SDDAO().rechercher_sds_par_user(
+                                    str(user["id_user"]), schema=schema
+                                ),
                             }
                         )
                         # Le mot de passe est ignoré pour évité d'être hashé de nouveau.
@@ -142,7 +145,9 @@ class UserDAO(metaclass=Singleton):
                         "prenom": user_data["prenom"],
                         "date_naissance": user_data["date_naissance"],
                         "id_user": str(user_data["id_user"]),
-                        "SD_possedes": [],  # A AJOUTER ENSUITE
+                        "SD_possedes": SDDAO().rechercher_sds_par_user(
+                            str(user_data["id_user"]), schema=schema
+                        ),
                     }
                     return user_trouve
                 return None

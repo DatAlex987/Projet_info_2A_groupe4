@@ -2,6 +2,7 @@ from utils.singleton import Singleton
 from dao.db_connection import DBConnection
 from business_object.sd import SD
 import datetime
+from dao.scene_dao import SceneDAO
 
 
 class SDDAO(metaclass=Singleton):
@@ -147,7 +148,9 @@ class SDDAO(metaclass=Singleton):
                             {
                                 "id_sd": str(row["id_sd"]),
                                 "nom": row["nom"],
-                                "scenes": [],  # A AJOUTER PLUS TARD
+                                "scenes": SceneDAO().rechercher_scenes_par_sd(
+                                    str(row["id_sd"]), schema=schema
+                                ),
                                 "description": row["description"],
                                 "date_creation": row["date_creation"],
                             }
@@ -199,7 +202,9 @@ class SDDAO(metaclass=Singleton):
                         "nom": res["nom"],
                         "description": res["description"],
                         "date_creation": res["date_creation"],
-                        "scenes": [],  # A AJOUTER PLUS TARD
+                        "scenes": SceneDAO().rechercher_scenes_par_sd(
+                            str(res["id_sd"]), schema=schema
+                        ),  # A AJOUTER PLUS TARD
                     }
         except Exception as e:
             print(f"Erreur lors de la recherche du sound-deck avec ID {id_sd} : {e}")
@@ -250,7 +255,9 @@ class SDDAO(metaclass=Singleton):
                             {
                                 "id_sd": str(row["id_sd"]),
                                 "nom": row["nom"],
-                                "scenes": [],  # A AJOUTER PLUS TARD
+                                "scenes": SceneDAO().rechercher_scenes_par_sd(
+                                    str(row["id_sd"]), schema=schema
+                                ),  # A AJOUTER PLUS TARD
                                 "description": row["description"],
                                 "date_creation": row["date_creation"],
                             }

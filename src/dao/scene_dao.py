@@ -1,5 +1,6 @@
 from dao.db_connection import DBConnection
 from business_object.scene import Scene
+from dao.son_dao import SonDAO
 
 
 class SceneDAO:
@@ -77,9 +78,21 @@ class SceneDAO:
                         {
                             "id_scene": str(row["id_scene"]),
                             "nom": row["nom"],
-                            "sons_aleatoires": [],  # SANS DOUTE A MODIFIER à L'AVENIR
-                            "sons_continus": [],  # SANS DOUTE A MODIFIER à L'AVENIR
-                            "sons_manuels": [],  # SANS DOUTE A MODIFIER à L'AVENIR
+                            "sons_aleatoires": SonDAO().rechercher_sons_par_scene(
+                                str(row["id_scene"]), schema=schema
+                            )[
+                                "sons_aleatoires"
+                            ],  # SANS DOUTE A MODIFIER à L'AVENIR
+                            "sons_continus": SonDAO().rechercher_sons_par_scene(
+                                str(row["id_scene"]), schema=schema
+                            )[
+                                "sons_continus"
+                            ],  # SANS DOUTE A MODIFIER à L'AVENIR
+                            "sons_manuels": SonDAO().rechercher_sons_par_scene(
+                                str(row["id_scene"]), schema=schema
+                            )[
+                                "sons_manuels"
+                            ],  # SANS DOUTE A MODIFIER à L'AVENIR
                             "description": row["description"],
                             "date_creation": row["date_creation"],
                         }
@@ -105,9 +118,21 @@ class SceneDAO:
                 Scene_trouvee = {
                     "id_scene": str(res["id_scene"]),
                     "nom": res["nom"],
-                    "sons_aleatoires": [],  # SANS DOUTE A MODIFIER à L'AVENIR
-                    "sons_continus": [],  # SANS DOUTE A MODIFIER à L'AVENIR
-                    "sons_manuels": [],  # SANS DOUTE A MODIFIER à L'AVENIR
+                    "sons_aleatoires": SonDAO().rechercher_sons_par_scene(
+                        str(res["id_scene"]), schema=schema
+                    )[
+                        "sons_aleatoires"
+                    ],  # SANS DOUTE A MODIFIER à L'AVENIR
+                    "sons_continus": SonDAO().rechercher_sons_par_scene(
+                        str(res["id_scene"]), schema=schema
+                    )[
+                        "sons_continus"
+                    ],  # SANS DOUTE A MODIFIER à L'AVENIR
+                    "sons_manuels": SonDAO().rechercher_sons_par_scene(
+                        str(res["id_scene"]), schema=schema
+                    )[
+                        "sons_manuels"
+                    ],  # SANS DOUTE A MODIFIER à L'AVENIR
                     "description": res["description"],
                     "date_creation": res["date_creation"],
                 }
@@ -159,9 +184,21 @@ class SceneDAO:
                         {
                             "id_scene": str(row["id_scene"]),
                             "nom": row["nom"],
-                            "sons_aleatoires": [],  # SANS DOUTE A MODIFIER à L'AVENIR
-                            "sons_continus": [],  # SANS DOUTE A MODIFIER à L'AVENIR
-                            "sons_manuels": [],  # SANS DOUTE A MODIFIER à L'AVENIR
+                            "sons_aleatoires": SonDAO().rechercher_sons_par_scene(
+                                str(row["id_scene"]), schema=schema
+                            )[
+                                "sons_aleatoires"
+                            ],  # SANS DOUTE A MODIFIER à L'AVENIR
+                            "sons_continus": SonDAO().rechercher_sons_par_scene(
+                                str(row["id_scene"]), schema=schema
+                            )[
+                                "sons_continus"
+                            ],  # SANS DOUTE A MODIFIER à L'AVENIR
+                            "sons_manuels": SonDAO().rechercher_sons_par_scene(
+                                str(row["id_scene"]), schema=schema
+                            )[
+                                "sons_manuels"
+                            ],  # SANS DOUTE A MODIFIER à L'AVENIR
                             "description": row["description"],
                             "date_creation": row["date_creation"],
                         }

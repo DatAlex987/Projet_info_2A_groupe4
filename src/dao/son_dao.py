@@ -3,6 +3,7 @@ from business_object.son import Son
 from business_object.son_aleatoire import Son_Aleatoire
 from business_object.son_manuel import Son_Manuel
 from business_object.son_continu import Son_Continu
+from dao.tag_dao import TagDAO
 
 
 class SonDAO:
@@ -97,6 +98,9 @@ class SonDAO:
                             "id_freesound": str(row["id_freesound"]),
                             "nom": row["nom"],
                             "description": row["description"],
+                            "tags": TagDAO().rechercher_tags_par_son(
+                                str(row["id_freesound"]), schema=schema
+                            ),
                             "duree": row["duree"],
                         }
                     )
@@ -123,6 +127,9 @@ class SonDAO:
                     "id_freesound": str(res["id_freesound"]),
                     "nom": res["nom"],
                     "description": res["description"],
+                    "tags": TagDAO().rechercher_tags_par_son(
+                        str(res["id_freesound"]), schema=schema
+                    ),
                     "duree": res["duree"],
                 }
         return son_trouve
@@ -176,6 +183,9 @@ class SonDAO:
                     "nom": row["nom"],
                     "description": row["description"],
                     "duree": row["duree"],
+                    "tags": TagDAO().rechercher_tags_par_son(
+                        str(row["id_freesound"]), schema=schema
+                    ),
                     "param1": row["param1"],
                     "param2": row["param2"],
                 }
