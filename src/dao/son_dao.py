@@ -88,22 +88,22 @@ class SonDAO:
                 cursor.execute(query)
                 res = cursor.fetchall()
 
-                if not res:
-                    return []
+        if not res:
+            return []
 
-                sons_trouves = []
-                for row in res:
-                    sons_trouves.append(
-                        {
-                            "id_freesound": str(row["id_freesound"]),
-                            "nom": row["nom"],
-                            "description": row["description"],
-                            "tags": TagDAO().rechercher_tags_par_son(
-                                str(row["id_freesound"]), schema=schema
-                            ),
-                            "duree": row["duree"],
-                        }
-                    )
+        sons_trouves = []
+        for row in res:
+            sons_trouves.append(
+                {
+                    "id_freesound": str(row["id_freesound"]),
+                    "nom": row["nom"],
+                    "description": row["description"],
+                    "tags": TagDAO().rechercher_tags_par_son(
+                        str(row["id_freesound"]), schema=schema
+                    ),
+                    "duree": row["duree"],
+                }
+            )
         return sons_trouves
 
     def rechercher_par_id_son(self, id_freesound, schema):
@@ -120,18 +120,16 @@ class SonDAO:
                 )
                 res = cursor.fetchone()
 
-                if res is None:
-                    return None
+        if res is None:
+            return None
 
-                son_trouve = {
-                    "id_freesound": str(res["id_freesound"]),
-                    "nom": res["nom"],
-                    "description": res["description"],
-                    "tags": TagDAO().rechercher_tags_par_son(
-                        str(res["id_freesound"]), schema=schema
-                    ),
-                    "duree": res["duree"],
-                }
+        son_trouve = {
+            "id_freesound": str(res["id_freesound"]),
+            "nom": res["nom"],
+            "description": res["description"],
+            "tags": TagDAO().rechercher_tags_par_son(str(res["id_freesound"]), schema=schema),
+            "duree": res["duree"],
+        }
         return son_trouve
 
     def rechercher_sons_par_scene(self, id_scene: str, schema):

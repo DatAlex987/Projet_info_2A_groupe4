@@ -68,35 +68,35 @@ class SceneDAO:
                 cursor.execute(query)
                 res = cursor.fetchall()
 
-                if not res:
-                    return []
+        if not res:
+            return []
 
-                scenes_trouvees = []
+        scenes_trouvees = []
 
-                for row in res:
-                    scenes_trouvees.append(
-                        {
-                            "id_scene": str(row["id_scene"]),
-                            "nom": row["nom"],
-                            "sons_aleatoires": SonDAO().rechercher_sons_par_scene(
-                                str(row["id_scene"]), schema=schema
-                            )[
-                                "sons_aleatoires"
-                            ],  # SANS DOUTE A MODIFIER à L'AVENIR
-                            "sons_continus": SonDAO().rechercher_sons_par_scene(
-                                str(row["id_scene"]), schema=schema
-                            )[
-                                "sons_continus"
-                            ],  # SANS DOUTE A MODIFIER à L'AVENIR
-                            "sons_manuels": SonDAO().rechercher_sons_par_scene(
-                                str(row["id_scene"]), schema=schema
-                            )[
-                                "sons_manuels"
-                            ],  # SANS DOUTE A MODIFIER à L'AVENIR
-                            "description": row["description"],
-                            "date_creation": row["date_creation"],
-                        }
-                    )
+        for row in res:
+            scenes_trouvees.append(
+                {
+                    "id_scene": str(row["id_scene"]),
+                    "nom": row["nom"],
+                    "sons_aleatoires": SonDAO().rechercher_sons_par_scene(
+                        str(row["id_scene"]), schema=schema
+                    )[
+                        "sons_aleatoires"
+                    ],  # SANS DOUTE A MODIFIER à L'AVENIR
+                    "sons_continus": SonDAO().rechercher_sons_par_scene(
+                        str(row["id_scene"]), schema=schema
+                    )[
+                        "sons_continus"
+                    ],  # SANS DOUTE A MODIFIER à L'AVENIR
+                    "sons_manuels": SonDAO().rechercher_sons_par_scene(
+                        str(row["id_scene"]), schema=schema
+                    )[
+                        "sons_manuels"
+                    ],  # SANS DOUTE A MODIFIER à L'AVENIR
+                    "description": row["description"],
+                    "date_creation": row["date_creation"],
+                }
+            )
         return scenes_trouvees
 
     def rechercher_par_id_scenes(self, id_scene, schema):
@@ -112,30 +112,28 @@ class SceneDAO:
                     {"id_scene": id_scene},
                 )
                 res = cursor.fetchone()
-                if res is None:
-                    return None
+        if res is None:
+            return None
 
-                Scene_trouvee = {
-                    "id_scene": str(res["id_scene"]),
-                    "nom": res["nom"],
-                    "sons_aleatoires": SonDAO().rechercher_sons_par_scene(
-                        str(res["id_scene"]), schema=schema
-                    )[
-                        "sons_aleatoires"
-                    ],  # SANS DOUTE A MODIFIER à L'AVENIR
-                    "sons_continus": SonDAO().rechercher_sons_par_scene(
-                        str(res["id_scene"]), schema=schema
-                    )[
-                        "sons_continus"
-                    ],  # SANS DOUTE A MODIFIER à L'AVENIR
-                    "sons_manuels": SonDAO().rechercher_sons_par_scene(
-                        str(res["id_scene"]), schema=schema
-                    )[
-                        "sons_manuels"
-                    ],  # SANS DOUTE A MODIFIER à L'AVENIR
-                    "description": res["description"],
-                    "date_creation": res["date_creation"],
-                }
+        Scene_trouvee = {
+            "id_scene": str(res["id_scene"]),
+            "nom": res["nom"],
+            "sons_aleatoires": SonDAO().rechercher_sons_par_scene(
+                str(res["id_scene"]), schema=schema
+            )[
+                "sons_aleatoires"
+            ],  # SANS DOUTE A MODIFIER à L'AVENIR
+            "sons_continus": SonDAO().rechercher_sons_par_scene(
+                str(res["id_scene"]), schema=schema
+            )[
+                "sons_continus"
+            ],  # SANS DOUTE A MODIFIER à L'AVENIR
+            "sons_manuels": SonDAO().rechercher_sons_par_scene(str(res["id_scene"]), schema=schema)[
+                "sons_manuels"
+            ],  # SANS DOUTE A MODIFIER à L'AVENIR
+            "description": res["description"],
+            "date_creation": res["date_creation"],
+        }
         return Scene_trouvee
 
     def rechercher_scenes_par_sd(self, id_sd: str, schema):
@@ -174,36 +172,36 @@ class SceneDAO:
 
                     res = cursor.fetchall()
 
-                if not res:
-                    return []
+            if not res:
+                return []
 
-                scenes_trouvees = []
+            scenes_trouvees = []
 
-                for row in res:
-                    scenes_trouvees.append(
-                        {
-                            "id_scene": str(row["id_scene"]),
-                            "nom": row["nom"],
-                            "sons_aleatoires": SonDAO().rechercher_sons_par_scene(
-                                str(row["id_scene"]), schema=schema
-                            )[
-                                "sons_aleatoires"
-                            ],  # SANS DOUTE A MODIFIER à L'AVENIR
-                            "sons_continus": SonDAO().rechercher_sons_par_scene(
-                                str(row["id_scene"]), schema=schema
-                            )[
-                                "sons_continus"
-                            ],  # SANS DOUTE A MODIFIER à L'AVENIR
-                            "sons_manuels": SonDAO().rechercher_sons_par_scene(
-                                str(row["id_scene"]), schema=schema
-                            )[
-                                "sons_manuels"
-                            ],  # SANS DOUTE A MODIFIER à L'AVENIR
-                            "description": row["description"],
-                            "date_creation": row["date_creation"],
-                        }
-                    )
-                return scenes_trouvees
+            for row in res:
+                scenes_trouvees.append(
+                    {
+                        "id_scene": str(row["id_scene"]),
+                        "nom": row["nom"],
+                        "sons_aleatoires": SonDAO().rechercher_sons_par_scene(
+                            str(row["id_scene"]), schema=schema
+                        )[
+                            "sons_aleatoires"
+                        ],  # SANS DOUTE A MODIFIER à L'AVENIR
+                        "sons_continus": SonDAO().rechercher_sons_par_scene(
+                            str(row["id_scene"]), schema=schema
+                        )[
+                            "sons_continus"
+                        ],  # SANS DOUTE A MODIFIER à L'AVENIR
+                        "sons_manuels": SonDAO().rechercher_sons_par_scene(
+                            str(row["id_scene"]), schema=schema
+                        )[
+                            "sons_manuels"
+                        ],  # SANS DOUTE A MODIFIER à L'AVENIR
+                        "description": row["description"],
+                        "date_creation": row["date_creation"],
+                    }
+                )
+            return scenes_trouvees
         except Exception as e:
             print(f"Erreur lors de la récupération des sound-decks : {e}")
             return []

@@ -138,24 +138,24 @@ class SDDAO(metaclass=Singleton):
                     cursor.execute(query)
                     res = cursor.fetchall()
 
-                    if not res:
-                        return []
+            if not res:
+                return []
 
-                    sd_trouves = []
+            sd_trouves = []
 
-                    for row in res:
-                        sd_trouves.append(
-                            {
-                                "id_sd": str(row["id_sd"]),
-                                "nom": row["nom"],
-                                "scenes": SceneDAO().rechercher_scenes_par_sd(
-                                    str(row["id_sd"]), schema=schema
-                                ),
-                                "description": row["description"],
-                                "date_creation": row["date_creation"],
-                            }
-                        )
-                    return sd_trouves
+            for row in res:
+                sd_trouves.append(
+                    {
+                        "id_sd": str(row["id_sd"]),
+                        "nom": row["nom"],
+                        "scenes": SceneDAO().rechercher_scenes_par_sd(
+                            str(row["id_sd"]), schema=schema
+                        ),
+                        "description": row["description"],
+                        "date_creation": row["date_creation"],
+                    }
+                )
+            return sd_trouves
         except Exception as e:
             print(f"Erreur lors de la récupération des sound-decks : {e}")
             return []
@@ -194,18 +194,18 @@ class SDDAO(metaclass=Singleton):
                     )
 
                     res = cursor.fetchone()
-                    if res is None:
-                        return None
+            if res is None:
+                return None
 
-                    return {
-                        "id_sd": res["id_sd"],
-                        "nom": res["nom"],
-                        "description": res["description"],
-                        "date_creation": res["date_creation"],
-                        "scenes": SceneDAO().rechercher_scenes_par_sd(
-                            str(res["id_sd"]), schema=schema
-                        ),  # A AJOUTER PLUS TARD
-                    }
+            return {
+                "id_sd": res["id_sd"],
+                "nom": res["nom"],
+                "description": res["description"],
+                "date_creation": res["date_creation"],
+                "scenes": SceneDAO().rechercher_scenes_par_sd(
+                    str(res["id_sd"]), schema=schema
+                ),  # A AJOUTER PLUS TARD
+            }
         except Exception as e:
             print(f"Erreur lors de la recherche du sound-deck avec ID {id_sd} : {e}")
             return None
@@ -245,24 +245,24 @@ class SDDAO(metaclass=Singleton):
                     )
 
                     res = cursor.fetchall()
-                    if not res:
-                        return []
+            if not res:
+                return []
 
-                    sd_trouves = []
+            sd_trouves = []
 
-                    for row in res:
-                        sd_trouves.append(
-                            {
-                                "id_sd": str(row["id_sd"]),
-                                "nom": row["nom"],
-                                "scenes": SceneDAO().rechercher_scenes_par_sd(
-                                    str(row["id_sd"]), schema=schema
-                                ),  # A AJOUTER PLUS TARD
-                                "description": row["description"],
-                                "date_creation": row["date_creation"],
-                            }
-                        )
-                    return sd_trouves
+            for row in res:
+                sd_trouves.append(
+                    {
+                        "id_sd": str(row["id_sd"]),
+                        "nom": row["nom"],
+                        "scenes": SceneDAO().rechercher_scenes_par_sd(
+                            str(row["id_sd"]), schema=schema
+                        ),  # A AJOUTER PLUS TARD
+                        "description": row["description"],
+                        "date_creation": row["date_creation"],
+                    }
+                )
+            return sd_trouves
         except Exception as e:
             print(f"Erreur lors de la récupération des sound-decks : {e}")
             return []

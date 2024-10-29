@@ -98,7 +98,7 @@ class TagDAO:
             return []
 
     def ajouter_association_son_tag(self, id_freesound: str, tag: str, schema: str):
-         """
+        """
         Ajoute une nouvelle association Son - Tag dans la table d'association.
 
         Parameters
@@ -113,14 +113,13 @@ class TagDAO:
         bool
             True si ajout avec succès, None sinon
         """
-
         try:
             with DBConnection(schema=schema).connection as conn:
                 with conn.cursor() as cursor:
                     query = f"""
-                        INSERT INTO {schema}.Son_tag(id_freesound, nom_tag)
-                        VALUES (%(id_freesound)s, %(nom_tag)s);
-                        """
+                            INSERT INTO {schema}.Son_tag(id_freesound, nom_tag)
+                            VALUES (%(id_freesound)s, %(nom_tag)s);
+                            """
                     cursor.execute(
                         query,
                         {
@@ -128,10 +127,9 @@ class TagDAO:
                             "nom_tag": tag,
                         },
                     )
-            nb_lignes_add = cursor.rowcount
-            if nb_lignes_add == 1:
-                return True
-
+                    nb_lignes_add = cursor.rowcount
+                    if nb_lignes_add == 1:
+                        return True
         except Exception as e:
             print(f"Erreur lors de l'ajout de l'association : {e}")
             return None
