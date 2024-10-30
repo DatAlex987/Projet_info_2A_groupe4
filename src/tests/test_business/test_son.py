@@ -33,7 +33,7 @@ def test_JouerSon(setup_pygame, mocker):
         son.JouerSon()
 
     # Vérifier que Sound a été appelé avec le bon chemin
-    pygame.mixer.Sound.assert_called_once_with("/mock/path/test_sound.mp3")
+    pygame.mixer.Sound.assert_called_once_with(os.path.normpath("/mock/path/test_sound.mp3"))
     mock_sound.play.assert_called_once_with(loop=0)
 
 

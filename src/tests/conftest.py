@@ -1,12 +1,8 @@
-from business_object.personne import Personne
-from business_object.user import User
-from business_object.son import Son
-from business_object.scene import Scene
-from business_object.sd import SD
 from business_object.son_aleatoire import Son_Aleatoire
 from business_object.son_manuel import Son_Manuel
 from business_object.son_continu import Son_Continu
 import pytest
+import pygame
 import datetime
 
 
@@ -177,6 +173,16 @@ def sd_kwargs(scene1_kwargs):
         "scenes": [],  # Scene(**scene1_kwargs)
         "date_creation": datetime.date(2024, 1, 4),
     }
+
+
+@pytest.fixture
+def setup_pygame():
+    # Initialiser pygame et son mixer
+    pygame.init()
+    pygame.mixer.init()
+    yield
+    # Quitter pygame après les tests
+    pygame.quit()
 
 
 """# Substances chimiques
