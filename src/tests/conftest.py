@@ -55,6 +55,7 @@ def utilisateur2_kwargs():
     }
 
 
+@pytest.fixture
 def son_vador_kwargs():
     return {
         "nom": "The Imperial March",

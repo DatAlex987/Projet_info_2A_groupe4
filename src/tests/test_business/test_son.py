@@ -29,11 +29,12 @@ def test_JouerSon(setup_pygame, mocker):
     )
 
     # Simuler la variable d'environnement
-    with patch.dict(os.environ, {"DOSSIER_SAUVEGARDE": "/mock/path"}):
+    with patch.dict(os.environ, {"DOSSIER_SAUVEGARDE": os.path.normpath("/mock/path")}):
         son.JouerSon()
 
     # Vérifier que Sound a été appelé avec le bon chemin
-    pygame.mixer.Sound.assert_called_once_with(os.path.normpath("/mock/path/test_sound.mp3"))
+    expected_path = os.path.normpath("/mock/path/test_sound.mp3")
+    pygame.mixer.Sound.assert_called_once_with(expected_path)
     mock_sound.play.assert_called_once_with(loop=0)
 
 
@@ -49,10 +50,13 @@ def test_JouerSon_file_not_found(setup_pygame, mocker):
         tags=["test"],
     )
 
-    with patch.dict(os.environ, {"DOSSIER_SAUVEGARDE": "/mock/path"}):
+    with patch.dict(os.environ, {"DOSSIER_SAUVEGARDE": os.path.normpath("C:/mock/path")}):
+        fichier_son = os.path.normpath(
+            os.path.join(os.getenv("DOSSIER_SAUVEGARDE"), "test_sound.mp3")
+        )
         with pytest.raises(
             FileNotFoundError,
-            match="Le fichier son '/mock/path/test_sound.mp3' n'a pas été trouvé.",
+            match=rf"Le fichier son {fichier_son} n'a pas été trouvé.",
         ):
             son.JouerSon()
 
@@ -70,7 +74,7 @@ def test_ArretSon(setup_pygame, mocker):
         tags=["test"],
     )
 
-    with patch.dict(os.environ, {"DOSSIER_SAUVEGARDE": "/mock/path"}):
+    with patch.dict(os.environ, {"DOSSIER_SAUVEGARDE": os.path.normpath("/mock/path")}):
         son.JouerSon()
 
     assert son.charge is not None
