@@ -1,30 +1,36 @@
-import logging
+"""Ce module implémente la classe abstraite AbstractView"""
 
 from abc import ABC, abstractmethod
 
 
-class VueAbstraite(ABC):
-    """Modèle de Vue"""
+class AbstractView(ABC):
+    """Classe abstraite définissant la structure des views"""
 
-    def __init__(self, message=""):
-        self.message = message
-        logging.info(type(self).__name__)
-
-    def nettoyer_console(self):
-        """Insérer des lignes vides pour simuler un nettoyage"""
-        for _ in range(30):
-            print("")
-
-    def afficher(self) -> None:
-        """Echappe un grand espace dans le terminal pour simuler
-        le changement de page de l'application"""
-        self.nettoyer_console()
-        print(self.message)
-        print()
+    def __init__(self):
+        self.style = {
+            "separator": "ffffff",
+            "questionmark": "000000",
+            "selected": "00BFFF",
+            "pointer": "ffffff",
+            "instruction": "ffffff",
+            "answer": "008000",
+            "question": "FF7F50",
+        }
 
     @abstractmethod
-    def choisir_menu(self):
-        """Choix du menu suivant de l'utilisateur"""
+    def display_info(self):
+        """Affiche un bandeau information"""
+        pass
+
+    @abstractmethod
+    def make_choice(self, user_info):
+        """Regroupe les interactions avec l'utilisateur
+
+        Parameters
+        -------------------
+        user_info : Client / str
+            Permet de récupérer les informations de l'utilisateur de views en views
+        """
         pass
 
 
