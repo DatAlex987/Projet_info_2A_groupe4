@@ -1,5 +1,5 @@
 from utils.reset_database import ResetDatabase
-from view.accueil_view import AccueilView
+from view.accueilview import AccueilView
 
 reseter = ResetDatabase()
 reseter.ResetALL()
