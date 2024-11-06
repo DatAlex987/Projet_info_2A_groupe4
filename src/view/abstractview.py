@@ -23,15 +23,6 @@ class AbstractView(ABC):
         pass
 
     @abstractmethod
-    def make_choice(self, user_info):
-        """Regroupe les interactions avec l'utilisateur
-
-        Parameters
-        -------------------
-        user_info : Client / str
-            Permet de récupérer les informations de l'utilisateur de views en views
-        """
+    def make_choice(self):
+        """Regroupe les interactions avec l'utilisateur"""
         pass
-
-
-# Utiliser singleton session

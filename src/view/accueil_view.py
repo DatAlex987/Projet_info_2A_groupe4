@@ -2,7 +2,8 @@
 
 from colorama import Fore, Style
 from InquirerPy import prompt
-from view.abstract_view import AbstractView
+from view.abstractview import AbstractView
+from service.user_service import UserService
 
 
 class AccueilView(AbstractView):
@@ -10,11 +11,11 @@ class AccueilView(AbstractView):
 
     def __init__(self):
         super().__init__()
-        self.questions = [
+        self.question = [
             {
                 "type": "list",
                 "name": "Menu principal",
-                "message": "Merci de vous identifier.",
+                "message": "Que souhaitez-vous faire ?",
                 "choices": [
                     "Se connecter",
                     "Créer un compte",
@@ -22,15 +23,27 @@ class AccueilView(AbstractView):
                 ],
             }
         ]
-        self.questions_identification = [
-            {"type": "input", "name": "question pseudo", "message": "Quel est votre pseudo ?"},
-            {"type": "input", "name": "question mdp", "message": "Quel est votre mot de passe ?"},
+        self.questions_identifiants = [
+            {"type": "input", "name": "Nom", "message": "Veuillez entrer votre nom:"},
+            {"type": "input", "name": "Prénom", "message": "Veuillez entrer votre prénom:"},
+            {
+                "type": "password",
+                "name": "mdp",
+                "message": "Veuillez entrer votre mot de passe:",
+            },  # Avec le type password, l'input est remplacé par des "*"
         ]
 
-    def make_choice(self, user_info: str):
-        answers = prompt(self.questions)
-        next_view = None
-        return [next_view, ""]
+    def make_choice(self):
+        answers = prompt(self.question)
+        if answers["Menu principal"] == "Se connecter":
+            identifiants = prompt(self.questions_identifiants)
+            # Appel de UserService().authenticate_user(pseudo ou nom/prenom)
+        if answers["Menu principal"] == "Créer un compte":
+            pass
+        if answers["Menu principal"] == "Quitter l'appli":
+            next_view = None
+
+        return next_view
 
     def display_info(self):
-        print(Fore.BLUE + " MENU DE CONNEXION ".center(80, "=") + Style.RESET_ALL)
+        print(Fore.BLUE + " MENU D'ACCUEIL' ".center(80, "=") + Style.RESET_ALL)

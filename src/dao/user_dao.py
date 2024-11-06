@@ -152,6 +152,8 @@ class UserDAO(metaclass=Singleton):
             return user_trouve
         return None
 
+    # Potentiellement une methode recherche_par_pseudo_user ou recherche_par_nom_prenom_user
+
 
 # Pas de modifier user car rien à modifier
 
