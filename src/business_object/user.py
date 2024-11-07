@@ -18,13 +18,17 @@ class User(Personne):
         Hachage du mot de passe de l'utilisateur combiné avec un élément lié à l'utilisateur.
     SD_possedes : list[SD]
         Liste des Sound-decks possédées par l'utilisateur.
+    pseudo : str
+        Pseudonyme de l'utilisateur pour se connecter à l'application
     Méthodes
     --------
     supprimer_utilisateur() -> None:
         Supprime l'utilisateur en réinitialisant ses données.
     """
 
-    def __init__(self, nom, prenom, date_naissance, id_user, SD_possedes, mdp=None):
+    def __init__(
+        self, nom, prenom, date_naissance, id_user, mdp=None, SD_possedes=None, pseudo=None
+    ):
         # mdp optionel. N'est précisé que lors de la première instantiation
         # (pour éviter de hasher le mdp déjà hashé lors de l'instantiation après
         # requête dans la bdd par exemple)
@@ -44,7 +48,10 @@ class User(Personne):
             Nom d'utilisateur pour la connexion.
         mdp : str
             Mot de passe en clair à hacher.
+        pseudo : str
+            Pseudonyme de l'utilisateur pour se connecter à l'application
         """
+        # Vérifications de type dans l'ordre spécifié par les tests
         if not isinstance(nom, str):
             raise TypeError("Le nom doit être une instance de str.")
         if not isinstance(prenom, str):
@@ -59,10 +66,6 @@ class User(Personne):
             # devra comporter un mot de passe (pour s'assurer qu'un user a bel et bien un mdp).
             if not isinstance(mdp, str):
                 raise TypeError("Le mot de passe doit être une instance de str.")
-            if not isinstance(SD_possedes, list):
-                raise TypeError(
-                    "La liste des Sound-decks possédées doit être une instance de list."
-                )
             if len(mdp) < 8:
                 raise ValueError("Le mot de passe doit contenir au moins 8 caractères.")
             if not re.search(r"[A-Z]", mdp):
@@ -73,11 +76,16 @@ class User(Personne):
                 raise ValueError("Le mot de passe doit contenir au moins un chiffre.")
             if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", mdp):
                 raise ValueError("Le mot de passe doit contenir au moins un caractère spécial.")
+        if not isinstance(SD_possedes, list):
+            raise TypeError("La liste des Sound-decks possédées doit être une instance de list.")
+        if not isinstance(pseudo, str):
+            raise TypeError("Le pseudo de l'utilisateur doit être une instance de str.")
 
         super().__init__(nom, prenom, date_naissance)
         self.id_user = id_user
         self.mot_de_passe_hash = self._hash_mdp(mdp) if mdp else None
         self.SD_possedes = SD_possedes
+        self.pseudo = pseudo
 
     def _hash_mdp(self, mdp):
         mdp_combine = mdp + self.prenom
@@ -85,7 +93,10 @@ class User(Personne):
             "sha256", mdp_combine.encode("utf-8"), self.nom.encode("utf-8"), 100000
         )
 
+    # SERT A RIEN
+
     def supprimer_utilisateur(self):
         self.id_user = None
         self.mot_de_passe_hash = None
+        self.pseudo = None
         print("L'utilisateur a été supprimé avec succès.")

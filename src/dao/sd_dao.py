@@ -1,7 +1,6 @@
 from utils.singleton import Singleton
 from dao.db_connection import DBConnection
 from business_object.sd import SD
-import datetime
 from dao.scene_dao import SceneDAO
 
 
@@ -67,7 +66,8 @@ class SDDAO(metaclass=Singleton):
 
                     query = f"""
                     UPDATE {schema}.SoundDeck
-                        SET nom = %(nom)s, description = %(description)s, date_creation = %(date_creation)s
+                        SET nom = %(nom)s, description = %(description)s,
+                        date_creation = %(date_creation)s
                         WHERE id_sd = %(id_sd)s;
                     """
                     cursor.execute(
@@ -383,6 +383,7 @@ class SDDAO(metaclass=Singleton):
 
         except Exception as e:
             print(
-                f"Erreur lors de la vérification de l'appartenance du sound-deck {id_sd} à l'utilisateur {id_user} : {e}"
+                f"Erreur lors de la vérification de l'appartenance du sound-deck {id_sd} "
+                f"à l'utilisateur {id_user} : {e}"
             )
             return False

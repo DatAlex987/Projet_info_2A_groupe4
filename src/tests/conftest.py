@@ -26,6 +26,7 @@ def user1_kwargs():
         "id_user": "jdoe",
         "mdp": "Password!123",
         "SD_possedes": [],
+        "pseudo": "JaneDoe01",
     }
 
 
@@ -39,6 +40,7 @@ def utilisateur_kwargs():
         "id_user": "noemie.b",
         "mdp": "Mdpexample@1",
         "SD_possedes": [],
+        "pseudo": "noemie.bocquet",
     }
 
 
@@ -52,6 +54,7 @@ def utilisateur2_kwargs():
         "id_user": "123",
         "mdp": "Mdpexample@1",
         "SD_possedes": ["My Sounddeck"],
+        "pseudo": "noemie.bocquet",
     }
 
 

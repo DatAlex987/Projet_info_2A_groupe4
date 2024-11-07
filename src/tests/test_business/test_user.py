@@ -5,7 +5,7 @@ from datetime import date
 
 
 @pytest.mark.parametrize(
-    "nom, prenom, date_naissance, id_user, mdp, SD_possedes, expected_error, error_type",
+    "nom, prenom, date_naissance, id_user, mdp, SD_possedes, pseudo, expected_error, error_type",
     [
         (
             123,
@@ -14,6 +14,7 @@ from datetime import date
             "noemie.b",
             "Mdpexample@1",
             [],
+            "noemie.bocquet",
             "Le nom doit être une instance de str.",
             TypeError,
         ),
@@ -24,6 +25,7 @@ from datetime import date
             "noemie.b",
             "Mdpexample@1",
             [],
+            "noemie.bocquet",
             "Le prénom doit être une instance de str.",
             TypeError,
         ),
@@ -34,6 +36,7 @@ from datetime import date
             "noemie.b",
             "Mdpexample@1",
             [],
+            "noemie.bocquet",
             "La date de naissance doit être une instance datetime.",
             TypeError,
         ),
@@ -44,6 +47,7 @@ from datetime import date
             123,
             "Mdpexample@1",
             [],
+            "noemie.bocquet",
             "L'identifiant de l'utilisateur doit être une instance de str.",
             TypeError,
         ),
@@ -52,8 +56,9 @@ from datetime import date
             "Noémie",
             date(2003, 8, 8),
             "noemie.b",
-            456,
+            123,
             [],
+            "noemie.bocquet",
             "Le mot de passe doit être une instance de str.",
             TypeError,
         ),
@@ -64,6 +69,7 @@ from datetime import date
             "noemie.b",
             "Mdpexample@1",
             "not_a_list",
+            "noemie.bocquet",
             "La liste des Sound-decks possédées doit être une instance de list.",
             TypeError,
         ),
@@ -74,17 +80,29 @@ from datetime import date
             "noemie.b",
             "Mdpexample@1",
             [],
+            "noemie.bocquet",
             "La date de naissance doit être une instance datetime.",
+            TypeError,
+        ),
+        (
+            "Bocquet",
+            "Noémie",
+            date(2003, 8, 8),
+            "noemie.b",
+            "Mdpexample@1",
+            [],
+            1234,
+            "Le pseudo de l'utilisateur doit être une instance de str.",
             TypeError,
         ),
     ],
 )
 def test_initialisation_erreurs(
-    nom, prenom, date_naissance, id_user, mdp, SD_possedes, expected_error, error_type
+    nom, prenom, date_naissance, id_user, mdp, SD_possedes, pseudo, expected_error, error_type
 ):
     """Test les erreurs d'initialisation de l'utilisateur."""
     with pytest.raises(error_type, match=expected_error):
-        User(nom, prenom, date_naissance, id_user, mdp, SD_possedes)
+        User(nom, prenom, date_naissance, id_user, mdp, SD_possedes, pseudo)
 
 
 def test_initialisation_succes(user1_kwargs):
@@ -96,6 +114,7 @@ def test_initialisation_succes(user1_kwargs):
     assert utilisateur.id_user == user1_kwargs["id_user"]
     assert utilisateur.mot_de_passe_hash is not None
     assert utilisateur.SD_possedes == user1_kwargs["SD_possedes"]
+    assert utilisateur.pseudo == user1_kwargs["pseudo"]
 
 
 def test_supprimer_utilisateur(utilisateur_kwargs):
@@ -105,6 +124,7 @@ def test_supprimer_utilisateur(utilisateur_kwargs):
     assert utilisateur.id_user is None
     assert utilisateur.mot_de_passe_hash is None
     assert utilisateur.SD_possedes == []
+    assert utilisateur.pseudo is None
 
 
 def test_mot_de_passe_hash(utilisateur_kwargs):

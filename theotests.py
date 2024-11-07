@@ -1,3 +1,5 @@
+# tests manuels DAO, instancié tous les users, sd, scène, son, tag possibles...
+
 from dao.db_connection import DBConnection
 from business_object.user import User
 from business_object.personne import Personne
@@ -47,6 +49,7 @@ user1 = User(
     id_user="123",
     SD_possedes=[],
     mdp="Password1!",
+    pseudo="nom.prenom1",
 )
 user2 = User(
     nom="Nom2",
@@ -55,6 +58,7 @@ user2 = User(
     id_user="222222",
     SD_possedes=[],
     mdp="Password2!",
+    pseudo="nom.prenom2",
 )
 
 # SD (SoundDeck) class instantiation with empty scenes list
