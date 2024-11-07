@@ -10,7 +10,8 @@ CREATE TABLE ProjetInfo.Utilisateur (
     mdp_hashe      VARCHAR(256),
     date_naissance DATE,
     nom            VARCHAR(30),
-    prenom         VARCHAR(30)
+    prenom         VARCHAR(30),
+    pseudo         VARCHAR(30) UNIQUE
 
 );
 

@@ -1,4 +1,3 @@
-import datetime
 from utils.singleton import Singleton
 from dao.db_connection import DBConnection
 from business_object.user import User
@@ -30,8 +29,10 @@ class UserDAO(metaclass=Singleton):
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
                 query = f"""
-                INSERT INTO {schema}.utilisateur(id_user, mdp_hashe, date_naissance, nom, prenom)
-                VALUES (%(id_user)s, %(mdp_hashe)s, %(date_naissance)s, %(nom)s, %(prenom)s)
+                INSERT INTO {schema}.utilisateur(id_user, mdp_hashe, date_naissance, nom, prenom,
+                pseudo)
+                VALUES (%(id_user)s, %(mdp_hashe)s, %(date_naissance)s, %(nom)s, %(prenom)s,
+                %(pseudo)s)
                 RETURNING id_user;
                 """
                 cursor.execute(
@@ -43,6 +44,7 @@ class UserDAO(metaclass=Singleton):
                         "date_naissance": user.date_naissance,
                         "nom": user.nom,
                         "prenom": user.prenom,
+                        "pseudo": user.pseudo,
                     },
                 )
                 # .strftime("%Y-%m-%d")
@@ -104,6 +106,7 @@ class UserDAO(metaclass=Singleton):
                         "prenom": user["prenom"],
                         "date_naissance": user["date_naissance"],
                         "id_user": str(user["id_user"]),
+                        "pseudo": user["pseudo"],
                         "SD_possedes": SDDAO().rechercher_sds_par_user(
                             str(user["id_user"]), schema=schema
                         ),
@@ -127,7 +130,8 @@ class UserDAO(metaclass=Singleton):
         Returns
         -------
         User
-            Une instance de la classe User contenant les informations de l'utilisateur, ou None si aucun utilisateur trouvé.
+            Une instance de la classe User contenant les informations de l'utilisateur, ou None si
+            aucun utilisateur trouvé.
         dict
             Un dictionnaire contenant les informations de l'utilisateur,
             ou None si aucun utilisateur trouvé.
@@ -145,6 +149,7 @@ class UserDAO(metaclass=Singleton):
                 "prenom": user_data["prenom"],
                 "date_naissance": user_data["date_naissance"],
                 "id_user": str(user_data["id_user"]),
+                "pseudo": user_data["pseudo"],
                 "SD_possedes": SDDAO().rechercher_sds_par_user(
                     str(user_data["id_user"]), schema=schema
                 ),
