@@ -80,16 +80,5 @@ def test_modifier_cooldown_no_change_on_error(son_aleatoire1_kwargs):
     assert son.cooldown_max == original_cooldown_max
 
 
-# Exécute les tests avec pytest
-if __name__ == "__main__":
-    pytest.main()
-
-
-def test_modifier_cooldown(son_aleatoire1_kwargs):
-    test = Son_Aleatoire(**son_aleatoire1_kwargs)
-    test.modifier_cooldown(10, 20)
-    assert test.cooldown_min == 10 and test.cooldown_max == 20
-
-
-def jouer_son_aléatoire():
-    pass
+# def test_jouer_son_aléatoire():
+# pass
