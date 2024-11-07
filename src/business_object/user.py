@@ -80,7 +80,7 @@ class User(Personne):
         self.SD_possedes = SD_possedes
 
     def _hash_mdp(self, mdp):
-        mdp_combine = mdp + self.id_user
+        mdp_combine = mdp + self.prenom
         return hashlib.pbkdf2_hmac(
             "sha256", mdp_combine.encode("utf-8"), self.nom.encode("utf-8"), 100000
         )

@@ -13,10 +13,21 @@ class UserService:
 
     def __init__(self):
         self.user_dao = UserDAO()
-        self.session = Session.connexion()
+        self.session = None
 
-    def authenticate_user(self, nom, prenom, mdp):
-        pass
+    def authenticate_user(self, nom, prenom, pseudo, mdp):
+        """methode d'authentification : verifie que
+        le mdp fourni corrrespond et instancie la session"""
+        dic_u = UserDAO.rechercher_par_nom_prenom_pseudo(nom, prenom, pseudo)
+        if dic_u:
+            if UserDAO.compare_mdp(id_user=dic_u["id_user"], mdp=mdp):
+                self.session = Session()
+                utilisateur = User(dic_u)
+                s.connexion(utilisateur)
+            else:
+                print("mot de passe incorrect")
+        else:
+            print("les identifiants renseignés ne correspondent pas")
         # vérifie que le user existe en BDD et instancie la session comme il faut
 
 
@@ -30,11 +41,6 @@ class UserService:
     def supprimer(self, utilisateur) -> bool:
 
         return UserDAO().supprimer(utilisateur)
-
-    @log
-    def se_connecter(self, pseudo, mdp) -> User:
-
-        return UserDAO().se_connecter(pseudo, hash_password(mdp, pseudo))
 
     @log
     def lister_tous_les_utilisateurs(self, inclure_mdp=False) -> list[User]:

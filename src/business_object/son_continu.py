@@ -14,6 +14,8 @@ class Son_Continu(Son):
 
     def __init__(self, nom, description, duree, id_freesound, tags):
         super().__init__(nom, description, duree, id_freesound, tags)
+        self.lp = -1
 
     def jouer_son_en_boucle(self):
         """Lancer le son en boucle"""
+        self.JouerSon()

@@ -108,6 +108,9 @@ def test_rechercher_par_id_user_succes(user_dao, utilisateur2_kwargs, schema_tes
         reseter = ResetDatabase()
         reseter.ResetTEST()
 
+    def compare_test(user_dao, utilisateur2_kwargs, shema_test):
+        pass
+
 
 # def test_ajouter_sounddeck(user_dao, utilisateur2_kwargs, schema_test):
 #     """Test qu'un sounddeck peut être ajouté pour un utilisateur."""
