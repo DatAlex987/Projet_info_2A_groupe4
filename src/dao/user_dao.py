@@ -2,6 +2,7 @@ import datetime
 from utils.singleton import Singleton
 from dao.db_connection import DBConnection
 from business_object.user import User
+from dao.sd_dao import SDDAO
 
 
 class UserDAO(metaclass=Singleton):
@@ -94,21 +95,23 @@ class UserDAO(metaclass=Singleton):
 
                 users = cursor.fetchall()
 
-                if users:
-                    users_trouves = []
-                    for user in users:
-                        users_trouves.append(
-                            {
-                                "nom": user["nom"],
-                                "prenom": user["prenom"],
-                                "date_naissance": user["date_naissance"],
-                                "id_user": str(user["id_user"]),
-                                "SD_possedes": [],  # A AJOUTER ENSUITE
-                            }
-                        )
-                        # Le mot de passe est ignoré pour évité d'être hashé de nouveau.
-                    return users_trouves
-                return None
+        if users:
+            users_trouves = []
+            for user in users:
+                users_trouves.append(
+                    {
+                        "nom": user["nom"],
+                        "prenom": user["prenom"],
+                        "date_naissance": user["date_naissance"],
+                        "id_user": str(user["id_user"]),
+                        "SD_possedes": SDDAO().rechercher_sds_par_user(
+                            str(user["id_user"]), schema=schema
+                        ),
+                    }
+                )
+                # Le mot de passe est ignoré pour évité d'être hashé de nouveau.
+            return users_trouves
+        return None
 
     def rechercher_par_id_user(self, id_user: int, schema) -> dict:
         """
@@ -136,16 +139,20 @@ class UserDAO(metaclass=Singleton):
                     {"id_user": id_user},
                 )
                 user_data = cursor.fetchone()
-                if user_data:
-                    user_trouve = {
-                        "nom": user_data["nom"],
-                        "prenom": user_data["prenom"],
-                        "date_naissance": user_data["date_naissance"],
-                        "id_user": str(user_data["id_user"]),
-                        "SD_possedes": [],  # A AJOUTER ENSUITE
-                    }
-                    return user_trouve
-                return None
+        if user_data:
+            user_trouve = {
+                "nom": user_data["nom"],
+                "prenom": user_data["prenom"],
+                "date_naissance": user_data["date_naissance"],
+                "id_user": str(user_data["id_user"]),
+                "SD_possedes": SDDAO().rechercher_sds_par_user(
+                    str(user_data["id_user"]), schema=schema
+                ),
+            }
+            return user_trouve
+        return None
+
+    # Potentiellement une methode recherche_par_pseudo_user ou recherche_par_nom_prenom_user
 
 
 # Pas de modifier user car rien à modifier

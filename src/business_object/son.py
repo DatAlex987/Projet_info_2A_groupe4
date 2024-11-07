@@ -57,7 +57,8 @@ class Son:
     def JouerSon(self) -> None:
         """Méthode globale pour charger puis jouer un son avec Pygame"""
         try:
-            fichier_son = os.path.join(os.getenv("DOSSIER_SAUVEGARDE"), f"{self.id_freesound}.mp3")
+            expected_path = os.getenv("DOSSIER_SAUVEGARDE")
+            fichier_son = os.path.normpath(os.path.join(expected_path, f"{self.id_freesound}.mp3"))
             # Charger le son
             self.charge = pygame.mixer.Sound(fichier_son)
             # Jouer le son
@@ -65,7 +66,7 @@ class Son:
         except pygame.error as e:
             print(f"Erreur lors de la lecture du fichier son : {e}")
         except FileNotFoundError:
-            print(f"Le fichier son '{fichier_son}' n'a pas été trouvé.")
+            print(rf"Le fichier son {fichier_son} n'a pas été trouvé.")
 
     def Arret_Son(self) -> None:
         (self.charge).stop()

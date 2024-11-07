@@ -34,7 +34,7 @@ def test_ajouter_scene_succes(scene1_kwargs):
             result = cursor.fetchone()
 
             assert result is not None
-            assert result["id_scene"] == int(scene1_kwargs["id_scene"])
+            assert result["id_scene"] == scene1_kwargs["id_scene"]
             assert result["nom"] == scene1_kwargs["nom"]
             assert result["description"] == scene1_kwargs["description"]
             assert result["date_creation"] == scene1_kwargs["date_creation"]
@@ -80,7 +80,7 @@ def test_modifier_scene_succes(scene1_kwargs, new_nom, new_desc):
             result = cursor.fetchone()
 
             assert result is not None
-            assert result["id_scene"] == int(modified_added_scene.id_scene)
+            assert result["id_scene"] == modified_added_scene.id_scene
             assert result["nom"] == modified_added_scene.nom
             assert result["description"] == modified_added_scene.description
             assert result["date_creation"] == modified_added_scene.date_creation

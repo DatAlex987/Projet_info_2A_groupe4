@@ -5,33 +5,43 @@ from utils.securite import hash_password
 
 from business_object.user import User
 from dao.user_dao import UserDAO
+from view.session import Session
 
 
 class UserService:
     """Classe contenant les méthodes de service des Utilisateurs"""
 
-    @log
+    def __init__(self):
+        self.user_dao = UserDAO()
+        self.session = Session.connexion()
+
+    def authenticate_user(self, nom, prenom, mdp):
+        pass
+        # vérifie que le user existe en BDD et instancie la session comme il faut
+
+
+"""    @log
     def creer(self, nom, prenom, date_naissance, id_user, mdp, SD_possedes):
-        """Création d'un utilisateur à partir de ses attributs"""
+
         new_user = User(nom, prenom, date_naissance, id_user, mdp, SD_possedes)
         return new_user if UserDAO().ajouter_user(new_user) else None
 
     @log
     def supprimer(self, utilisateur) -> bool:
-        """Supprimer le compte d'un joueur"""
+
         return UserDAO().supprimer(utilisateur)
 
     @log
     def se_connecter(self, pseudo, mdp) -> User:
-        """Se connecter à partir de pseudo et mdp"""
+
         return UserDAO().se_connecter(pseudo, hash_password(mdp, pseudo))
 
     @log
     def lister_tous_les_utilisateurs(self, inclure_mdp=False) -> list[User]:
-        """Lister tous les joueurs
+        "Lister tous les joueurs
         Si inclure_mdp=True, les mots de passe seront inclus
         Par défaut, tous les mdp des joueurs sont à None
-        """
+        "
         utilisateurs = UserDAO().consulter_users()
         if not inclure_mdp:
             for u in utilisateurs:
@@ -40,9 +50,7 @@ class UserService:
 
     @log
     def afficher_tous(self) -> str:
-        """Afficher tous les utilisateurs
-        Sortie : Une chaine de caractères mise sous forme de tableau
-        """
+
         entetes = ["pseudo", "..."]
 
         utilisateurs = UserDAO().consulter_users()
@@ -69,12 +77,12 @@ class UserService:
 
     @log
     def trouver_par_id(self, id_user) -> User:
-        """Trouver un joueur à partir de son id"""
+
         return UserDAO().rechercher_par_id_users(id_user)
 
     @log
     def pseudo_deja_utilise(self, pseudo) -> bool:
-        """Vérifie si le pseudo est déjà utilisé
-        Retourne True si le pseudo existe déjà en BDD"""
+        "Vérifie si le pseudo est déjà utilisé
+        Retourne True si le pseudo existe déjà en BDD"
         utilisateurs = UserDAO().consulter_users()
-        return pseudo in [u.pseudo for u in utilisateurs]
+        return pseudo in [u.pseudo for u in utilisateurs]"""

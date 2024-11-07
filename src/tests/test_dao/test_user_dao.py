@@ -35,8 +35,8 @@ def test_ajouter_user_succes(user_dao, utilisateur2_kwargs, schema_test):
                 ), "L'utilisateur ajouté n'a pas été trouvé dans la base de données."
 
                 # Assurez-vous que vous comparez le bon ID ici
-                assert result["id_user"] == int(
-                    added_user.id_user
+                assert (
+                    result["id_user"] == added_user.id_user
                 ), "L'ID de l'utilisateur ne correspond pas."
 
     finally:

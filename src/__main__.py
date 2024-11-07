@@ -1,8 +1,18 @@
-# from dao.db_connection import DBConnection
-from dao.user_dao import UserDAO
 from utils.reset_database import ResetDatabase
-from business_object.user import User
-import datetime
+from view.accueilview import AccueilView
 
 reseter = ResetDatabase()
-reseter.ResetTEST()
+reseter.ResetALL()
+
+
+view = AccueilView()
+
+with open("resources/banner.txt", mode="r", encoding="utf-8") as title:
+    print(title.read())
+
+while view:
+    view.display_info()
+    view = view.make_choice()
+
+with open("resources/exit.txt", mode="r", encoding="utf-8") as exit_message:
+    print(exit_message.read())

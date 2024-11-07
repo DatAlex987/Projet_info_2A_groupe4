@@ -2,6 +2,7 @@ from utils.singleton import Singleton
 from dao.db_connection import DBConnection
 from business_object.sd import SD
 import datetime
+from dao.scene_dao import SceneDAO
 
 
 class SDDAO(metaclass=Singleton):
@@ -137,22 +138,24 @@ class SDDAO(metaclass=Singleton):
                     cursor.execute(query)
                     res = cursor.fetchall()
 
-                    if not res:
-                        return []
+            if not res:
+                return []
 
-                    sd_trouves = []
+            sd_trouves = []
 
-                    for row in res:
-                        sd_trouves.append(
-                            {
-                                "id_sd": str(row["id_sd"]),
-                                "nom": row["nom"],
-                                "scenes": [],  # A AJOUTER PLUS TARD
-                                "description": row["description"],
-                                "date_creation": row["date_creation"],
-                            }
-                        )
-                    return sd_trouves
+            for row in res:
+                sd_trouves.append(
+                    {
+                        "id_sd": str(row["id_sd"]),
+                        "nom": row["nom"],
+                        "scenes": SceneDAO().rechercher_scenes_par_sd(
+                            str(row["id_sd"]), schema=schema
+                        ),
+                        "description": row["description"],
+                        "date_creation": row["date_creation"],
+                    }
+                )
+            return sd_trouves
         except Exception as e:
             print(f"Erreur lors de la récupération des sound-decks : {e}")
             return []
@@ -191,16 +194,195 @@ class SDDAO(metaclass=Singleton):
                     )
 
                     res = cursor.fetchone()
-                    if res is None:
-                        return None
+            if res is None:
+                return None
 
-                    return {
-                        "id_sd": res["id_sd"],
-                        "nom": res["nom"],
-                        "description": res["description"],
-                        "date_creation": res["date_creation"],
-                        "scenes": [],  # A AJOUTER PLUS TARD
-                    }
+            return {
+                "id_sd": res["id_sd"],
+                "nom": res["nom"],
+                "description": res["description"],
+                "date_creation": res["date_creation"],
+                "scenes": SceneDAO().rechercher_scenes_par_sd(
+                    str(res["id_sd"]), schema=schema
+                ),  # A AJOUTER PLUS TARD
+            }
         except Exception as e:
             print(f"Erreur lors de la recherche du sound-deck avec ID {id_sd} : {e}")
             return None
+
+    def rechercher_sds_par_user(self, id_user: str, schema):
+        """
+        Recherche les sound-decks dans la base de données d'un utilisateur.
+
+        Parameters
+        ----------
+        id_user : str
+            L'ID de l'utilisateur concerné
+
+        Returns
+        -------
+        list[dict]
+            Liste des kwargs des sound-decks trouvés
+        """
+        if not isinstance(id_user, str):
+            print("ID de l'utilisateur invalide pour la recherche.")
+            return None
+
+        try:
+            with DBConnection(schema=schema).connection as conn:
+                with conn.cursor() as cursor:
+                    query = f"""
+                    SELECT Sounddeck.id_sd, nom, description, date_creation
+                    FROM {schema}.SoundDeck
+                    LEFT JOIN {schema}.User_Sounddeck
+                    ON {schema}.SoundDeck.id_sd = {schema}.User_Sounddeck.id_sd
+                    WHERE id_user = %(id_user)s;
+                    """
+
+                    cursor.execute(
+                        query,
+                        {"id_user": id_user},
+                    )
+
+                    res = cursor.fetchall()
+            if not res:
+                return []
+
+            sd_trouves = []
+
+            for row in res:
+                sd_trouves.append(
+                    {
+                        "id_sd": str(row["id_sd"]),
+                        "nom": row["nom"],
+                        "scenes": SceneDAO().rechercher_scenes_par_sd(
+                            str(row["id_sd"]), schema=schema
+                        ),  # A AJOUTER PLUS TARD
+                        "description": row["description"],
+                        "date_creation": row["date_creation"],
+                    }
+                )
+            return sd_trouves
+        except Exception as e:
+            print(f"Erreur lors de la récupération des sound-decks : {e}")
+            return []
+
+    def ajouter_association_user_sd(self, id_user: str, id_sd: str, schema):
+        """
+        Ajoute une nouvelle association User - SD dans la table d'association.
+
+        Parameters
+        ----------
+        id_sd : str
+            ID du Sound-deck concerné
+        id_user : str
+            ID du User concerné
+
+        Returns
+        -------
+        bool
+            True si ajout avec succès, None sinon
+        """
+
+        try:
+            with DBConnection(schema=schema).connection as conn:
+                with conn.cursor() as cursor:
+                    query = f"""
+                        INSERT INTO {schema}.User_Sounddeck(id_user, id_sd)
+                        VALUES (%(id_user)s, %(id_sd)s);
+                        """
+                    cursor.execute(
+                        query,
+                        {
+                            "id_user": id_user,
+                            "id_sd": id_sd,
+                        },
+                    )
+                    nb_lignes_add = cursor.rowcount
+            if nb_lignes_add == 1:
+                return True
+
+        except Exception as e:
+            print(f"Erreur lors de l'ajout de l'association : {e}")
+            return None
+
+    def supprimer_association_user_sd(self, id_user: str, id_sd: str, schema):
+        """
+        Supprimer une association User - SD dans la table d'association.
+
+        Parameters
+        ----------
+        id_sd : str
+            ID du Sound-deck concerné
+        id_user : str
+            ID du User concerné
+
+        Returns
+        -------
+        int
+            Nombre de lignes supprimées
+        """
+
+        try:
+            with DBConnection(schema=schema).connection as conn:
+                with conn.cursor() as cursor:
+                    query = f"""
+                        DELETE FROM {schema}.User_Sounddeck
+                        WHERE id_user = %(id_user)s and id_sd = %(id_sd)s;
+                        """
+                    cursor.execute(
+                        query,
+                        {
+                            "id_user": id_user,
+                            "id_sd": id_sd,
+                        },
+                    )
+                    nb_lignes_supp = cursor.rowcount
+            return nb_lignes_supp  # Permet notamment de savoir si aucune ligne n'a été trouvée
+        except Exception as e:
+            print(f"Erreur lors de la suppression de l'association : {e}")
+            return None
+
+    def check_if_sd_in_user(self, id_user: str, id_sd: str, schema):
+        """
+        Vérifie si un sound-deck appartient à un utilisateur.
+
+        Parameters
+        ----------
+        id_user : str
+            L'ID de l'utilisateur à vérifier.
+        id_sd : str
+            L'ID du sound-deck à vérifier.
+
+        Returns
+        -------
+        bool
+            True si le sound-deck appartient à l'utilisateur, False sinon.
+        """
+        try:
+            with DBConnection(schema=schema).connection as conn:
+                with conn.cursor() as cursor:
+                    query = f"""
+                    SELECT COUNT(*) AS count
+                    FROM {schema}.User_Sounddeck
+                    WHERE id_user = %(id_user)s AND id_sd = %(id_sd)s;
+                    """
+
+                    cursor.execute(
+                        query,
+                        {
+                            "id_user": id_user,
+                            "id_sd": id_sd,
+                        },
+                    )
+
+                    # Fetch the result
+                    res = cursor.fetchone()
+                    # Check if the count is greater than zero
+                    return res["count"] > 0
+
+        except Exception as e:
+            print(
+                f"Erreur lors de la vérification de l'appartenance du sound-deck {id_sd} à l'utilisateur {id_user} : {e}"
+            )
+            return False

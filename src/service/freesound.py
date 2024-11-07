@@ -216,6 +216,3 @@ class Freesound(metaclass=Singleton):
             print(f"Le fichier a été téléchargé sous le nom {chemin_fichier_mp3}")
         else:
             print(f"Erreur lors du téléchargement du fichier : {mp3_response.status_code}")
-
-
-print(Freesound.rechercher_ids_par_tag("house", limit=20))
