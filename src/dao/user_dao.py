@@ -31,7 +31,7 @@ class UserDAO(metaclass=Singleton):
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
                 query = f"""INSERT INTO {schema}.utilisateur(id_user, mdp_hashe,date_naissance, nom,
-                prenom) VALUES (%(id_user)s, %(mdp_hashe)s,"%(date_naissance)s, %(nom)s, %(prenom)s)
+                prenom) VALUES (%(id_user)s, %(mdp_hashe)s,%(date_naissance)s, %(nom)s, %(prenom)s)
                 RETURNING id_user;"""
 
                 cursor.execute(
