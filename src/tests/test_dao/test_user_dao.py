@@ -129,7 +129,8 @@ def test_rechercher_par_id_user_succes(user_dao, utilisateur2_kwargs, schema_tes
 #         with DBConnection(schema=schema_test).connection as connection:
 #             with connection.cursor() as cursor:
 #                 cursor.execute(
-#                     f"SELECT * FROM {schema_test}.utilisateur WHERE id_user = %(id_user)s AND nom = %(nom)s",
+#                     f"""SELECT * FROM {schema_test}.utilisateur WHERE
+#                     id_user = %(id_user)s AND nom = %(nom)s""",
 #                     {"id_user": user_to_add.id_user, "nom": sounddeck_name},
 #                 )
 #                 result = cursor.fetchone()

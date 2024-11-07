@@ -13,10 +13,20 @@ from business_object.son import Son
 from business_object.son_aleatoire import Son_Aleatoire
 from business_object.son_manuel import Son_Manuel
 from business_object.son_continu import Son_Continu
+import hashlib
 
 ResetDatabase().ResetALL()
 
+prenom = "bob"
+nom = "Hessane"
 
+mdp = "12345663"
+mdp_combine = mdp + prenom
+
+mdph = hashlib.pbkdf2_hmac("sha256", mdp_combine.encode("utf-8"), nom.encode("utf-8"), 100000)
+print(mdp_combine, mdph)
+print(hashlib.pbkdf2_hmac("sha256", mdp_combine.encode("utf-8"), nom.encode("utf-8"), 100000))
+"""
 def f(son):
     if isinstance(son, Son_Aleatoire):
         return "alea"
@@ -211,3 +221,4 @@ print(
 )
 print(son_dao.rechercher_sons_par_scene(id_scene="123123", schema="SchemaTest"))
 ResetDatabase().ResetALL()
+"""
