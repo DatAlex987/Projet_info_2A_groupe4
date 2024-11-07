@@ -210,5 +210,5 @@ class TagDAO:
                     return res["count"] > 0
 
         except Exception as e:
-            print(f"Erreur lors de la vérification : {id_freesoung},{tag} : {e}")
+            print(f"Erreur lors de la vérification : {id_freesound},{tag} : {e}")
             return False
