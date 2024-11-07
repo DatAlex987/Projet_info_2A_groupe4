@@ -20,8 +20,8 @@ import pygame
 
 ResetDatabase().ResetALL()
 
-pygame.mixer.init
-
+date_naissance = datetime.datetime.strptime("11/12/1999", "%d/%m/%Y").date()
+print(date_naissance)
 
 """
 prenom = "bob"

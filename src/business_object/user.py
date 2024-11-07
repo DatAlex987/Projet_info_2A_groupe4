@@ -76,8 +76,11 @@ class User(Personne):
                 raise ValueError("Le mot de passe doit contenir au moins un chiffre.")
             if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", mdp):
                 raise ValueError("Le mot de passe doit contenir au moins un caractère spécial.")
-        if not isinstance(SD_possedes, list):
-            raise TypeError("La liste des Sound-decks possédées doit être une instance de list.")
+        if SD_possedes is not None:
+            if not isinstance(SD_possedes, list):
+                raise TypeError(
+                    "La liste des Sound-decks possédées doit être une instance de list."
+                )
         if not isinstance(pseudo, str):
             raise TypeError("Le pseudo de l'utilisateur doit être une instance de str.")
 
@@ -88,10 +91,11 @@ class User(Personne):
         self.pseudo = pseudo
 
     def _hash_mdp(self, mdp):
-        mdp_combine = mdp + self.prenom
-        return hashlib.pbkdf2_hmac(
-            "sha256", mdp_combine.encode("utf-8"), self.nom.encode("utf-8"), 100000
+        gen_hash = hashlib.pbkdf2_hmac(
+            "sha256", mdp.encode("utf-8"), self.nom.encode("utf-8"), 100000
         )
+        return gen_hash.hex()
+        # Hash de type byte converti en hexadecimal. Evite les erreurs lors de l'authentification
 
     # SERT A RIEN
 

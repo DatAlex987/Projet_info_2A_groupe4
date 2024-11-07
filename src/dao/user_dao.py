@@ -157,47 +157,39 @@ class UserDAO(metaclass=Singleton):
             return user_trouve
         return None
 
-    def rechercher_par_nom_prenom_pseudo(
-        self, nom_user: str, prenom_user: str, pseudo_user: str, schema
-    ) -> dict:
+    def rechercher_par_pseudo_user(self, pseudo_user: str, schema) -> dict:
         """
-        Recherche un utilisateur dans la base de données par son nom, son prenom et son pseudo.
+        Recherche un utilisateur dans la base de données par son pseudo.
 
         Parameters
         ----------
-        nom_user : str
-            Le nom de l'utilisateur à rechercher.
-        prenom_user : str
-            Le prenom de l'utilisateur à rechercher.
         pseudo_user : str
             Le pseudo de l'utilisateur à rechercher.
         schema : str
-            Le schéma de la base de données. Par défaut, c'est 'projetinfo'.
+            Le schéma de la base de données à requêter.
 
         Returns
         -------
-        User
-            Une instance de la classe User contenant les informations de l'utilisateur,
-            ou None si aucun utilisateur trouvé.
         dict
             Un dictionnaire contenant les informations de l'utilisateur,
             ou None si aucun utilisateur trouvé.
         """
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
+                query = f"""SELECT * FROM {schema}.Utilisateur
+                WHERE pseudo = %(pseudo_user)s;"""
                 cursor.execute(
-                    f"""SELECT * FROM {schema}.Utilisateur WHERE"
-                    nom = %(nom_user)s AND"
-                    prenom = %(prenom_user)s AND"
-                    pseudo = %(pseudo_user)s;""",
-                    {"nom_user": nom_user, "prenom_user": prenom_user, "pseudo_user": pseudo_user},
+                    query,
+                    {"pseudo_user": pseudo_user},
                 )
                 user_data = cursor.fetchone()
         if user_data:
             user_trouve = {
                 "nom": user_data["nom"],
                 "prenom": user_data["prenom"],
+                "pseudo": user_data["pseudo"],
                 "date_naissance": user_data["date_naissance"],
+                "mdp_hashe": user_data["mdp_hashe"],
                 "id_user": str(user_data["id_user"]),
                 "SD_possedes": SDDAO().rechercher_sds_par_user(
                     str(user_data["id_user"]), schema=schema
@@ -206,8 +198,10 @@ class UserDAO(metaclass=Singleton):
             return user_trouve
         return None
 
+
+"""
     def compare_mdp(self, id_user: str, mdp: str, schema):
-        """compare le mdp hashe et un mdp en entree"""
+        "compare le mdp hashe et un mdp en entree"
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
                 cursor.execute(
@@ -222,8 +216,8 @@ class UserDAO(metaclass=Singleton):
             )
             return val
         return None
-
-    # Potentiellement une methode recherche_par_pseudo_user ou recherche_par_nom_prenom_user
+"""
+# Potentiellement une methode recherche_par_pseudo_user ou recherche_par_nom_prenom_user
 
 
 # Pas de modifier user car rien à modifier

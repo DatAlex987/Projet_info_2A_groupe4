@@ -1,5 +1,5 @@
 from datetime import datetime
-from src.business_object.user import User
+from business_object.user import User
 from utils.singleton import Singleton
 import pygame
 
