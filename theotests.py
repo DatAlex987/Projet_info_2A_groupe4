@@ -19,9 +19,30 @@ import hashlib
 import pygame
 
 # ResetDatabase().ResetALL()
+scene1 = Scene(
+    nom="Scene1",
+    description="Description de la Scene1",
+    id_scene="pIbHf1",
+    sons_aleatoires=[],
+    sons_continus=[],
+    sons_manuels=[],
+    date_creation=datetime.date.today(),
+)
+scene2 = Scene(
+    nom="Scene2",
+    description="Description de la Scene2",
+    id_scene="2PjUy",
+    sons_aleatoires=[],
+    sons_continus=[],
+    sons_manuels=[],
+    date_creation=datetime.date.today(),
+)
 
-ehh = datetime.datetime.today().date()
-print(ehh == datetime.date(2024, 11, 8))
+
+SceneDAO().ajouter_scene(scene1, "ProjetInfo")
+SceneDAO().ajouter_scene(scene2, "ProjetInfo")
+SceneDAO().ajouter_association_sd_scene(id_sd="4CeZY0Y", id_scene="pIbHf1", schema="ProjetInfo")
+SceneDAO().ajouter_association_sd_scene(id_sd="4CeZY0Y", id_scene="2PjUy", schema="ProjetInfo")
 """
 prenom = "bob"
 nom = "Hessane"

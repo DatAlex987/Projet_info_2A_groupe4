@@ -93,6 +93,7 @@ class AccueilView(AbstractView):
                         + Style.RESET_ALL
                     )
                     connexion_avec_succes = True
+                    next_view = MenuPrincipalView()
                 except ValueError as e:
                     print(Fore.RED + f"Echec lors de la création du compte : {e}" + Style.RESET_ALL)
 

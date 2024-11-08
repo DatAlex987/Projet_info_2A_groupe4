@@ -4,6 +4,7 @@ from colorama import Fore, Style
 from InquirerPy import prompt
 from view.abstractview import AbstractView
 from view.menuprincipalview import MenuPrincipalView
+from view.menuparamsdview import MenuParamSDView
 from service.sd_service import SDService
 
 
@@ -40,7 +41,7 @@ class MenuParamView(AbstractView):
     def make_choice(self):
         choix = prompt(self.question)
         if choix["Premier Choix"] == "Consulter/Modifier une de mes Sound-decks":
-            pass
+            next_view = MenuParamSDView()
         if choix["Premier Choix"] == "Créer une Sound-deck":
             sd_creee_avec_succes = False
             while not sd_creee_avec_succes:

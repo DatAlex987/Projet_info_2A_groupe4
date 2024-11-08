@@ -2,6 +2,7 @@ import re
 import datetime
 import random
 import string
+from view.session import Session
 from business_object.sd import SD
 from dao.sd_dao import SDDAO
 
@@ -12,9 +13,7 @@ class SDService:
     def input_checking_injection(self, nom: str, description: str):
         # Check inputs pour injection:
         # Définition de pattern regex pour qualifier les caractères acceptés pour chaque input
-        pattern = (
-            r"^[a-zA-Z0-9\s,.\-:!@#%^&*()_+=|?/\[\]{}']*$"  # Autorise lettres, et autres caractères
-        )
+        pattern = r"^[a-zA-Zà-öø-ÿÀ-ÖØ-ß\s0-9\s,.\-:!@#%^&*()_+=|?/\[\]{}']*$"  # Autorise lettres, et autres caractères
         # On vérifie que les inputs sont conformes aux patternes regex.
         if not re.match(pattern, nom):
             raise ValueError("Le nom de la SD contient des caractères invalides.")
@@ -61,7 +60,26 @@ class SDService:
                 scenes=[],
                 date_creation=datetime.datetime.today().date(),
             )
-            SDDAO().ajouter_sd(sd=new_sd, schema="ProjetInfo")
+            SDDAO().ajouter_sd(sd=new_sd, schema=schema)
+            SDDAO().ajouter_association_user_sd(
+                id_user=Session().utilisateur.id_user, id_sd=new_sd.id_sd, schema=schema
+            )
+            Session().utilisateur.SD_possedes.append(new_sd)
             return True
         except ValueError as e:
             raise ValueError(f"{e}")
+
+    def formatage_question_sds_of_user(self):
+        sds_user = Session().utilisateur.SD_possedes
+        print(sds_user)
+        choix = []
+        compteur = 1
+        for sd in sds_user:
+            print(sd.nom)
+            print(sd.description[: min(len(sd.description), 40)])
+            print(sd.date_creation)
+            mise_en_page_ligne = f"{compteur}. {sd.id_sd} | {sd.nom} | {sd.description[:min(len(sd.description), 40)]}... | {sd.date_creation}"
+            choix.append(mise_en_page_ligne)
+            compteur += 1
+        choix.append("Retour au menu de paramétrage")
+        return choix

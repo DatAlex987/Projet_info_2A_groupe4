@@ -8,6 +8,12 @@ import re
 from business_object.user import User
 from dao.user_dao import UserDAO
 from view.session import Session
+from business_object.sd import SD
+from business_object.scene import Scene
+from business_object.son import Son
+from business_object.son_continu import Son_Continu
+from business_object.son_aleatoire import Son_Aleatoire
+from business_object.son_manuel import Son_Manuel
 import datetime
 
 
@@ -75,12 +81,81 @@ class UserService:
                 self, mdp=mdp, sel=nom, mdp_hashe=dic_user["mdp_hashe"]
             ):
                 self.session = Session()  # On lance la session avec le bon user
+                # l.86 - l.152 : On instancie tous les objets liés à l'utilisateur avec les données
+                # fournies par l'appel DAO rechercher_par_pseudo_user()
+                Sons_Alea_scene = []
+                Sons_Cont_scene = []
+                Sons_Manu_scene = []
+                for sd in dic_user["SD_possedes"]:
+                    for scene in sd["scenes"]:
+                        for son_alea_kwargs in scene["sons_aleatoires"]:
+                            Sons_Alea_scene.append(
+                                Son_Aleatoire(
+                                    nom=son_alea_kwargs["nom"],
+                                    description=son_alea_kwargs["description"],
+                                    duree=son_alea_kwargs["duree"],
+                                    id_freesound=son_alea_kwargs["id_freesound"],
+                                    tags=son_alea_kwargs["tags"],
+                                    cooldown_min=son_alea_kwargs["cooldown_min"],
+                                    cooldown_max=son_alea_kwargs["cooldown_max"],
+                                )
+                            )
+                for sd in dic_user["SD_possedes"]:
+                    for scene in sd["scenes"]:
+                        for son_cont_kwargs in scene["sons_continus"]:
+                            Sons_Cont_scene.append(
+                                Son_Continu(
+                                    nom=son_cont_kwargs["nom"],
+                                    description=son_cont_kwargs["description"],
+                                    duree=son_cont_kwargs["duree"],
+                                    id_freesound=son_cont_kwargs["id_freesound"],
+                                    tags=son_alea_kwargs["tags"],
+                                )
+                            )
+                for sd in dic_user["SD_possedes"]:
+                    for scene in sd["scenes"]:
+                        for son_manu_kwargs in scene["sons_manuels"]:
+                            Sons_Manu_scene.append(
+                                Son_Manuel(
+                                    nom=son_manu_kwargs["nom"],
+                                    description=son_manu_kwargs["description"],
+                                    duree=son_manu_kwargs["duree"],
+                                    id_freesound=son_manu_kwargs["id_freesound"],
+                                    tags=son_alea_kwargs["tags"],
+                                    start_key=son_manu_kwargs["start_key"],
+                                )
+                            )
+                Scenes_of_user = []
+                for sd in dic_user["SD_possedes"]:
+                    for scene_kwargs in sd["scenes"]:
+                        Scenes_of_user.append(
+                            Scene(
+                                nom=scene_kwargs["nom"],
+                                description=scene_kwargs["description"],
+                                id_scene=scene_kwargs["id_scene"],
+                                sons_aleatoires=Sons_Alea_scene,
+                                sons_manuels=Sons_Manu_scene,
+                                sons_continus=Sons_Cont_scene,
+                                date_creation=scene_kwargs["date_creation"],
+                            )
+                        )
+                SDs_of_user = []
+                for sd_kwargs in dic_user["SD_possedes"]:
+                    SDs_of_user.append(
+                        SD(
+                            nom=sd_kwargs["nom"],
+                            description=sd_kwargs["description"],
+                            id_sd=sd_kwargs["id_sd"],
+                            scenes=Scenes_of_user,
+                            date_creation=sd_kwargs["date_creation"],
+                        )
+                    )
                 utilisateur = User(
                     nom=dic_user["nom"],
                     prenom=dic_user["prenom"],
                     date_naissance=dic_user["date_naissance"],
                     id_user=dic_user["id_user"],
-                    SD_possedes=dic_user["SD_possedes"],
+                    SD_possedes=SDs_of_user,
                     pseudo=dic_user["pseudo"],
                 )
                 self.session.connexion(utilisateur)
