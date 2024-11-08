@@ -20,8 +20,8 @@ import pygame
 
 # ResetDatabase().ResetALL()
 
-ehh = datetime.datetime.strptime("11.11.2002", "%d/%m/%Y").date()
-print(ehh)
+ehh = datetime.datetime.today().date()
+print(ehh == datetime.date(2024, 11, 8))
 """
 prenom = "bob"
 nom = "Hessane"

@@ -38,9 +38,36 @@ class UserService:
         unique_id = f"{generation}"
         return unique_id
 
+    def input_checking_injection(
+        self, nom: str, prenom: str, pseudo: str, mdp: str, date_naissance: str = None
+    ):
+        # Check inputs pour injection:
+        # Définition de pattern regex pour qualifier les caractères acceptés pour chaque input
+        name_pattern = r"^[a-zA-ZÀ-ÿ' -]+$"  # Autorise lettres, accents, trait d'union, espace
+        pseudo_pattern = r"^[\w\d]{1,29}$"  # Autorise lettres, chiffres, entre 1 et 29 caractères
+        password_pattern = r"^[\w\d!@#$%^&*()+=]{1,29}$"  # Autorise lettres, chiffres et quelques caractères spéciaux (mais pas ', ",-, ; car utilisés dans des injections SQL.
+        date_of_birth_pattern = r"^[\d/]{10,10}$"  # Autorise chiffres et / .
+        # On vérifie que les inputs sont conformes aux patternes regex.
+        if not re.match(name_pattern, nom):
+            raise ValueError("Le nom contient des caractères invalides.")
+        if not re.match(name_pattern, prenom):
+            raise ValueError("Le prénom contient des caractères invalides.")
+        if date_naissance is not None:
+            if not re.match(date_of_birth_pattern, date_naissance):
+                raise ValueError("La date de naissance contient des caractères invalides.")
+        if not re.match(pseudo_pattern, pseudo):
+            raise ValueError(
+                "Le pseudo contient des caractères invalides ou n'est pas de longueur valide."
+            )
+        if not re.match(password_pattern, mdp):
+            raise ValueError(
+                "Le mot de passe contient des caractères invalides ou n'est pas de longueur valide."
+            )
+
     def authenticate_user(self, nom: str, prenom: str, pseudo: str, mdp: str, schema: str):
         """Methode d'authentification : vérifie que les informations fournies
         corrrespondent et instancie la session avec l'objet User qui convient"""
+        UserService().input_checking_injection(nom=nom, prenom=prenom, pseudo=pseudo, mdp=mdp)
         dic_user = self.user_dao.rechercher_par_pseudo_user(pseudo_user=pseudo, schema=schema)
         if dic_user:
             # Si le pseudo et le mdp correspondent :
@@ -72,25 +99,9 @@ class UserService:
         mdp: str,
         schema: str,
     ):
-        # Check inputs pour injection:
-        # Définition de pattern regex pour qualifier les caractères acceptés pour chaque input
-        name_pattern = r"^[a-zA-ZÀ-ÿ' -]+$"  # Autorise lettres, accents, trait d'union, espace
-        pseudo_pattern = r"^[\w\d]{1,29}$"  # Autorise lettres, chiffres, entre 1 et 29 caractères
-        password_pattern = r"^[\w\d!@#$%^&*()+=]{1,29}$"  # Autorise lettres, chiffres et quelques caractères spéciaux (mais pas ', ",-, ; car utilisés dans des injections SQL.
-
-        # On vérifie que les inputs sont conformes aux patternes regex.
-        if not re.match(name_pattern, nom):
-            raise ValueError("Le nom contient des caractères invalides.")
-        if not re.match(name_pattern, prenom):
-            raise ValueError("Le prénom contient des caractères invalides.")
-        if not re.match(pseudo_pattern, pseudo):
-            raise ValueError(
-                "Le pseudo contient des caractères invalides ou n'est pas de longueur valide."
-            )
-        if not re.match(password_pattern, mdp):
-            raise ValueError(
-                "Le mot de passe contient des caractères invalides ou n'est pas de longueur valide."
-            )
+        UserService().input_checking_injection(
+            nom=nom, prenom=prenom, date_naissance=date_naissance, pseudo=pseudo, mdp=mdp
+        )
         try:
             new_user = User(
                 nom=nom,
