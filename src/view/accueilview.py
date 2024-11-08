@@ -15,7 +15,7 @@ class AccueilView(AbstractView):
         self.question = [
             {
                 "type": "list",
-                "name": "Menu principal",
+                "name": "Choix connexion",
                 "message": "Que souhaitez-vous faire ?",
                 "choices": [
                     "Se connecter",
@@ -52,7 +52,7 @@ class AccueilView(AbstractView):
 
     def make_choice(self):
         answers = prompt(self.question)
-        if answers["Menu principal"] == "Se connecter":
+        if answers["Choix connexion"] == "Se connecter":
             est_connecte = False
             while not est_connecte:
                 identifiants = prompt(self.questions_identifiants)
@@ -70,7 +70,7 @@ class AccueilView(AbstractView):
                 except ValueError:
                     raise ValueError("L'authentification a échoué")
 
-        if answers["Menu principal"] == "Créer un compte":
+        if answers["Choix connexion"] == "Créer un compte":
             info_creation_compte = prompt(self.questions_creation_compte)
             try:
                 UserService().creer_compte(
@@ -85,7 +85,7 @@ class AccueilView(AbstractView):
             except ValueError:
                 raise ValueError("Echec de la création du compte")
 
-        if answers["Menu principal"] == "Quitter l'appli":
+        if answers["Choix connexion"] == "Quitter l'appli":
             next_view = None
 
         return next_view
