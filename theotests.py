@@ -18,11 +18,10 @@ from business_object.son_continu import Son_Continu
 import hashlib
 import pygame
 
-ResetDatabase().ResetALL()
+# ResetDatabase().ResetALL()
 
-date_naissance = datetime.datetime.strptime("11/12/1999", "%d/%m/%Y").date()
-print(date_naissance)
-
+ehh = datetime.datetime.strptime("11.11.2002", "%d/%m/%Y").date()
+print(ehh)
 """
 prenom = "bob"
 nom = "Hessane"

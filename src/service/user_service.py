@@ -20,9 +20,7 @@ class UserService:
 
     def compare_mdp(self, mdp: str, sel: str, mdp_hashe: str):
         """Compare un mot de passe et son sel avec sa version hashé"""
-        print(mdp_hashe)
         gen_hash = hashlib.pbkdf2_hmac("sha256", mdp.encode("utf-8"), sel.encode("utf-8"), 100000)
-        print(gen_hash.hex())
         return gen_hash.hex() == mdp_hashe
 
     @staticmethod  # Ne nécessite pas d'instance de UserService pour exister
@@ -35,7 +33,6 @@ class UserService:
         -------------------------
         str
         Identifiant (supposé unique) généré pour un utilisateur.
-
         """
         generation = "".join(random.choices(string.ascii_letters + string.digits, k=6))
         unique_id = f"{generation}"
@@ -107,8 +104,8 @@ class UserService:
             UserService().authenticate_user(
                 nom=nom, prenom=prenom, pseudo=pseudo, mdp=mdp, schema="ProjetInfo"
             )
-        except ValueError:
-            raise ValueError("Erreur lors de la création du compte.")
+        except ValueError as e:
+            raise ValueError(f"{e}")
 
 
 """    @log

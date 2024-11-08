@@ -65,25 +65,36 @@ class AccueilView(AbstractView):
                         schema="ProjetInfo",
                     )
                     est_connecte = True
-                    print("Connecté avec succès")
+                    print(
+                        Fore.GREEN
+                        + f"Connexion réussie. Content de vous revoir {identifiants['prenom']}."
+                        + Style.RESET_ALL
+                    )
                     next_view = MenuPrincipalView()
-                except ValueError:
-                    raise ValueError("L'authentification a échoué")
+                except ValueError as e:
+                    print(Fore.RED + f"Erreur lors de l'authentification : {e}" + Style.RESET_ALL)
 
         if answers["Choix connexion"] == "Créer un compte":
-            info_creation_compte = prompt(self.questions_creation_compte)
-            try:
-                UserService().creer_compte(
-                    nom=info_creation_compte["nom"],
-                    prenom=info_creation_compte["prenom"],
-                    date_naissance=info_creation_compte["date_naissance"],
-                    pseudo=info_creation_compte["pseudo"],
-                    mdp=info_creation_compte["mdp"],
-                    schema="ProjetInfo",
-                )
-                print("Création du compte OK. Vous voila connecté")
-            except ValueError:
-                raise ValueError("Echec de la création du compte")
+            connexion_avec_succes = False
+            while not connexion_avec_succes:
+                info_creation_compte = prompt(self.questions_creation_compte)
+                try:
+                    UserService().creer_compte(
+                        nom=info_creation_compte["nom"],
+                        prenom=info_creation_compte["prenom"],
+                        date_naissance=info_creation_compte["date_naissance"],
+                        pseudo=info_creation_compte["pseudo"],
+                        mdp=info_creation_compte["mdp"],
+                        schema="ProjetInfo",
+                    )
+                    print(
+                        Fore.GREEN
+                        + f"Votre compte a été créé avec succès. Bienvenue {info_creation_compte['prenom']}"
+                        + Style.RESET_ALL
+                    )
+                    connexion_avec_succes = True
+                except ValueError as e:
+                    print(Fore.RED + f"Echec lors de la création du compte : {e}" + Style.RESET_ALL)
 
         if answers["Choix connexion"] == "Quitter l'appli":
             next_view = None
@@ -91,4 +102,4 @@ class AccueilView(AbstractView):
         return next_view
 
     def display_info(self):
-        print(Fore.BLUE + " MENU D'ACCUEIL' ".center(80, "=") + Style.RESET_ALL)
+        print(Fore.BLUE + " MENU D'ACCUEIL ".center(80, "=") + Style.RESET_ALL)
