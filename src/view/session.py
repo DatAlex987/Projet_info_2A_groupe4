@@ -15,6 +15,9 @@ class Session(metaclass=Singleton):
         """Création de la session"""
         self.utilisateur: User = None
         self.debut_connexion = None
+        self.sd_to_param = None  # Permet de stocker les choix de naviguation de l'utilisateur
+        self.scene_to_param = None  # Permet de stocker les choix de naviguation de l'utilisateur
+        self.son_to_param = None  # Permet de stocker les choix de naviguation de l'utilisateur
         self.mixer = pygame.mixer.init()
 
     def connexion(self, utilisateur):

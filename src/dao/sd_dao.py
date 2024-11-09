@@ -84,7 +84,7 @@ class SDDAO(metaclass=Singleton):
             print(f"Erreur lors de la modification du sound-deck avec ID {sd.id_sd} : {e}")
             return None
 
-    def supprimer_sd(self, id_sd: int, schema) -> bool:
+    def supprimer_sd(self, id_sd: str, schema) -> bool:
         """
         Supprime un sound-deck par son ID.
 
@@ -160,7 +160,7 @@ class SDDAO(metaclass=Singleton):
             print(f"Erreur lors de la récupération des sound-decks : {e}")
             return []
 
-    def rechercher_par_id_sd(self, id_sd: int, schema) -> SD:
+    def rechercher_par_id_sd(self, id_sd: str, schema) -> SD:
         """
         Recherche un sound-deck dans la base de données par son ID.
 

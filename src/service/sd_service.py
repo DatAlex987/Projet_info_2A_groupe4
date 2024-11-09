@@ -4,7 +4,13 @@ import random
 import string
 from view.session import Session
 from business_object.sd import SD
+from business_object.scene import Scene
+from business_object.son import Son
+from business_object.son_continu import Son_Continu
+from business_object.son_aleatoire import Son_Aleatoire
+from business_object.son_manuel import Son_Manuel
 from dao.sd_dao import SDDAO
+from dao.scene_dao import SceneDAO
 
 
 class SDService:
@@ -69,15 +75,82 @@ class SDService:
         except ValueError as e:
             raise ValueError(f"{e}")
 
+    def supprimer_sd(self, id_sd: str, schema: str):
+        # Il faut trouver une solution aux pb soulevés sur whatsapp le 09/11 à 15h avant.
+        """
+        if SDDAO().supprimer_sd(id_sd=id_sd, schema=schema):
+            SceneDAO().supprimer_association_sd_scene(id_sd=, id_scene=)
+            SDDAO().supprimer_association_user_sd(id_user=, id_sd=, schema=schema)
+        """
+
+    def instancier_sd_par_id(self, id_sd: str, schema: str):
+        sd_kwargs = SDDAO().rechercher_par_id_sd(id_sd=id_sd, schema=schema)
+        Sons_Alea_scene = []
+        Sons_Cont_scene = []
+        Sons_Manu_scene = []
+        for scene in sd_kwargs["scenes"]:
+            for son_alea_kwargs in scene["sons_aleatoires"]:
+                Sons_Alea_scene.append(
+                    Son_Aleatoire(
+                        nom=son_alea_kwargs["nom"],
+                        description=son_alea_kwargs["description"],
+                        duree=son_alea_kwargs["duree"],
+                        id_freesound=son_alea_kwargs["id_freesound"],
+                        tags=son_alea_kwargs["tags"],
+                        cooldown_min=son_alea_kwargs["cooldown_min"],
+                        cooldown_max=son_alea_kwargs["cooldown_max"],
+                    )
+                )
+        for scene in sd_kwargs["scenes"]:
+            for son_cont_kwargs in scene["sons_continus"]:
+                Sons_Cont_scene.append(
+                    Son_Continu(
+                        nom=son_cont_kwargs["nom"],
+                        description=son_cont_kwargs["description"],
+                        duree=son_cont_kwargs["duree"],
+                        id_freesound=son_cont_kwargs["id_freesound"],
+                        tags=son_alea_kwargs["tags"],
+                    )
+                )
+        for scene in sd_kwargs["scenes"]:
+            for son_manu_kwargs in scene["sons_manuels"]:
+                Sons_Manu_scene.append(
+                    Son_Manuel(
+                        nom=son_manu_kwargs["nom"],
+                        description=son_manu_kwargs["description"],
+                        duree=son_manu_kwargs["duree"],
+                        id_freesound=son_manu_kwargs["id_freesound"],
+                        tags=son_alea_kwargs["tags"],
+                        start_key=son_manu_kwargs["start_key"],
+                    )
+                )
+        Scenes_of_sd = []
+        for scene_kwargs in sd_kwargs["scenes"]:
+            Scenes_of_sd.append(
+                Scene(
+                    nom=scene_kwargs["nom"],
+                    description=scene_kwargs["description"],
+                    id_scene=scene_kwargs["id_scene"],
+                    sons_aleatoires=Sons_Alea_scene,
+                    sons_manuels=Sons_Manu_scene,
+                    sons_continus=Sons_Cont_scene,
+                    date_creation=scene_kwargs["date_creation"],
+                )
+            )
+            sd = SD(
+                nom=sd_kwargs["nom"],
+                description=sd_kwargs["description"],
+                id_sd=sd_kwargs["id_sd"],
+                scenes=Scenes_of_sd,
+                date_creation=sd_kwargs["date_creation"],
+            )
+        return sd
+
     def formatage_question_sds_of_user(self):
         sds_user = Session().utilisateur.SD_possedes
-        print(sds_user)
         choix = []
         compteur = 1
         for sd in sds_user:
-            print(sd.nom)
-            print(sd.description[: min(len(sd.description), 40)])
-            print(sd.date_creation)
             mise_en_page_ligne = f"{compteur}. {sd.id_sd} | {sd.nom} | {sd.description[:min(len(sd.description), 40)]}... | {sd.date_creation}"
             choix.append(mise_en_page_ligne)
             compteur += 1
