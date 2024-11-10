@@ -6,6 +6,7 @@ from utils.reset_database import ResetDatabase
 
 
 def test_ajouter_scene_succes(scene1_kwargs):
+    ResetDatabase().ResetTEST()
     # GIVEN: A Scene object to add and the test schema
     schema = "SchemaTest"
     scene_to_add = Scene(**scene1_kwargs)
@@ -51,6 +52,7 @@ def test_ajouter_scene_succes(scene1_kwargs):
     ],
 )
 def test_modifier_scene_succes(scene1_kwargs, new_nom, new_desc):
+    ResetDatabase().ResetTEST()
     # GIVEN: A Scene object already added in the test schema the test schema
     schema = "SchemaTest"
     scene_to_add = Scene(**scene1_kwargs)
@@ -91,6 +93,7 @@ def test_modifier_scene_succes(scene1_kwargs, new_nom, new_desc):
 
 
 def test_supprimer_scene_succes(scene1_kwargs):
+    ResetDatabase().ResetTEST()
     # GIVEN: A Scene object already added in the test schema
     schema = "SchemaTest"
     scene_to_add = Scene(**scene1_kwargs)
@@ -116,6 +119,7 @@ def test_supprimer_scene_succes(scene1_kwargs):
 
 
 def test_consulter_scenes_succes(scene1_kwargs, scene2_kwargs):
+    ResetDatabase().ResetTEST()
     # GIVEN: 2 scenes already added in the test schema
     schema = "SchemaTest"
     scene1_to_add = Scene(**scene1_kwargs)
@@ -141,6 +145,7 @@ def test_consulter_scenes_succes(scene1_kwargs, scene2_kwargs):
 
 
 def test_rechercher_par_id_scenes_succes(scene1_kwargs):
+    ResetDatabase().ResetTEST()
     # GIVEN: A Scene object already added in the test schema the test schema
     schema = "SchemaTest"
     scene_to_add = Scene(**scene1_kwargs)

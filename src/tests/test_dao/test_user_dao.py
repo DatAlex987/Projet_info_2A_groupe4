@@ -16,6 +16,7 @@ def schema_test():
 
 
 def test_ajouter_user_succes(user_dao, utilisateur2_kwargs, schema_test):
+    ResetDatabase().ResetTEST()
     """Test si l'utilisateur est bien ajouté dans schema_test."""
     user_to_add = User(**utilisateur2_kwargs)
 
@@ -45,6 +46,7 @@ def test_ajouter_user_succes(user_dao, utilisateur2_kwargs, schema_test):
 
 
 def test_supprimer_user_succes(user_dao, utilisateur2_kwargs, schema_test):
+    ResetDatabase().ResetTEST()
     """Test que l'utilisateur peut être correctement supprimé de la base de données."""
     user_to_add = User(**utilisateur2_kwargs)
 
@@ -71,6 +73,7 @@ def test_supprimer_user_succes(user_dao, utilisateur2_kwargs, schema_test):
 
 
 def test_consulter_users_succes(user_dao, utilisateur2_kwargs, schema_test):
+    ResetDatabase().ResetTEST()
     # GIVEN: A user already added in the test schema
     user_to_add = User(**utilisateur2_kwargs)
     user_dao.ajouter_user(user_to_add, schema_test)
@@ -84,6 +87,7 @@ def test_consulter_users_succes(user_dao, utilisateur2_kwargs, schema_test):
 
 
 def test_rechercher_par_id_user_succes(user_dao, utilisateur2_kwargs, schema_test):
+    ResetDatabase().ResetTEST()
     """Test que l'utilisateur peut être récupéré par son ID."""
     user_to_add = User(**utilisateur2_kwargs)
 
@@ -106,9 +110,6 @@ def test_rechercher_par_id_user_succes(user_dao, utilisateur2_kwargs, schema_tes
         # Clean up the test data
         reseter = ResetDatabase()
         reseter.ResetTEST()
-
-    def compare_test(user_dao, utilisateur2_kwargs, shema_test):
-        pass
 
 
 # def test_ajouter_sounddeck(user_dao, utilisateur2_kwargs, schema_test):

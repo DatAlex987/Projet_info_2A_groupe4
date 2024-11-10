@@ -20,7 +20,8 @@ CREATE TABLE ProjetInfo.Sounddeck(
     id_sd VARCHAR(30) PRIMARY KEY,
     nom TEXT,
     description TEXT,
-    date_creation DATE
+    date_creation DATE,
+    id_createur VARCHAR(30)
 );
 
 

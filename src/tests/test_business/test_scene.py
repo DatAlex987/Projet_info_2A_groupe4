@@ -6,6 +6,7 @@ from business_object.son_continu import Son_Continu
 from business_object.son_manuel import Son_Manuel
 
 
+
 def test_modifier_nom_succes(scene1_kwargs):
     scene_test = Scene(**scene1_kwargs)
     scene_test.modifier_nom("Nouvelle Forêt")

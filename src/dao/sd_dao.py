@@ -26,8 +26,8 @@ class SDDAO(metaclass=Singleton):
             with DBConnection(schema=schema).connection as conn:
                 with conn.cursor() as cursor:
                     query = f"""
-                     INSERT INTO {schema}.SoundDeck(id_sd, nom, description, date_creation)
-                        VALUES (%(id_sd)s, %(nom)s, %(description)s, %(date_creation)s)
+                     INSERT INTO {schema}.SoundDeck(id_sd, nom, description, date_creation, id_createur)
+                        VALUES (%(id_sd)s, %(nom)s, %(description)s, %(date_creation)s, %(id_createur)s)
                         RETURNING id_sd;
                     """
                     cursor.execute(
@@ -37,6 +37,7 @@ class SDDAO(metaclass=Singleton):
                             "nom": sd.nom,
                             "description": sd.description,
                             "date_creation": sd.date_creation,
+                            "id_createur": sd.id_createur,
                         },
                     )
 
@@ -67,7 +68,7 @@ class SDDAO(metaclass=Singleton):
                     query = f"""
                     UPDATE {schema}.SoundDeck
                         SET nom = %(nom)s, description = %(description)s,
-                        date_creation = %(date_creation)s
+                        date_creation = %(date_creation)s, id_createur = %(id_createur)s
                         WHERE id_sd = %(id_sd)s;
                     """
                     cursor.execute(
@@ -77,6 +78,7 @@ class SDDAO(metaclass=Singleton):
                             "description": sd.description,
                             "date_creation": sd.date_creation,
                             "id_sd": sd.id_sd,
+                            "id_createur": sd.id_createur,
                         },
                     )
             return sd
@@ -131,7 +133,7 @@ class SDDAO(metaclass=Singleton):
             with DBConnection(schema=schema).connection as conn:
                 with conn.cursor() as cursor:
                     query = f"""
-                    SELECT id_sd, nom, description, date_creation
+                    SELECT id_sd, nom, description, date_creation, id_createur
                         FROM {schema}.SoundDeck;
                     """
 
@@ -153,6 +155,7 @@ class SDDAO(metaclass=Singleton):
                         ),
                         "description": row["description"],
                         "date_creation": row["date_creation"],
+                        "id_createur": row["id_createur"],
                     }
                 )
             return sd_trouves
@@ -183,7 +186,7 @@ class SDDAO(metaclass=Singleton):
             with DBConnection(schema=schema).connection as conn:
                 with conn.cursor() as cursor:
                     query = f"""
-                    SELECT id_sd, nom, description, date_creation
+                    SELECT id_sd, nom, description, date_creation, id_createur
                         FROM {schema}.SoundDeck
                         WHERE id_sd = %(id_sd)s;
                     """
@@ -202,6 +205,7 @@ class SDDAO(metaclass=Singleton):
                 "nom": res["nom"],
                 "description": res["description"],
                 "date_creation": res["date_creation"],
+                "id_createur": res["id_createur"],
                 "scenes": SceneDAO().rechercher_scenes_par_sd(
                     str(res["id_sd"]), schema=schema
                 ),  # A AJOUTER PLUS TARD
@@ -232,7 +236,7 @@ class SDDAO(metaclass=Singleton):
             with DBConnection(schema=schema).connection as conn:
                 with conn.cursor() as cursor:
                     query = f"""
-                    SELECT Sounddeck.id_sd, nom, description, date_creation
+                    SELECT Sounddeck.id_sd, nom, description, date_creation, id_createur
                     FROM {schema}.SoundDeck
                     LEFT JOIN {schema}.User_Sounddeck
                     ON {schema}.SoundDeck.id_sd = {schema}.User_Sounddeck.id_sd
@@ -260,6 +264,7 @@ class SDDAO(metaclass=Singleton):
                         ),  # A AJOUTER PLUS TARD
                         "description": row["description"],
                         "date_creation": row["date_creation"],
+                        "id_createur": row["id_createur"],
                     }
                 )
             return sd_trouves

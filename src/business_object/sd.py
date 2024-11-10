@@ -23,7 +23,7 @@ class SD:
     --------
     """
 
-    def __init__(self, nom, description, id_sd, scenes, date_creation):
+    def __init__(self, nom, description, id_sd, scenes, date_creation, id_createur):
         "self.scenes à modifier dès que possible"
         """Constructeur"""
         self.nom = nom
@@ -31,6 +31,7 @@ class SD:
         self.id_sd = id_sd
         self.scenes = scenes
         self.date_creation = date_creation
+        self.id_createur = id_createur
 
         if not isinstance(id_sd, str):
             raise TypeError("L'identifiant sound-deck doit être une instance de str.")
@@ -38,6 +39,8 @@ class SD:
             raise TypeError("Le nom doit etre une instance de str.")
         if not isinstance(description, str):
             raise TypeError("La description doit etre une instance de str.")
+        if not isinstance(id_createur, str):
+            raise TypeError("L'id du créateur doit etre une instance de str.")
         if not isinstance(scenes, list):
             raise TypeError("Scenes doit etre une liste de scènes.")
         if not all(isinstance(element, Scene) for element in scenes):

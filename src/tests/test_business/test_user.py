@@ -130,8 +130,8 @@ def test_supprimer_utilisateur(utilisateur_kwargs):
 def test_mot_de_passe_hash(utilisateur_kwargs):
     """Test le hachage du mot de passe."""
     utilisateur = User(**utilisateur_kwargs)
-    mdp_combine = utilisateur_kwargs["mdp"] + utilisateur_kwargs["id_user"]
+    mdp = utilisateur_kwargs["mdp"]
     hash_test = hashlib.pbkdf2_hmac(
-        "sha256", mdp_combine.encode("utf-8"), utilisateur.nom.encode("utf-8"), 100000
+        "sha256", mdp.encode("utf-8"), utilisateur.nom.encode("utf-8"), 100000
     )
-    assert utilisateur.mot_de_passe_hash == hash_test
+    assert utilisateur.mot_de_passe_hash == hash_test.hex()

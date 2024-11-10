@@ -7,6 +7,7 @@ import datetime
 
 
 def test_ajouter_sd_succes(sd_kwargs):
+    ResetDatabase().ResetTEST()
     # GIVEN: A sd object to add and the test schema
     schema = "SchemaTest"
     sd_to_add = SD(**sd_kwargs)
@@ -50,6 +51,7 @@ def test_ajouter_sd_succes(sd_kwargs):
     ],
 )
 def test_modifier_sd_succes(sd_kwargs, new_nom, new_desc):
+    ResetDatabase().ResetTEST()
     # GIVEN: A sd object already added in the test schema the test schema
     schema = "SchemaTest"
     sd_to_add = SD(**sd_kwargs)
@@ -88,6 +90,7 @@ def test_modifier_sd_succes(sd_kwargs, new_nom, new_desc):
 
 
 def test_supprimer_sd_succes(sd_kwargs):
+    ResetDatabase().ResetTEST()
     # GIVEN: A Sd object already added in the test schema the test schema
     schema = "SchemaTest"
     sd_to_add = SD(**sd_kwargs)
@@ -113,6 +116,7 @@ def test_supprimer_sd_succes(sd_kwargs):
 
 
 def test_consulter_sds_succes(sd_kwargs):
+    ResetDatabase().ResetTEST()
     # GIVEN: A sd already added in the test schema
     schema = "SchemaTest"
     sd1_to_add = SD(**sd_kwargs)
@@ -129,6 +133,7 @@ def test_consulter_sds_succes(sd_kwargs):
 
 
 def test_rechercher_par_id_sd_succes(sd_kwargs):
+    ResetDatabase().ResetTEST()
     # GIVEN: A Sd object already added in the test schema the test schema
     schema = "SchemaTest"
     sd_to_add = SD(**sd_kwargs)
