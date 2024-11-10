@@ -21,8 +21,8 @@ class MenuParamView(AbstractView):
                 "name": "Premier Choix",
                 "message": "Que souhaitez-vous faire ?",
                 "choices": [
-                    "Consulter/Modifier une de mes Sound-decks",
-                    "Créer une Sound-deck",
+                    "Consulter/Modifier une de mes sound-decks",
+                    "Créer une sound-deck",
                     "Retour au menu principal",
                 ],
             }
@@ -31,20 +31,20 @@ class MenuParamView(AbstractView):
             {
                 "type": "input",
                 "name": "nom",
-                "message": "Quel sera le nom de votre Sound-deck ?",
+                "message": "Quel sera le nom de votre sound-deck ?",
             },
             {
                 "type": "input",
                 "name": "description",
-                "message": "Quel sera la description de votre Sound-deck ?",
+                "message": "Quelle sera la description de votre sound-deck ?",
             },
         ]
 
     def make_choice(self):
         choix = prompt(self.question)
-        if choix["Premier Choix"] == "Consulter/Modifier une de mes Sound-decks":
+        if choix["Premier Choix"] == "Consulter/Modifier une de mes sound-decks":
             next_view = MenuParamSDView()
-        if choix["Premier Choix"] == "Créer une Sound-deck":
+        elif choix["Premier Choix"] == "Créer une sound-deck":
             sd_creee_avec_succes = False
             while not sd_creee_avec_succes:
                 try:
@@ -59,7 +59,6 @@ class MenuParamView(AbstractView):
                             + f"Sound-deck '{infos_creation_sd['nom']}' créée avec succès"
                             + Style.RESET_ALL
                         )
-                        next_view = MenuParamView()
                         sd_creee_avec_succes = True
                 except ValueError as e:
                     print(
@@ -67,7 +66,8 @@ class MenuParamView(AbstractView):
                         + f"Erreur lors de la création de la Sound-deck : {e}"
                         + Style.RESET_ALL
                     )
-        if choix["Premier Choix"] == "Retour au menu principal":
+            next_view = MenuParamView()
+        elif choix["Premier Choix"] == "Retour au menu principal":
             next_view = MenuPrincipalView()
         return next_view
 

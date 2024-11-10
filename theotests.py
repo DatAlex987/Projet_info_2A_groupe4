@@ -15,10 +15,14 @@ from business_object.son import Son
 from business_object.son_aleatoire import Son_Aleatoire
 from business_object.son_manuel import Son_Manuel
 from business_object.son_continu import Son_Continu
+from view.session import Session
 import hashlib
 import pygame
 
 ResetDatabase().ResetALL()
+
+
+"""
 sounddeck1 = SD(
     nom="SoundDeck 1",
     description="First sound deck",
@@ -29,8 +33,7 @@ sounddeck1 = SD(
 )
 print(sounddeck1)
 print(sounddeck1.id_sd)
-
-"""scene1 = Scene(
+scene1 = Scene(
     nom="Scene1",
     description="Description de la Scene1",
     id_scene="pIbHf1",

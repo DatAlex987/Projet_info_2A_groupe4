@@ -3,6 +3,7 @@ from business_object.personne import Personne
 import datetime
 import re
 from business_object.sd import SD
+from business_object.scene import Scene
 
 
 class User(Personne):
@@ -105,3 +106,19 @@ class User(Personne):
         for sd_pos in self.SD_possedes:
             if sd.id_sd == sd_pos.id_sd:
                 self.SD_possedes.remove(sd_pos)
+
+    def ajouter_scene_a_sd(self, id_sd: str, scene: Scene):
+        print("attribut id_sd de ajouter_scene_a_sd:", id_sd)
+        print("All SD IDs in SD_possedes:", [sd.id_sd for sd in self.SD_possedes])
+        for sd in self.SD_possedes:
+            if sd.id_sd == id_sd:
+                print(f"Adding scene {scene.nom} to SD {id_sd}")
+                sd.scenes.append(scene)
+        print(f"Current scenes in SD {id_sd}: {[s.nom for s in sd.scenes]}")
+
+    def supprimer_scene_a_sd(self, id_sd: str, id_scene: str):
+        for sd in self.SD_possedes:
+            if sd.id_sd == id_sd:
+                for scene in sd.scenes:
+                    if scene.id_scene == id_scene:
+                        sd.scenes.remove(scene)

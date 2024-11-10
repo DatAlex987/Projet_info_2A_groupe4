@@ -33,14 +33,26 @@ class MenuParamSceneView(AbstractView):
                 "message": "Etes-vous sûr de vouloir supprimer votre sound-deck ? Sa suppression entraînera la perte de tout ce qu'elle contient.",
             }
         ]
+        self.questions_creation_scene = [
+            {
+                "type": "input",
+                "name": "nom",
+                "message": "Quel sera le nom de votre scène ?",
+            },
+            {
+                "type": "input",
+                "name": "description",
+                "message": "Quelle sera la description de votre scène ?",
+            },
+        ]
 
     def make_choice(self):
         choix = prompt(self.question_choix_scene)
-        if choix["Choix Scene"] == "Retour au menu de paramétrage":
+        if choix["Choix Scene"] == "Retour au menu de choix des sound-decks":
             # Contraint de faire l'import ici pour éviter un circular import
-            from view.menuparam_view import MenuParamView
+            from view.menuparamsdview import MenuParamSDView
 
-            next_view = MenuParamView()
+            next_view = MenuParamSDView()
         if choix["Choix Scene"] == "Supprimer la sound-deck":
             confirmation = prompt(self.question_choix_suppr_sd)
             if confirmation["confirm suppr sd"]:
@@ -64,15 +76,37 @@ class MenuParamSceneView(AbstractView):
                         + f"Erreur lors de la suppression de la Sound-deck : {e}"
                         + Style.RESET_ALL
                     )
-                    next_view = MenuParamSceneView()
-            if not confirmation["confirm suppr sd"]:
+                # Contraint de faire l'import ici pour éviter un circular import
+                from view.menuparam_view import MenuParamView
+
+                next_view = MenuParamView()
+            else:
                 next_view = MenuParamSceneView()
             # Contraint de faire l'import ici pour éviter un circular import
-            from view.menuparamsdview import MenuParamSDView
+            # from view.menuparamsdview import MenuParamSDView
 
-            next_view = MenuParamSDView()
+            # next_view = MenuParamSDView()
         if choix["Choix Scene"] == "Ajouter une scène":
-            pass
+            scene_creee_avec_succes = False
+            while not scene_creee_avec_succes:
+                try:
+                    info_new_scene = prompt(self.questions_creation_scene)
+                    if SceneService().creer_scene(
+                        nom=info_new_scene["nom"],
+                        description=info_new_scene["description"],
+                        schema="ProjetInfo",
+                    ):
+                        print(
+                            Fore.GREEN
+                            + f"Scène '{info_new_scene['nom']}' créée avec succès"
+                            + Style.RESET_ALL
+                        )
+                        scene_creee_avec_succes = True
+                except ValueError as e:
+                    print(
+                        Fore.RED + f"Erreur lors de la création de la scène : {e}" + Style.RESET_ALL
+                    )
+            next_view = MenuParamSceneView()
         else:
             id_scene_select = choix["Choix Scene"].split()[1]  # A VERIFIER
 
