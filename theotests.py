@@ -28,6 +28,7 @@ scene1 = Scene(
     sons_manuels=[],
     date_creation=datetime.date.today(),
 )
+
 scene2 = Scene(
     nom="Scene2",
     description="Description de la Scene2",
@@ -39,8 +40,10 @@ scene2 = Scene(
 )
 
 
-SceneDAO().ajouter_scene(scene1, "ProjetInfo")
-SceneDAO().ajouter_scene(scene2, "ProjetInfo")
+SceneDAO().ajouter_scene(scene1, schema="ProjetInfo")
+print("ajout 1 ok")
+SceneDAO().ajouter_scene(scene2, schema="ProjetInfo")
+print("ajout 2 ok")
 SceneDAO().ajouter_association_sd_scene(id_sd="4CeZY0Y", id_scene="pIbHf1", schema="ProjetInfo")
 SceneDAO().ajouter_association_sd_scene(id_sd="4CeZY0Y", id_scene="2PjUy", schema="ProjetInfo")
 """

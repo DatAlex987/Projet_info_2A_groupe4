@@ -148,6 +148,7 @@ class UserService:
                             id_sd=sd_kwargs["id_sd"],
                             scenes=Scenes_of_user,
                             date_creation=sd_kwargs["date_creation"],
+                            id_createur=sd_kwargs["id_createur"],
                         )
                     )
                 utilisateur = User(

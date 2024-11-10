@@ -65,6 +65,7 @@ class SDService:
                 id_sd=SDService.id_sd_generator(),
                 scenes=[],
                 date_creation=datetime.datetime.today().date(),
+                id_createur=Session().utilisateur.id_user,
             )
             SDDAO().ajouter_sd(sd=new_sd, schema=schema)
             SDDAO().ajouter_association_user_sd(
@@ -137,13 +138,14 @@ class SDService:
                     date_creation=scene_kwargs["date_creation"],
                 )
             )
-            sd = SD(
-                nom=sd_kwargs["nom"],
-                description=sd_kwargs["description"],
-                id_sd=sd_kwargs["id_sd"],
-                scenes=Scenes_of_sd,
-                date_creation=sd_kwargs["date_creation"],
-            )
+        sd = SD(
+            nom=sd_kwargs["nom"],
+            description=sd_kwargs["description"],
+            id_sd=sd_kwargs["id_sd"],
+            scenes=Scenes_of_sd,
+            date_creation=sd_kwargs["date_creation"],
+            id_createur=sd_kwargs["id_createur"],
+        )
         return sd
 
     def formatage_question_sds_of_user(self):
