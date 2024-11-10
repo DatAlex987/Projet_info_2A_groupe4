@@ -65,6 +65,8 @@ class MenuParamSceneView(AbstractView):
                         + Style.RESET_ALL
                     )
                     next_view = MenuParamSceneView()
+            if not confirmation["confirm suppr sd"]:
+                next_view = MenuParamSceneView()
             # Contraint de faire l'import ici pour éviter un circular import
             from view.menuparamsdview import MenuParamSDView
 
