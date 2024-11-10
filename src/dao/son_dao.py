@@ -347,3 +347,8 @@ class SonDAO:
                 )
                 res = cursor.fetchall()
         return [row["nom_tag"] for row in res]
+
+    def supprimer_toutes_associations_son(self, id_freesound: str, schema):
+        pass  # En théorie inutile car on ne pourra jamais supprimer un son
+
+    # (on pourra le retirer d'une scène, mais pas supprimer son utilisation complète.)

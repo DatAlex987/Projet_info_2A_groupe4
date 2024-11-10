@@ -387,3 +387,43 @@ class SceneDAO:
                 )
                 res = cursor.fetchall()
         return [row["id_freesound"] for row in res]
+
+    def supprimer_toutes_associations_scene(self, id_scene: str, schema):
+        # Get all sd having the given scene
+        sds_possedants = [
+            sd_id
+            for sd_id in self.get_sds_of_scene(id_scene=id_scene, schema=schema)
+            if self.check_if_scene_in_sd(id_sd=sd_id, id_scene=id_scene, schema=schema)
+        ]
+
+        # Delete all associations in sd_scene for the given scene
+        for id_sd in sds_possedants:
+            self.supprimer_association_sd_scene(id_sd=id_sd, id_scebe=id_scene, schema=schema)
+
+        # Get all sons associated with the given scene
+        sons_inclus = [
+            freesound_id
+            for freesound_id in self.get_sons_aleatoires_of_scene(id_scene=id_scene, schema=schema)
+            if SonDAO().check_if_son_in_scene(
+                id_freesound=freesound_id, id_scene=id_scene, schema=schema
+            )
+        ]
+        sons_inclus.append(
+            freesound_id
+            for freesound_id in self.get_sons_continus_of_scene(id_scene=id_scene, schema=schema)
+            if SonDAO().check_if_son_in_scene(
+                id_freesound=freesound_id, id_scene=id_scene, schema=schema
+            )
+        )
+        sons_inclus.append(
+            freesound_id
+            for freesound_id in self.get_sons_manuels_of_scene(id_scene=id_scene, schema=schema)
+            if SonDAO().check_if_son_in_scene(
+                id_freesound=freesound_id, id_scene=id_scene, schema=schema
+            )
+        )
+        # Delete all associations in scene_son for the given scene
+        for id_freesound in sons_inclus:
+            SonDAO().supprimer_association_scene_son(
+                id_freesound=id_freesound, id_scene=id_scene, schema=schema
+            )

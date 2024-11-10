@@ -420,4 +420,24 @@ class SDDAO(metaclass=Singleton):
         return [row["id_scene"] for row in res]
 
     def supprimer_toutes_associations_sd(self, id_sd: str, schema):
-        pass
+        # Get all users associated with the given Sounddeck
+        users_possedants = [
+            user_id
+            for user_id in self.get_users_for_sd(id_sd=id_sd, schema=schema)
+            if self.check_if_sd_in_user(id_sd=id_sd, id_user=user_id, schema=schema)
+        ]
+
+        # Delete all associations in user_sd for the given Sounddeck
+        for id_user in users_possedants:
+            self.supprimer_association_user_sd(id_sd=id_sd, id_user=id_user, schema=schema)
+
+        # Get all scenes associated with the given Sounddeck
+        scenes_incluses = [
+            scene_id
+            for scene_id in self.get_scenes_for_sd(id_sd=id_sd, schema=schema)
+            if SceneDAO().check_if_scene_in_sd(id_sd=id_sd, id_scene=scene_id, schema=schema)
+        ]
+
+        # Delete all associations in sd_scene for the given Sounddeck
+        for id_scene in scenes_incluses:
+            SceneDAO().supprimer_association_sd_scene(id_sd=id_sd, id_scene=id_scene, schema=schema)
