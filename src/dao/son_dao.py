@@ -325,3 +325,25 @@ class SonDAO:
         except Exception as e:
             print(f"Erreur lors de la vérification : {id_scene},{id_freesound},{type_son} : {e}")
             return False
+
+    def get_scenes_of_son_aleatoire(self, id_freesound: str, schema: str):
+        pass  # A priori, inutile
+
+    def get_scenes_of_son_continu(self, id_freesound: str, schema: str):
+        pass  # A priori, inutile
+
+    def get_scenes_of_son_manuel(self, id_freesound: str, schema: str):
+        pass  # A priori, inutile
+
+    def get_tags_of_son(self, id_freesound: str, schema: str):
+        """
+        Renvoie la liste des tags de id_freesound
+        """
+        with DBConnection(schema=schema).connection as connection:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    f"SELECT nom_tag FROM {schema}.Son_Tag WHERE id_freesound = %(id_freesound)s;",
+                    {"id_freesound": id_freesound},
+                )
+                res = cursor.fetchall()
+        return [row["nom_tag"] for row in res]

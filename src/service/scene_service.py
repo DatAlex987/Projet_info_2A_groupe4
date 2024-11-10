@@ -20,7 +20,9 @@ class SceneService:
             )
             choix.append(mise_en_page_ligne)
             compteur += 1
-        choix.append("Supprimer la Sound-deck")
+        choix.append("Ajouter une scène")
+        choix.append("Supprimer une scène")
+        choix.append("Supprimer la sound-deck")
         choix.append("Retour au menu de paramétrage")
         return choix
 

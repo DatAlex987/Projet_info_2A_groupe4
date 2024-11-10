@@ -34,7 +34,7 @@ class MenuParamSceneView(AbstractView):
             from view.menuparam_view import MenuParamView
 
             next_view = MenuParamView()
-        if choix["Choix Scene"] == "Supprimer la Sound-deck":
+        if choix["Choix Scene"] == "Supprimer la sound-deck":
             sd_supprimee_avec_succes = False
             while not sd_supprimee_avec_succes:
                 try:

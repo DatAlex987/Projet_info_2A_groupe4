@@ -198,6 +198,19 @@ class UserDAO(metaclass=Singleton):
             return user_trouve
         return None
 
+    def get_sds_of_user(self, id_user: str, schema: str):
+        """
+        Renvoie la liste des id des SDs qui sont dans le répertoire de id_user/
+        """
+        with DBConnection(schema=schema).connection as connection:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    f"SELECT id_sd FROM {schema}.User_Sounddeck WHERE id_user = %(id_user)s;",
+                    {"id_user": id_user},
+                )
+                res = cursor.fetchall()
+        return [row["id_sd"] for row in res]
+
 
 """
     def compare_mdp(self, id_user: str, mdp: str, schema):

@@ -392,3 +392,32 @@ class SDDAO(metaclass=Singleton):
                 f"à l'utilisateur {id_user} : {e}"
             )
             return False
+
+    def get_users_of_sd(self, id_sd: str, schema: str):
+        """
+        Renvoie la liste des id des User qui ont dans leur répertoire id_sd
+        """
+        with DBConnection(schema=schema).connection as connection:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    f"SELECT id_user FROM {schema}.User_Sounddeck WHERE id_sd = %(id_sd)s;",
+                    {"id_sd": id_sd},
+                )
+                res = cursor.fetchall()
+        return [row["id_user"] for row in res]
+
+    def get_scenes_of_sd(self, id_sd: str, schema: str):
+        """
+        Renvoie la liste des id des Scenes qui sont dans id_sd
+        """
+        with DBConnection(schema=schema).connection as connection:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    f"SELECT id_scene FROM {schema}.Sounddeck_Scene WHERE id_sd = %(id_sd)s;",
+                    {"id_sd": id_sd},
+                )
+                res = cursor.fetchall()
+        return [row["id_scene"] for row in res]
+
+    def supprimer_toutes_associations_sd(self, id_sd: str, schema):
+        pass

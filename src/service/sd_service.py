@@ -77,12 +77,11 @@ class SDService:
             raise ValueError(f"{e}")
 
     def supprimer_sd(self, id_sd: str, schema: str):
-        # Il faut trouver une solution aux pb soulevés sur whatsapp le 09/11 à 15h avant.
-        """
-        if SDDAO().supprimer_sd(id_sd=id_sd, schema=schema):
+        # La suppression d'une SD supprimer l'objet + toutes les associations dans les tables + les scènes qu'elle contient + les sons qu'elle contient
+        if SDDAO().supprimer_sd(id_sd=id_sd, schema=schema): #Cette condition permet d'assurer que la BDD reste cohérente en cas de problème
             SceneDAO().supprimer_association_sd_scene(id_sd=, id_scene=)
             SDDAO().supprimer_association_user_sd(id_user=, id_sd=, schema=schema)
-        """
+
 
     def instancier_sd_par_id(self, id_sd: str, schema: str):
         sd_kwargs = SDDAO().rechercher_par_id_sd(id_sd=id_sd, schema=schema)

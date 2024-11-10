@@ -212,3 +212,16 @@ class TagDAO:
         except Exception as e:
             print(f"Erreur lors de la vérification : {id_freesound},{tag} : {e}")
             return False
+
+    def get_sons_of_tag(self, nom_tag: str, schema: str):
+        """
+        Renvoie la liste des sons qui possèdent nom_tag
+        """
+        with DBConnection(schema=schema).connection as connection:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    f"SELECT id_freesound FROM {schema}.Son_Tag WHERE nom_tag = %(nom_tag)s;",
+                    {"nom_tag": nom_tag},
+                )
+                res = cursor.fetchall()
+        return [row["id_freesound"] for row in res]

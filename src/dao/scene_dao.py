@@ -323,3 +323,67 @@ class SceneDAO:
         except Exception as e:
             print(f"Erreur lors de la vérification : {id_scene},{id_sd} : {e}")
             return False
+
+    def get_sds_of_scene(self, id_scene: str, schema: str):
+        """
+        Renvoie la liste des id des SD qui ont id_scene dedans
+        """
+        with DBConnection(schema=schema).connection as connection:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    f"SELECT id_sd FROM {schema}.Sounddeck_Scene WHERE id_scene = %(id_scene)s;",
+                    {"id_scene": id_scene},
+                )
+                res = cursor.fetchall()
+        return [row["id_sd"] for row in res]
+
+    def get_sons_aleatoires_of_scene(self, id_scene: str, schema: str):
+        """
+        Renvoie la liste des id des Sons Aléatoires qui ont id_scene dedans
+        """
+        with DBConnection(schema=schema).connection as connection:
+            with connection.cursor() as cursor:
+                query = f"""SELECT id_freesound
+                        FROM {schema}.Scene_Son
+                        WHERE id_scene = %(id_scene)s
+                        AND type = "aleatoire";"""
+                cursor.execute(
+                    query,
+                    {"id_scene": id_scene},
+                )
+                res = cursor.fetchall()
+        return [row["id_freesound"] for row in res]
+
+    def get_sons_continus_of_scene(self, id_scene: str, schema: str):
+        """
+        Renvoie la liste des id des Sons Aléatoires qui ont id_scene dedans
+        """
+        with DBConnection(schema=schema).connection as connection:
+            with connection.cursor() as cursor:
+                query = f"""SELECT id_freesound
+                        FROM {schema}.Scene_Son
+                        WHERE id_scene = %(id_scene)s
+                        AND type = "continu";"""  # Ces 2 conditions sont celles qui portent sur Son Continus
+                cursor.execute(
+                    query,
+                    {"id_scene": id_scene},
+                )
+                res = cursor.fetchall()
+        return [row["id_freesound"] for row in res]
+
+    def get_sons_manuels_of_scene(self, id_scene: str, schema: str):
+        """
+        Renvoie la liste des id des Sons Aléatoires qui ont id_scene dedans
+        """
+        with DBConnection(schema=schema).connection as connection:
+            with connection.cursor() as cursor:
+                query = f"""SELECT id_freesound
+                        FROM {schema}.Scene_Son
+                        WHERE id_scene = %(id_scene)s
+                        AND type = "manuel";"""  # Ces 2 conditions sont celles qui portent sur Son Manuels
+                cursor.execute(
+                    query,
+                    {"id_scene": id_scene},
+                )
+                res = cursor.fetchall()
+        return [row["id_freesound"] for row in res]
