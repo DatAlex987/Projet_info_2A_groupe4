@@ -11,6 +11,8 @@ from business_object.son_aleatoire import Son_Aleatoire
 from business_object.son_manuel import Son_Manuel
 from dao.sd_dao import SDDAO
 from dao.scene_dao import SceneDAO
+from dao.son_dao import SonDAO
+from dao.tag_dao import TagDAO
 
 
 class SDService:
@@ -71,17 +73,37 @@ class SDService:
             SDDAO().ajouter_association_user_sd(
                 id_user=Session().utilisateur.id_user, id_sd=new_sd.id_sd, schema=schema
             )
-            Session().utilisateur.SD_possedes.append(new_sd)
+            Session().utilisateur.ajouter_sd(sd=new_sd)
             return True
         except ValueError as e:
             raise ValueError(f"{e}")
 
-    def supprimer_sd(self, id_sd: str, schema: str):
-        # La suppression d'une SD supprimer l'objet + toutes les associations dans les tables + les scènes qu'elle contient + les sons qu'elle contient
-        if SDDAO().supprimer_sd(id_sd=id_sd, schema=schema): #Cette condition permet d'assurer que la BDD reste cohérente en cas de problème
-            SceneDAO().supprimer_association_sd_scene(id_sd=, id_scene=)
-            SDDAO().supprimer_association_user_sd(id_user=, id_sd=, schema=schema)
-
+    def supprimer_sd(
+        self, sd: SD, schema: str
+    ):  # On a besoin de l'objet en entier pour supprimer en "cascade"
+        # La suppression d'une SD supprime l'objet + toutes les associations dans les tables +
+        # les associations en cascade. Mais pas les objets en cascade (car ils peuvent tjrs
+        # exister dans d'autres SD)
+        try:
+            SDDAO().supprimer_sd(id_sd=sd.id_sd, schema=schema)
+            SDDAO().supprimer_toutes_associations_sd(id_sd=sd.id_sd, schema=schema)
+            for scene in sd.scenes:
+                SceneDAO().supprimer_toutes_associations_scene(
+                    id_scene=scene.id_scene, schema=schema
+                )
+                for son in scene.sons_aleatoires + scene.sons_continus + scene.sons_manuels:
+                    SonDAO().supprimer_toutes_associations_son(
+                        id_freesound=son.id_freesound, schema=schema
+                    )
+                    for tag in son.tags:
+                        TagDAO().supprimer_association_son_tag(
+                            id_freesound=son.id_freesound, tag=tag, schema=schema
+                        )
+            # On termine par actualiser la session
+            Session().utilisateur.enlever_sd(sd=sd)
+        except (ValueError, AttributeError) as e:
+            raise ValueError(f"La suppression du SD n'a pas abouti : {e}")
+        return True
 
     def instancier_sd_par_id(self, id_sd: str, schema: str):
         sd_kwargs = SDDAO().rechercher_par_id_sd(id_sd=id_sd, schema=schema)

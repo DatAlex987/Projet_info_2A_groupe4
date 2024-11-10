@@ -18,8 +18,19 @@ from business_object.son_continu import Son_Continu
 import hashlib
 import pygame
 
-"""# ResetDatabase().ResetALL()
-scene1 = Scene(
+ResetDatabase().ResetALL()
+sounddeck1 = SD(
+    nom="SoundDeck 1",
+    description="First sound deck",
+    id_sd="101",
+    scenes=[],
+    date_creation=datetime.date.today(),
+    id_createur="123",
+)
+print(sounddeck1)
+print(sounddeck1.id_sd)
+
+"""scene1 = Scene(
     nom="Scene1",
     description="Description de la Scene1",
     id_scene="pIbHf1",
@@ -38,31 +49,11 @@ scene2 = Scene(
     sons_manuels=[],
     date_creation=datetime.date.today(),
 )
-"""
-sds = UserDAO().get_sds_of_user(id_user="jhRZ8v", schema="ProjetInfo")
-print(sds)
-"""SceneDAO().ajouter_scene(scene1, schema="ProjetInfo")
+
+SceneDAO().ajouter_scene(scene1, schema="SchemaTest")
 print("ajout 1 ok")
-SceneDAO().ajouter_scene(scene2, schema="ProjetInfo")
+SceneDAO().ajouter_scene(scene2, schema="SchemaTest")
 print("ajout 2 ok")
-SceneDAO().ajouter_association_sd_scene(id_sd="4CeZY0Y", id_scene="pIbHf1", schema="ProjetInfo")
-SceneDAO().ajouter_association_sd_scene(id_sd="4CeZY0Y", id_scene="2PjUy", schema="ProjetInfo")"""
-"""
-prenom = "bob"
-nom = "Hessane"
-
-mdp = "12345663"
-mdp_combine = mdp + prenom
-
-mdph = hashlib.pbkdf2_hmac("sha256", mdp_combine.encode("utf-8"), nom.encode("utf-8"), 100000)
-print(mdp_combine, mdph)
-print(hashlib.pbkdf2_hmac("sha256", mdp_combine.encode("utf-8"), nom.encode("utf-8"), 100000))
-
-def f(son):
-    if isinstance(son, Son_Aleatoire):
-        return "alea"
-    if isinstance(son, Son_Continu):
-        return "continu"
 
 
 # User class instantiation
@@ -92,6 +83,7 @@ sounddeck1 = SD(
     id_sd="101",
     scenes=[],
     date_creation=datetime.date.today(),
+    id_createur="123",
 )
 sounddeck2 = SD(
     nom="SoundDeck 2",
@@ -99,6 +91,7 @@ sounddeck2 = SD(
     id_sd="102",
     scenes=[],
     date_creation=datetime.date.today(),
+    id_createur="222222",
 )
 sounddeck3 = SD(
     nom="SoundDeck 3",
@@ -106,6 +99,7 @@ sounddeck3 = SD(
     id_sd="103",
     scenes=[],
     date_creation=datetime.date.today(),
+    id_createur="123",
 )
 sounddeck4 = SD(
     nom="SoundDeck 4",
@@ -113,6 +107,7 @@ sounddeck4 = SD(
     id_sd="104",
     scenes=[],
     date_creation=datetime.date.today(),
+    id_createur="222222",
 )
 
 # Scene class instantiation
@@ -203,7 +198,7 @@ all_sons = son_dao.consulter_sons(schema="Schematest")
 # print(all_users)
 # print(all_sds)
 # print(all_scenes)
-print(all_sons)
+# print(all_sons)
 scene_dao.ajouter_association_sd_scene(id_sd="101", id_scene="123123", schema="SchemaTest")
 scene_dao.ajouter_association_sd_scene(id_sd="101", id_scene="234234", schema="SchemaTest")
 scene_dao.ajouter_association_sd_scene(id_sd="101", id_scene="345345", schema="SchemaTest")
@@ -217,9 +212,15 @@ son_dao.ajouter_association_scene_son(id_scene="234234", son=son_alea2, schema="
 son_dao.ajouter_association_scene_son(id_scene="234234", son=son_continu2, schema="SchemaTest")
 son_dao.ajouter_association_scene_son(id_scene="234234", son=son_manuel2, schema="SchemaTest")
 son_dao.ajouter_association_scene_son(id_scene="234234", son=son_continu1, schema="SchemaTest")
-
-
-print(
+sd_dao.ajouter_association_user_sd(id_user="123", id_sd="101", schema="SchemaTest")
+sd_dao.ajouter_association_user_sd(id_user="222222", id_sd="101", schema="SchemaTest")
+print(all_users)
+print(all_sds)
+print(all_scenes)
+print(all_sons)
+sd_dao.supprimer_toutes_associations_sd(id_sd="101", schema="SchemaTest")
+"""
+"""print(
     son_dao.check_if_son_in_scene(
         id_scene="123123", id_freesound="194863", type_son="aleatoire", schema="SchemaTest"
     )
@@ -253,5 +254,4 @@ print(
     )
 )
 print(son_dao.rechercher_sons_par_scene(id_scene="123123", schema="SchemaTest"))
-ResetDatabase().ResetALL()
-"""
+ResetDatabase().ResetALL()"""

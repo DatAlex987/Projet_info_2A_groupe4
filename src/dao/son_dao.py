@@ -25,7 +25,7 @@ class SonDAO:
         elif isinstance(son, Son_Manuel):
             return "manuel"
 
-    def ajouter_son(self, son, schema):
+    def ajouter_son(self, son, schema: str):
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
                 query = f"""
@@ -45,7 +45,7 @@ class SonDAO:
                 son.id = cursor.fetchone()["id_freesound"]
         return son
 
-    def modifier_son(self, son, schema):
+    def modifier_son(self, son, schema: str):
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
                 query = f"""
@@ -65,7 +65,7 @@ class SonDAO:
                 )
         return son
 
-    def supprimer_son(self, id_freesound, schema):
+    def supprimer_son(self, id_freesound, schema: str):
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
                 query = f"""
@@ -78,7 +78,7 @@ class SonDAO:
                     {"id_freesound": id_freesound},
                 )
 
-    def consulter_sons(self, schema):
+    def consulter_sons(self, schema: str):
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
                 query = f"""
@@ -106,7 +106,7 @@ class SonDAO:
             )
         return sons_trouves
 
-    def rechercher_par_id_son(self, id_freesound, schema):
+    def rechercher_par_id_son(self, id_freesound, schema: str):
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
                 query = f"""
@@ -132,7 +132,7 @@ class SonDAO:
         }
         return son_trouve
 
-    def rechercher_sons_par_scene(self, id_scene: str, schema):
+    def rechercher_sons_par_scene(self, id_scene: str, schema: str):
         """
         Recherche les sons appartenant à une scène.
 
@@ -201,7 +201,7 @@ class SonDAO:
             print(f"Erreur lors de la récupération des sound-decks : {e}")
             return []
 
-    def ajouter_association_scene_son(self, id_scene: str, son: Son, schema):
+    def ajouter_association_scene_son(self, id_scene: str, son: Son, schema: str):
         """
         Ajoute une nouvelle association Scene - Son dans la table d'association.
 
@@ -244,7 +244,7 @@ class SonDAO:
             return None
 
     def supprimer_association_scene_son(
-        self, id_scene: str, id_freesound: str, type_son: str, schema
+        self, id_scene: str, id_freesound: str, type_son: str, schema: str
     ):
         """
         Supprimer une association Scene - Son dans la table d'association.
@@ -281,7 +281,7 @@ class SonDAO:
             print(f"Erreur lors de la suppression de l'association : {e}")
             return None
 
-    def check_if_son_in_scene(self, id_scene: str, id_freesound: str, type_son: str, schema):
+    def check_if_son_in_scene(self, id_scene: str, id_freesound: str, type_son: str, schema: str):
         """
         Vérifie si un son appartient à une scène
 
@@ -327,13 +327,55 @@ class SonDAO:
             return False
 
     def get_scenes_of_son_aleatoire(self, id_freesound: str, schema: str):
-        pass  # A priori, inutile
+        """
+        Renvoie la liste des scenes qui ont le son mentionné en "aléatoire".
+        """
+        with DBConnection(schema=schema).connection as connection:
+            with connection.cursor() as cursor:
+                query = f"""SELECT id_scene
+                        FROM {schema}.Scene_Son
+                        WHERE id_freesound = %(id_freesound)s
+                        AND type = "aleatoire";"""
+                cursor.execute(
+                    query,
+                    {"id_freesound": id_freesound},
+                )
+                res = cursor.fetchall()
+        return [row["id_scene"] for row in res]
 
     def get_scenes_of_son_continu(self, id_freesound: str, schema: str):
-        pass  # A priori, inutile
+        """
+        Renvoie la liste des scenes qui ont le son mentionné en "continu".
+        """
+        with DBConnection(schema=schema).connection as connection:
+            with connection.cursor() as cursor:
+                query = f"""SELECT id_scene
+                        FROM {schema}.Scene_Son
+                        WHERE id_freesound = %(id_freesound)s
+                        AND type = "continu";"""
+                cursor.execute(
+                    query,
+                    {"id_freesound": id_freesound},
+                )
+                res = cursor.fetchall()
+        return [row["id_scene"] for row in res]
 
     def get_scenes_of_son_manuel(self, id_freesound: str, schema: str):
-        pass  # A priori, inutile
+        """
+        Renvoie la liste des scenes qui ont le son mentionné en "manuel".
+        """
+        with DBConnection(schema=schema).connection as connection:
+            with connection.cursor() as cursor:
+                query = f"""SELECT id_scene
+                        FROM {schema}.Scene_Son
+                        WHERE id_freesound = %(id_freesound)s
+                        AND type = "manuel";"""
+                cursor.execute(
+                    query,
+                    {"id_freesound": id_freesound},
+                )
+                res = cursor.fetchall()
+        return [row["id_scene"] for row in res]
 
     def get_tags_of_son(self, id_freesound: str, schema: str):
         """
@@ -348,7 +390,57 @@ class SonDAO:
                 res = cursor.fetchall()
         return [row["nom_tag"] for row in res]
 
-    def supprimer_toutes_associations_son(self, id_freesound: str, schema):
-        pass  # En théorie inutile car on ne pourra jamais supprimer un son
+    def supprimer_toutes_associations_son(self, id_freesound: str, type_son: str, schema: str):
+        # Get all scenes having the given son as type_son
+        if type_son == "aleatoire":
+            scenes_possedants = [
+                scene_id
+                for scene_id in self.get_scenes_of_son_aleatoire(
+                    id_freesound=id_freesound, schema=schema
+                )
+                if self.check_if_son_in_scene(
+                    id_scene=scene_id,
+                    id_freesound=id_freesound,
+                    type_son="aleatoire",
+                    schema=schema,
+                )
+            ]
 
-    # (on pourra le retirer d'une scène, mais pas supprimer son utilisation complète.)
+        if type_son == "continu":
+            scenes_possedants = [
+                scene_id
+                for scene_id in self.get_scenes_of_son_aleatoire(
+                    id_freesound=id_freesound, schema=schema
+                )
+                if self.check_if_son_in_scene(
+                    id_scene=scene_id, id_freesound=id_freesound, type_son="continu", schema=schema
+                )
+            ]
+
+        if type_son == "manuel":
+            scenes_possedants = [
+                scene_id
+                for scene_id in self.get_scenes_of_son_aleatoire(
+                    id_freesound=id_freesound, schema=schema
+                )
+                if self.check_if_son_in_scene(
+                    id_scene=scene_id, id_freesound=id_freesound, type_son="manuel", schema=schema
+                )
+            ]
+        # Delete all associations in scene_son for the given son
+        for id_scene in scenes_possedants:
+            self.supprimer_association_scene_son(
+                id_scene=id_scene, id_freesound=id_freesound, type_son=type_son, schema=schema
+            )
+
+        # Get all tags associated with the given son
+        tags_inclus = [
+            nom_tag
+            for nom_tag in self.get_tags_of_son(id_freesound=id_freesound, schema=schema)
+            if TagDAO().check_if_son_has_tag(id_freesound=id_freesound, tag=nom_tag, schema=schema)
+        ]
+        # Delete all associations in son_tag for the given son
+        for tag in tags_inclus:
+            TagDAO().supprimer_association_son_tag(
+                id_freesound=id_freesound, tag=tag, schema=schema
+            )

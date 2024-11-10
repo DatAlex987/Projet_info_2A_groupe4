@@ -423,7 +423,7 @@ class SDDAO(metaclass=Singleton):
         # Get all users associated with the given Sounddeck
         users_possedants = [
             user_id
-            for user_id in self.get_users_for_sd(id_sd=id_sd, schema=schema)
+            for user_id in self.get_users_of_sd(id_sd=id_sd, schema=schema)
             if self.check_if_sd_in_user(id_sd=id_sd, id_user=user_id, schema=schema)
         ]
 
@@ -434,7 +434,7 @@ class SDDAO(metaclass=Singleton):
         # Get all scenes associated with the given Sounddeck
         scenes_incluses = [
             scene_id
-            for scene_id in self.get_scenes_for_sd(id_sd=id_sd, schema=schema)
+            for scene_id in self.get_scenes_of_sd(id_sd=id_sd, schema=schema)
             if SceneDAO().check_if_scene_in_sd(id_sd=id_sd, id_scene=scene_id, schema=schema)
         ]
 

@@ -24,6 +24,7 @@ class MenuPrincipalView(AbstractView):
                     "Accéder au menu de paramétrage",
                     "Accéder au menu de jeu",
                     "Consulter les créations des utilisateurs",
+                    "Se déconnecter",
                 ],
             }
         ]
@@ -38,6 +39,11 @@ class MenuPrincipalView(AbstractView):
             next_view = MenuSceneView()
         if answers["Menu principal"] == "Consulter les créations des utilisateurs":
             next_view = MenuConsulterUserView()
+        if answers["Menu principal"] == "Se déconnecter":
+            # Contraint de faire l'import ici pour éviter les circular imports
+            from view.accueilview import AccueilView
+
+            next_view = AccueilView()
 
         return next_view
 

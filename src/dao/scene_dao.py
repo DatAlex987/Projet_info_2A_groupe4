@@ -398,7 +398,7 @@ class SceneDAO:
 
         # Delete all associations in sd_scene for the given scene
         for id_sd in sds_possedants:
-            self.supprimer_association_sd_scene(id_sd=id_sd, id_scebe=id_scene, schema=schema)
+            self.supprimer_association_sd_scene(id_sd=id_sd, id_scene=id_scene, schema=schema)
 
         # Get all sons associated with the given scene
         sons_inclus = [

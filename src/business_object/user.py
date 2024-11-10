@@ -2,6 +2,7 @@ import hashlib
 from business_object.personne import Personne
 import datetime
 import re
+from business_object.sd import SD
 
 
 class User(Personne):
@@ -97,10 +98,10 @@ class User(Personne):
         return gen_hash.hex()
         # Hash de type byte converti en hexadecimal. Evite les erreurs lors de l'authentification
 
-    # SERT A RIEN
+    def ajouter_sd(self, sd: SD):
+        self.SD_possedes.append(sd)
 
-    def supprimer_utilisateur(self):
-        self.id_user = None
-        self.mot_de_passe_hash = None
-        self.pseudo = None
-        print("L'utilisateur a été supprimé avec succès.")
+    def enlever_sd(self, sd: SD):
+        for sd_pos in self.SD_possedes:
+            if sd.id_sd == sd_pos.id_sd:
+                self.SD_possedes.remove(sd_pos)

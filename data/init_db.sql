@@ -21,7 +21,8 @@ CREATE TABLE ProjetInfo.Sounddeck(
     nom TEXT,
     description TEXT,
     date_creation DATE,
-    id_createur VARCHAR(30)
+    id_createur VARCHAR(30),
+    FOREIGN KEY (id_createur) REFERENCES ProjetInfo.Utilisateur(id_user) ON DELETE CASCADE
 );
 
 

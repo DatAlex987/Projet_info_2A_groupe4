@@ -9,6 +9,8 @@ class SceneService:
 
     def formatage_question_scenes_of_sd(self, id_sd: str):
         sds_user = Session().utilisateur.SD_possedes
+        sd_selectionne = None
+        print("AV BOUCLE FORMATAGE QUESTION SCENE SD", [sd.nom for sd in sds_user])
         for sd in sds_user:
             if sd.id_sd == id_sd:
                 sd_selectionne = sd

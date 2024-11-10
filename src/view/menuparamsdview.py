@@ -32,11 +32,10 @@ class MenuParamSDView(AbstractView):
 
             next_view = MenuParamView()
         else:
-            id_sd_select = choix["Choix SD"].split()[1]  # A VERIFIER
+            id_sd_select = choix["Choix SD"].split()[1]
             Session().sd_to_param = SDService().instancier_sd_par_id(
                 id_sd=id_sd_select, schema="ProjetInfo"
             )
-            print(id_sd_select)
             next_view = MenuParamSceneView()
         return next_view
 

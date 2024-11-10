@@ -26,6 +26,13 @@ class MenuParamSceneView(AbstractView):
                 ),
             }
         ]
+        self.question_choix_suppr_sd = [
+            {
+                "type": "confirm",
+                "name": "confirm suppr sd",
+                "message": "Etes-vous sûr de vouloir supprimer votre sound-deck ? Sa suppression entraînera la perte de tout ce qu'elle contient.",
+            }
+        ]
 
     def make_choice(self):
         choix = prompt(self.question_choix_scene)
@@ -35,36 +42,37 @@ class MenuParamSceneView(AbstractView):
 
             next_view = MenuParamView()
         if choix["Choix Scene"] == "Supprimer la sound-deck":
-            sd_supprimee_avec_succes = False
-            while not sd_supprimee_avec_succes:
+            confirmation = prompt(self.question_choix_suppr_sd)
+            if confirmation["confirm suppr sd"]:
                 try:
+                    sd_to_delete = (
+                        Session().sd_to_param
+                    )  # Le SD à supprimer est celui sur lequel le user à cliqué
                     if SDService().supprimer_sd(
-                        id_sd=Session().sd_to_param.id_sd,
+                        sd=sd_to_delete,
                         schema="ProjetInfo",
-                    ):  # apres to modify
-                        pass
-                    """
+                    ):
                         print(
                             Fore.GREEN
-                            + f"Sound-deck '{infos_creation_sd['nom']}' créée avec succès"
+                            + f"Sound-deck '{Session().sd_to_param.nom}' supprimée avec succès"
                             + Style.RESET_ALL
                         )
-                        next_view = MenuParamView()
-                        sd_creee_avec_succes = True
-                        """
-                except ValueError as e:
-                    """
+
+                except (ValueError, AttributeError) as e:
                     print(
                         Fore.RED
-                        + f"Erreur lors de la création de la Sound-deck : {e}"
+                        + f"Erreur lors de la suppression de la Sound-deck : {e}"
                         + Style.RESET_ALL
                     )
-                    """
-            next_view = MenuParamSceneView()
+                    next_view = MenuParamSceneView()
+            # Contraint de faire l'import ici pour éviter un circular import
+            from view.menuparamsdview import MenuParamSDView
 
+            next_view = MenuParamSDView()
+        if choix["Choix Scene"] == "Ajouter une scène":
+            pass
         else:
             id_scene_select = choix["Choix Scene"].split()[1]  # A VERIFIER
-            print(id_scene_select)
 
             from view.menuparam_view import MenuParamView
 

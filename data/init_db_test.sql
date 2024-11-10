@@ -21,7 +21,8 @@ CREATE TABLE SchemaTest.Sounddeck(
     nom TEXT,
     description TEXT,
     date_creation DATE,
-    id_createur VARCHAR(30)
+    id_createur VARCHAR(30),
+    FOREIGN KEY (id_createur) REFERENCES SchemaTest.Utilisateur(id_user) ON DELETE CASCADE
 );
 
 

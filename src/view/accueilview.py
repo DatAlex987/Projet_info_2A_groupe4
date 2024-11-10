@@ -2,6 +2,7 @@
 
 from colorama import Fore, Style
 from InquirerPy import prompt
+import psycopg2
 from view.abstractview import AbstractView
 from view.menuprincipalview import MenuPrincipalView
 from service.user_service import UserService
@@ -94,8 +95,9 @@ class AccueilView(AbstractView):
                     )
                     connexion_avec_succes = True
                     next_view = MenuPrincipalView()
-                except ValueError as e:
+                except (ValueError, psycopg2.Error) as e:
                     print(Fore.RED + f"Echec lors de la création du compte : {e}" + Style.RESET_ALL)
+                    next_view = AccueilView()
 
         if answers["Choix connexion"] == "Quitter l'appli":
             next_view = None

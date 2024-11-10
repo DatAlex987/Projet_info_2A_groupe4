@@ -6,6 +6,8 @@ from view.abstractview import AbstractView
 from view.menuprincipalview import MenuPrincipalView
 from view.menuparamsdview import MenuParamSDView
 from service.sd_service import SDService
+from dao.sd_dao import SDDAO
+from view.session import Session
 
 
 class MenuParamView(AbstractView):
