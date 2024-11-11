@@ -26,7 +26,7 @@ class MenuJeuSceneView(AbstractView):
                 " ID         |   Nom   | Date de création \n"
                 "------------------------------------------------------------",
                 "choices": SceneService().formatage_question_scenes_of_sd_menu_jeu(
-                    id_sd=Session().sd_to_param.id_sd
+                    id_sd=Session().sd_to_play.id_sd
                 ),
             }
         ]
@@ -39,7 +39,7 @@ class MenuJeuSceneView(AbstractView):
             next_view = MenuJeuView()
         else:
             id_scene_select = choix["Choix Scene"].split()[1]
-            Session().scene_to_param = SceneService().instancier_scene_par_id(
+            Session().scene_to_play = SceneService().instancier_scene_par_id(
                 id_scene=id_scene_select, schema="ProjetInfo"
             )
             next_view = MenuJeuSonsView()

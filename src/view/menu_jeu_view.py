@@ -23,7 +23,7 @@ class MenuJeuView(AbstractView):
                 "type": "list",
                 "name": "Choix SD",
                 "message": "Quelle Sound-deck souhaitez vous jouer ? \n"
-                " ID   |      Nom       |               Description                   | Date de création \n"
+                " ID   |      Nom       |      Description               | Date de création \n"
                 "----------------------------------------------------------------------------------",
                 "choices": SDService().formatage_question_sds_of_user_menu_jeu(),
             }
@@ -38,7 +38,7 @@ class MenuJeuView(AbstractView):
 
         else:
             id_sd_select = choix["Choix SD"].split()[1]
-            Session().sd_to_param = SDService().instancier_sd_par_id(
+            Session().sd_to_play = SDService().instancier_sd_par_id(
                 id_sd=id_sd_select, schema="ProjetInfo"
             )
             next_view = MenuJeuSceneView()

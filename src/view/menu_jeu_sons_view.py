@@ -26,12 +26,12 @@ class MenuJeuSonsView(AbstractView):
                 "  Type        |   Nom   | ID Freesound | Déclenchement | Etat \n"
                 "------------------------------------------------------------",
                 "choices": SonService().formatage_question_sons_of_scene_menu_jeu(
-                    id_sd=Session().sd_to_param.id_sd, id_scene=Session().scene_to_param.id_scene
+                    id_sd=Session().sd_to_play.id_sd, id_scene=Session().scene_to_play.id_scene
                 ),
             }
         ]
 
-    def make_choice(self):
+    def make_choice(self):  # voir avec alex : jouer son
         choix = prompt(self.question_choix_son)
         if choix["Choix Son"] == "Retour au menu de choix des scènes":
             from view.menu_jeu_scene_view import MenuJeuSceneView
@@ -39,7 +39,7 @@ class MenuJeuSonsView(AbstractView):
             next_view = MenuJeuSceneView()
         else:
             id_scene_select = choix["Choix Son"].split()[1]
-            Session().scene_to_param = SDService().instancier_scene_par_id(
+            Session().scene_to_play = SDService().instancier_scene_par_id(
                 id_scene=id_scene_select, schema="ProjetInfo"
             )
             # next_view = MenuJeuSonsView() : remplacer par juste modifier le déclencher
