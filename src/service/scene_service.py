@@ -16,6 +16,15 @@ class SceneService:
     """Méthodes de service des scènes"""
 
     def input_checking_injection(self, nom: str, description: str):
+        """Vérifier les inputs de l'utilisateur pour empêcher les injections SQL
+
+        Params
+        -------------
+        nom : str
+            nom entré par l'utilisateur
+        description : str
+            description entrée par l'utilisateur
+        """
         # Check inputs pour injection:
         # Définition de pattern regex pour qualifier les caractères acceptés pour chaque input
         pattern = r"^[a-zA-Zà-öø-ÿÀ-ÖØ-ß\s0-9\s,.\-:!@#%^&*()_+=|?/\[\]{}']*$"  # Autorise lettres, et autres caractères
@@ -41,6 +50,18 @@ class SceneService:
         return unique_id
 
     def formatage_question_scenes_of_sd(self, id_sd: str):
+        """Construit une liste des choix à afficher après sélection d'une SD
+
+        Params
+        -------------
+        id_sd : str
+            id du SD sélectionné par l'utilisateur
+
+        Returns
+        -------------
+        list
+            Liste des choix proposés à l'utilisateur
+        """
         sds_user = Session().utilisateur.SD_possedes
         sd_selectionne = None
         for sd in sds_user:
@@ -73,7 +94,8 @@ class SceneService:
 
         Returns
         ------------
-        ???
+        bool
+            True si la création à eu lieu sans soulever d'erreur, rien sinon
         """
         SceneService().input_checking_injection(nom=nom, description=description)
         try:
@@ -98,6 +120,19 @@ class SceneService:
             raise ValueError(f"{e}")
 
     def instancier_scene_par_id(self, id_scene: str, schema: str):
+        """Instancie une Scène (et tous les sons qui la composent) à partir de son id
+
+        Params
+        -------------
+        id_scene : str
+            id de la scène sélectionnée par l'utilisateur
+        schema : str
+            Schéma sur lequel faire les requêtes
+        Returns
+        -------------
+        Scene
+            Instance de la scène demandée
+        """
         scene_kwargs = SceneDAO().rechercher_par_id_scene(id_scene=id_scene, schema=schema)
         print("scene_kwargs:", scene_kwargs)
         Sons_Alea_scene = []
