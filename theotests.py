@@ -21,7 +21,17 @@ import pygame
 
 # ResetDatabase().ResetALL()
 
+son = Son(
+    nom="The Imperial March",
+    description="Luke, I am your father",
+    duree=datetime.timedelta(seconds=45),
+    id_freesound="747222__gregorquendel__tchaikovsky-dance-of-the-sugar-plum-fairy-the-nutcracker-suite-op",
+    tags=["starwars", "Vador", "JW"],
+)
+pygame.mixer.init()
+son.JouerSon()
 
+"""
 son_alea1 = Son_Aleatoire(
     "SonAlea1", "Description du SonAlea1", datetime.timedelta(seconds=1), "194863", [], 10, 15
 )
@@ -53,7 +63,7 @@ son_dao.ajouter_association_scene_son(id_scene="ZCokXpxM", son=son_continu1, sch
 son_dao.ajouter_association_scene_son(id_scene="ZCokXpxM", son=son_continu2, schema="ProjetInfo")
 son_dao.ajouter_association_scene_son(id_scene="ZCokXpxM", son=son_manuel1, schema="ProjetInfo")
 son_dao.ajouter_association_scene_son(id_scene="ZCokXpxM", son=son_manuel2, schema="ProjetInfo")
-"""
+
 
 sounddeck1 = SD(
     nom="SoundDeck 1",

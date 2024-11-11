@@ -1,6 +1,7 @@
 import datetime
 import pygame
 import os
+from dotenv import load_dotenv
 
 
 class Son:
@@ -56,13 +57,19 @@ class Son:
 
     def JouerSon(self) -> None:
         """Méthode globale pour charger puis jouer un son avec Pygame"""
+        load_dotenv()
         try:
             expected_path = os.getenv("DOSSIER_SAUVEGARDE")
-            fichier_son = os.path.normpath(os.path.join(expected_path, f"{self.id_freesound}.mp3"))
-            # Charger le son
-            self.charge = pygame.mixer.Sound(fichier_son)
-            # Jouer le son
-            (self.charge).play(loop=self.lp)
+            if expected_path is None:
+                raise ValueError("Le chemin attendu (expected_path) ne doit pas être None.")
+            else:
+                fichier_son = os.path.normpath(
+                    os.path.join(expected_path, f"{self.id_freesound}.mp3")
+                )
+                # Charger le son
+                self.charge = pygame.mixer.Sound(fichier_son)
+                # Jouer le son
+                (self.charge).play(loops=self.lp)
         except pygame.error as e:
             print(f"Erreur lors de la lecture du fichier son : {e}")
         except FileNotFoundError:
