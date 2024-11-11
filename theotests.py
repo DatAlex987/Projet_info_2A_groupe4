@@ -18,6 +18,9 @@ from business_object.son_continu import Son_Continu
 from view.session import Session
 import hashlib
 import pygame
+import os
+
+os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 
 # ResetDatabase().ResetALL()
 
@@ -29,7 +32,7 @@ son = Son(
     tags=["starwars", "Vador", "JW"],
 )
 pygame.mixer.init()
-son.JouerSon()
+
 
 """
 son_alea1 = Son_Aleatoire(
