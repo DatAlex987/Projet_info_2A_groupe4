@@ -108,8 +108,10 @@ class MenuParamSceneView(AbstractView):
                     )
             next_view = MenuParamSceneView()
         else:
-            id_scene_select = choix["Choix Scene"].split()[1]  # A VERIFIER
-
+            id_scene_select = choix["Choix Scene"].split()[1]
+            Session().scene_to_param = SceneService().instancier_scene_par_id(
+                id_scene=id_scene_select, schema="ProjetInfo"
+            )
             from view.menuparam_view import MenuParamView
 
             next_view = MenuParamView()

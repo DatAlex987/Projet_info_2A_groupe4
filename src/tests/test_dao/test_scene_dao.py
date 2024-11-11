@@ -152,7 +152,7 @@ def test_rechercher_par_id_scenes_succes(scene1_kwargs):
     scene_dao = SceneDAO()
     added_scene = scene_dao.ajouter_scene(scene_to_add, schema)
     # WHEN: Searching for the scene id in the database
-    found_scene = scene_dao.rechercher_par_id_scenes(added_scene.id_scene, schema)
+    found_scene = scene_dao.rechercher_par_id_scene(added_scene.id_scene, schema)
     # THEN: The returned scene should have the correct ID, and the data should match
     assert found_scene["id_scene"] == str(added_scene.id_scene)
     assert found_scene["nom"] == added_scene.nom

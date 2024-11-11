@@ -108,13 +108,9 @@ class User(Personne):
                 self.SD_possedes.remove(sd_pos)
 
     def ajouter_scene_a_sd(self, id_sd: str, scene: Scene):
-        print("attribut id_sd de ajouter_scene_a_sd:", id_sd)
-        print("All SD IDs in SD_possedes:", [sd.id_sd for sd in self.SD_possedes])
         for sd in self.SD_possedes:
             if sd.id_sd == id_sd:
-                print(f"Adding scene {scene.nom} to SD {id_sd}")
                 sd.scenes.append(scene)
-        print(f"Current scenes in SD {id_sd}: {[s.nom for s in sd.scenes]}")
 
     def supprimer_scene_a_sd(self, id_sd: str, id_scene: str):
         for sd in self.SD_possedes:

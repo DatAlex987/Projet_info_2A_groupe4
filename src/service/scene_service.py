@@ -1,5 +1,9 @@
 from utils.log_decorator import log
 from business_object.scene import Scene
+from business_object.son import Son
+from business_object.son_continu import Son_Continu
+from business_object.son_aleatoire import Son_Aleatoire
+from business_object.son_manuel import Son_Manuel
 from view.session import Session
 import re
 import datetime
@@ -71,10 +75,6 @@ class SceneService:
         ------------
         ???
         """
-        print(
-            "Scènes du SD au début de créer scène:",
-            [scene.nom for sd in Session().utilisateur.SD_possedes for scene in sd.scenes],
-        )
         SceneService().input_checking_injection(nom=nom, description=description)
         try:
             new_scene = Scene(
@@ -93,13 +93,61 @@ class SceneService:
             Session().utilisateur.ajouter_scene_a_sd(
                 id_sd=Session().sd_to_param.id_sd, scene=new_scene
             )
-            print(
-                "Scènes du SD à la fin de créer scène:",
-                [scene.nom for sd in Session().utilisateur.SD_possedes for scene in sd.scenes],
-            )
             return True
         except ValueError as e:
             raise ValueError(f"{e}")
+
+    def instancier_scene_par_id(self, id_scene: str, schema: str):
+        scene_kwargs = SceneDAO().rechercher_par_id_scene(id_scene=id_scene, schema=schema)
+        print("scene_kwargs:", scene_kwargs)
+        Sons_Alea_scene = []
+        Sons_Cont_scene = []
+        Sons_Manu_scene = []
+        for son_alea_kwargs in scene_kwargs["sons_aleatoires"]:
+            Sons_Alea_scene.append(
+                Son_Aleatoire(
+                    nom=son_alea_kwargs["nom"],
+                    description=son_alea_kwargs["description"],
+                    duree=son_alea_kwargs["duree"],
+                    id_freesound=son_alea_kwargs["id_freesound"],
+                    tags=son_alea_kwargs["tags"],
+                    cooldown_min=son_alea_kwargs["cooldown_min"],
+                    cooldown_max=son_alea_kwargs["cooldown_max"],
+                )
+            )
+        print("Sons_Alea_scene:", Sons_Alea_scene)
+        for son_cont_kwargs in scene_kwargs["sons_continus"]:
+            Sons_Cont_scene.append(
+                Son_Continu(
+                    nom=son_cont_kwargs["nom"],
+                    description=son_cont_kwargs["description"],
+                    duree=son_cont_kwargs["duree"],
+                    id_freesound=son_cont_kwargs["id_freesound"],
+                    tags=son_alea_kwargs["tags"],
+                )
+            )
+        for son_manu_kwargs in scene_kwargs["sons_manuels"]:
+            Sons_Manu_scene.append(
+                Son_Manuel(
+                    nom=son_manu_kwargs["nom"],
+                    description=son_manu_kwargs["description"],
+                    duree=son_manu_kwargs["duree"],
+                    id_freesound=son_manu_kwargs["id_freesound"],
+                    tags=son_alea_kwargs["tags"],
+                    start_key=son_manu_kwargs["start_key"],
+                )
+            )
+        scene_to_return = Scene(
+            nom=scene_kwargs["nom"],
+            description=scene_kwargs["description"],
+            id_scene=scene_kwargs["id_scene"],
+            sons_aleatoires=Sons_Alea_scene,
+            sons_manuels=Sons_Manu_scene,
+            sons_continus=Sons_Cont_scene,
+            date_creation=scene_kwargs["date_creation"],
+        )
+        print("Scene_to_return:", scene_to_return)
+        return scene_to_return
 
 
 """
