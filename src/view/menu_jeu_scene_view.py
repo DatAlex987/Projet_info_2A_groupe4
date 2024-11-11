@@ -13,7 +13,7 @@ from view.session import Session
 
 
 class MenuJeuSceneView(AbstractView):
-    "classe représentant l'accès au menu sound-deck, après le menu principal"
+    "classe représentant l'accès au menu sound-deck, après le menu jeu"
 
     def __init__(self):
         super().__init__()
@@ -38,9 +38,9 @@ class MenuJeuSceneView(AbstractView):
 
             next_view = MenuJeuView()
         else:
-            id_sd_select = choix["Choix Scene"].split()[1]
-            Session().sd_to_param = SDService().instancier_sd_par_id(
-                id_sd=id_sd_select, schema="ProjetInfo"
+            id_scene_select = choix["Choix Scene"].split()[1]
+            Session().scene_to_param = SDService().instancier_scene_par_id(
+                id_scene=id_scene_select, schema="ProjetInfo"
             )
             next_view = MenuJeuSonsView()
         return next_view

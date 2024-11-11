@@ -16,11 +16,9 @@ class SonDAO:
         m = str_t[3] + str_t[4]
         s = str_t[6] + str_t[7]
         return datetime.timedelta(
-            days=t.days,
-            hours=t.hour,
-            minutes=t.minute,
-            seconds=t.second,
-            microseconds=t.microsecond,
+            hours=int(h),
+            minutes=int(m),
+            seconds=int(s),
         )
 
     def param_of_son(self, son):
@@ -190,29 +188,45 @@ class SonDAO:
 
             # On convertit les sons trouvés en dict
             for row in res:
-                print(
-                    "CONVERT row['duree'] in Son_DAO:",
-                    datetime.timedelta(row["duree"]),
-                    type(self.datetime.timedelta(row["duree"])),
-                )
-                son_dict = {
-                    "id_freesound": row["id_freesound"],
-                    "nom": row["nom"],
-                    "description": row["description"],
-                    "duree": self.time_to_timedelta(t=row["duree"]),
-                    "tags": TagDAO().rechercher_tags_par_son(
-                        str(row["id_freesound"]), schema=schema
-                    ),
-                    "param1": row["param1"],
-                    "param2": row["param2"],
-                }
-
                 # On ajoute les sons trouvés dans le dict correspondant à son type
                 if row["type"] == "aleatoire":
+                    son_dict = {
+                        "id_freesound": row["id_freesound"],
+                        "nom": row["nom"],
+                        "description": row["description"],
+                        "duree": self.time_to_timedelta(t=row["duree"]),
+                        "tags": TagDAO().rechercher_tags_par_son(
+                            str(row["id_freesound"]), schema=schema
+                        ),
+                        "param1": int(row["param1"]),
+                        "param2": int(row["param2"]),
+                    }
                     sons_trouves["sons_aleatoires"].append(son_dict)
                 elif row["type"] == "continu":
+                    son_dict = {
+                        "id_freesound": row["id_freesound"],
+                        "nom": row["nom"],
+                        "description": row["description"],
+                        "duree": self.time_to_timedelta(t=row["duree"]),
+                        "tags": TagDAO().rechercher_tags_par_son(
+                            str(row["id_freesound"]), schema=schema
+                        ),
+                        "param1": None,
+                        "param2": None,
+                    }
                     sons_trouves["sons_continus"].append(son_dict)
                 elif row["type"] == "manuel":
+                    son_dict = {
+                        "id_freesound": row["id_freesound"],
+                        "nom": row["nom"],
+                        "description": row["description"],
+                        "duree": self.time_to_timedelta(t=row["duree"]),
+                        "tags": TagDAO().rechercher_tags_par_son(
+                            str(row["id_freesound"]), schema=schema
+                        ),
+                        "param1": str(row["param1"]),
+                        "param2": None,
+                    }
                     sons_trouves["sons_manuels"].append(son_dict)
 
             return sons_trouves

@@ -89,11 +89,6 @@ class UserService:
                 for sd in dic_user["SD_possedes"]:
                     for scene in sd["scenes"]:
                         for son_alea_kwargs in scene["sons_aleatoires"]:
-                            print(
-                                "type son_alea_kwargs duree:",
-                                son_alea_kwargs["duree"],
-                                type(son_alea_kwargs["duree"]),
-                            )
                             Sons_Alea_scene.append(
                                 Son_Aleatoire(
                                     nom=son_alea_kwargs["nom"],
