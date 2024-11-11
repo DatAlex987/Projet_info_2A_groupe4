@@ -19,8 +19,8 @@ class MenuParamSceneSpecifiqueView(AbstractView):
             {
                 "type": "list",
                 "name": "Choix Scene Specifique",
-                "message": "Que souhaitez-vous faire (Sélectionnez un son pour le modifier) ? \n"
-                " Nom         |   Type   |   Durée   |Date de création \n"
+                "message": "Que souhaitez-vous faire ?  (Sélectionnez un son pour le modifier) \n"
+                "    Type       |   Nom   |   Durée   \n"
                 "------------------------------------------------------------",
                 "choices": SonService().formatage_question_sons_of_scene(
                     id_sd=Session().sd_to_param.id_sd, id_scene=Session().scene_to_param.id_scene

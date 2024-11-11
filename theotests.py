@@ -19,14 +19,8 @@ from view.session import Session
 import hashlib
 import pygame
 
-# ResetDatabase().ResetALL()
-time = datetime.time(hour=0, minute=1, second=2)
-print("time en datetime:", time)
-str_time = time.strftime("%H:%M:%S")
-print("time apres strftime:", str_time)
-print(str_time[0], str_time[1])
-# delta = SonDAO().time_to_timedelta(time)
-# print(delta)
+ResetDatabase().ResetALL()
+
 
 son_alea1 = Son_Aleatoire(
     "SonAlea1", "Description du SonAlea1", datetime.timedelta(seconds=1), "194863", [], 10, 15
