@@ -47,12 +47,12 @@ class SonService:
             compteur += 1
         for son_cont in scene_selectionnee.sons_continus:
             mise_en_page_ligne = (
-                f"{compteur}.{son_cont.id_freesound}| [CONTINU] |{son_cont.nom} | {son_cont.duree}"
+                f"{compteur}. {son_cont.id_freesound}| [CONTINU] |{son_cont.nom} | {son_cont.duree}"
             )
             choix.append(mise_en_page_ligne)
             compteur += 1
         for son_manuel in scene_selectionnee.sons_manuels:
-            mise_en_page_ligne = f"{compteur}.{son_manuel.id_freesound}| [MANUEL] |{son_manuel.nom} | {son_manuel.duree}"
+            mise_en_page_ligne = f"{compteur}. {son_manuel.id_freesound}| [MANUEL] |{son_manuel.nom} | {son_manuel.duree}"
             choix.append(mise_en_page_ligne)
             compteur += 1
         choix.append("Ajouter un son via Freesound")

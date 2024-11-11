@@ -19,7 +19,7 @@ from view.session import Session
 import hashlib
 import pygame
 
-ResetDatabase().ResetALL()
+# ResetDatabase().ResetALL()
 
 
 son_alea1 = Son_Aleatoire(
@@ -47,12 +47,12 @@ son_dao.ajouter_son(son_continu1, "ProjetInfo")
 son_dao.ajouter_son(son_continu2, "ProjetInfo")
 son_dao.ajouter_son(son_manuel1, "ProjetInfo")
 son_dao.ajouter_son(son_manuel2, "ProjetInfo")
-son_dao.ajouter_association_scene_son(id_scene="JrlXYjEm", son=son_alea1, schema="ProjetInfo")
-son_dao.ajouter_association_scene_son(id_scene="JrlXYjEm", son=son_alea2, schema="ProjetInfo")
-son_dao.ajouter_association_scene_son(id_scene="JrlXYjEm", son=son_continu1, schema="ProjetInfo")
-son_dao.ajouter_association_scene_son(id_scene="JrlXYjEm", son=son_continu2, schema="ProjetInfo")
-son_dao.ajouter_association_scene_son(id_scene="JrlXYjEm", son=son_manuel1, schema="ProjetInfo")
-son_dao.ajouter_association_scene_son(id_scene="JrlXYjEm", son=son_manuel2, schema="ProjetInfo")
+son_dao.ajouter_association_scene_son(id_scene="ZCokXpxM", son=son_alea1, schema="ProjetInfo")
+son_dao.ajouter_association_scene_son(id_scene="ZCokXpxM", son=son_alea2, schema="ProjetInfo")
+son_dao.ajouter_association_scene_son(id_scene="ZCokXpxM", son=son_continu1, schema="ProjetInfo")
+son_dao.ajouter_association_scene_son(id_scene="ZCokXpxM", son=son_continu2, schema="ProjetInfo")
+son_dao.ajouter_association_scene_son(id_scene="ZCokXpxM", son=son_manuel1, schema="ProjetInfo")
+son_dao.ajouter_association_scene_son(id_scene="ZCokXpxM", son=son_manuel2, schema="ProjetInfo")
 """
 
 sounddeck1 = SD(
