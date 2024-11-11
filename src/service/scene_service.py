@@ -10,6 +10,8 @@ import datetime
 import random
 import string
 from dao.scene_dao import SceneDAO
+from dao.son_dao import SonDAO
+from dao.tag_dao import TagDAO
 
 
 class SceneService:
@@ -183,6 +185,45 @@ class SceneService:
         )
         print("Scene_to_return:", scene_to_return)
         return scene_to_return
+
+    def supprimer_scene(
+        self, scene: Scene, schema: str
+    ):  # On a besoin de l'objet en entier pour supprimer en "cascade"
+        # La suppression d'une Scène supprime l'objet + toutes les associations dans les tables +
+        # les associations en cascade. Mais pas les objets en cascade (car ils peuvent tjrs
+        # exister dans d'autres Scène)
+        """Supprime une Scène dans la BDD ainsi que toutes les associations qui en découlent
+
+        Params
+        -------------
+        scene : Scene
+            Scène à supprimer
+        schema : str
+            Schema sur lequel opérer la suppression
+
+        Returns
+        -------------
+        bool
+            True si la suppression n'a pas soulevé d'erreur, rien sinon
+        """
+        try:
+            SceneDAO().supprimer_scene(id_scene=scene.id_scene, schema=schema)
+            SceneDAO().supprimer_toutes_associations_scene(id_scene=scene.id_scene, schema=schema)
+            for son in scene.sons_aleatoires + scene.sons_continus + scene.sons_manuels:
+                SonDAO().supprimer_toutes_associations_son(
+                    id_freesound=son.id_freesound, schema=schema
+                )
+                for tag in son.tags:
+                    TagDAO().supprimer_association_son_tag(
+                        id_freesound=son.id_freesound, tag=tag, schema=schema
+                    )
+            # On termine par actualiser la session
+            Session().utilisateur.supprimer_scene_a_sd(
+                id_sd=Session().sd_to_param.id_sd, id_scene=scene.id_scene
+            )
+        except (ValueError, AttributeError) as e:
+            raise ValueError(f"La suppression de la scène n'a pas abouti : {e}")
+        return True
 
 
 """
