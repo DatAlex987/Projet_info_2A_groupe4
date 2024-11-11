@@ -36,7 +36,7 @@ class MenuParamSceneSpecifiqueView(AbstractView):
         ]
 
     def make_choice(self):
-        choix = prompt(self.question_choix_scene)
+        choix = prompt(self.question_choix_scene_specifique)
         if choix["Choix Scene Specifique"] == "Retour au menu de choix des scènes":
             # Contraint de faire l'import ici pour éviter un circular import
             from view.menuparamsceneview import MenuParamSceneView

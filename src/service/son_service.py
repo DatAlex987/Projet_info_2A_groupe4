@@ -36,7 +36,7 @@ class SonService:
         scene_selectionnee = None
         for sd in sds_user:
             if sd.id_sd == id_sd:
-                for scene in sd:
+                for scene in sd.scenes:
                     if scene.id_scene == id_scene:
                         scene_selectionnee = scene
         choix = []
@@ -45,7 +45,15 @@ class SonService:
             mise_en_page_ligne = f"{compteur}. [ALEATOIRE] |{son_alea.nom} | {son_alea.duree} | {son_alea.date_creation}"
             choix.append(mise_en_page_ligne)
             compteur += 1
+        for son_cont in scene_selectionnee.sons_continus:
+            mise_en_page_ligne = f"{compteur}. [CONTINU] |{son_cont.nom} | {son_cont.duree} | {son_cont.date_creation}"
+            choix.append(mise_en_page_ligne)
+            compteur += 1
+        for son_manuel in scene_selectionnee.sons_manuels:
+            mise_en_page_ligne = f"{compteur}. [MANUEL] |{son_manuel.nom} | {son_manuel.duree} | {son_manuel.date_creation}"
+            choix.append(mise_en_page_ligne)
+            compteur += 1
         choix.append("Ajouter un son via Freesound")
         choix.append("Supprimer la scène")
-        choix.append("Retour au menu de choix des sound-decks")
+        choix.append("Retour au menu de choix des scènes")
         return choix
