@@ -39,7 +39,7 @@ class MenuJeuSceneView(AbstractView):
             next_view = MenuJeuView()
         else:
             id_scene_select = choix["Choix Scene"].split()[1]
-            Session().scene_to_param = SDService().instancier_scene_par_id(
+            Session().scene_to_param = SceneService().instancier_scene_par_id(
                 id_scene=id_scene_select, schema="ProjetInfo"
             )
             next_view = MenuJeuSonsView()

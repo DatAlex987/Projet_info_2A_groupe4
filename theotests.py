@@ -28,7 +28,7 @@ print(str_time[0], str_time[1])
 # delta = SonDAO().time_to_timedelta(time)
 # print(delta)
 
-"""son_alea1 = Son_Aleatoire(
+son_alea1 = Son_Aleatoire(
     "SonAlea1", "Description du SonAlea1", datetime.timedelta(seconds=1), "194863", [], 10, 15
 )
 son_alea2 = Son_Aleatoire(
@@ -53,13 +53,14 @@ son_dao.ajouter_son(son_continu1, "ProjetInfo")
 son_dao.ajouter_son(son_continu2, "ProjetInfo")
 son_dao.ajouter_son(son_manuel1, "ProjetInfo")
 son_dao.ajouter_son(son_manuel2, "ProjetInfo")
-son_dao.ajouter_association_scene_son(id_scene="1dLKXrPC", son=son_alea1, schema="ProjetInfo")
-son_dao.ajouter_association_scene_son(id_scene="1dLKXrPC", son=son_alea2, schema="ProjetInfo")
-son_dao.ajouter_association_scene_son(id_scene="1dLKXrPC", son=son_continu1, schema="ProjetInfo")
-son_dao.ajouter_association_scene_son(id_scene="1dLKXrPC", son=son_continu2, schema="ProjetInfo")
-son_dao.ajouter_association_scene_son(id_scene="1dLKXrPC", son=son_manuel1, schema="ProjetInfo")
-son_dao.ajouter_association_scene_son(id_scene="1dLKXrPC", son=son_manuel2, schema="ProjetInfo")"""
+son_dao.ajouter_association_scene_son(id_scene="JrlXYjEm", son=son_alea1, schema="ProjetInfo")
+son_dao.ajouter_association_scene_son(id_scene="JrlXYjEm", son=son_alea2, schema="ProjetInfo")
+son_dao.ajouter_association_scene_son(id_scene="JrlXYjEm", son=son_continu1, schema="ProjetInfo")
+son_dao.ajouter_association_scene_son(id_scene="JrlXYjEm", son=son_continu2, schema="ProjetInfo")
+son_dao.ajouter_association_scene_son(id_scene="JrlXYjEm", son=son_manuel1, schema="ProjetInfo")
+son_dao.ajouter_association_scene_son(id_scene="JrlXYjEm", son=son_manuel2, schema="ProjetInfo")
 """
+
 sounddeck1 = SD(
     nom="SoundDeck 1",
     description="First sound deck",

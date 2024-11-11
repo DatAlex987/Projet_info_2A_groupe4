@@ -42,18 +42,63 @@ class SonService:
         choix = []
         compteur = 1
         for son_alea in scene_selectionnee.sons_aleatoires:
-            mise_en_page_ligne = f"{compteur}. [ALEATOIRE] |{son_alea.nom} | {son_alea.duree}"
+            mise_en_page_ligne = f"{compteur}. {son_alea.id_freesound}| [ALEATOIRE] |{son_alea.nom} | {son_alea.duree}"
             choix.append(mise_en_page_ligne)
             compteur += 1
         for son_cont in scene_selectionnee.sons_continus:
-            mise_en_page_ligne = f"{compteur}. [CONTINU] |{son_cont.nom} | {son_cont.duree}"
+            mise_en_page_ligne = (
+                f"{compteur}.{son_cont.id_freesound}| [CONTINU] |{son_cont.nom} | {son_cont.duree}"
+            )
             choix.append(mise_en_page_ligne)
             compteur += 1
         for son_manuel in scene_selectionnee.sons_manuels:
-            mise_en_page_ligne = f"{compteur}. [MANUEL] |{son_manuel.nom} | {son_manuel.duree}"
+            mise_en_page_ligne = f"{compteur}.{son_manuel.id_freesound}| [MANUEL] |{son_manuel.nom} | {son_manuel.duree}"
             choix.append(mise_en_page_ligne)
             compteur += 1
         choix.append("Ajouter un son via Freesound")
         choix.append("Supprimer la scène")
+        choix.append("Retour au menu de choix des scènes")
+        return choix
+
+    def formatage_question_sons_of_scene_menu_jeu(self, id_sd: str, id_scene: str):
+        """Construit une liste des choix à afficher après sélection d'une Scène
+
+        Params
+        -------------
+        if_sd : str
+            id du SD sélectionné par l'utilisateur
+        id_scene : str
+            id de la scène sélectionnée par l'utilisateur
+
+        Returns
+        -------------
+        list
+            Liste des choix proposés à l'utilisateur
+        """
+        sds_user = Session().utilisateur.SD_possedes
+        scene_selectionnee = None
+        for sd in sds_user:
+            if sd.id_sd == id_sd:
+                for scene in sd.scenes:
+                    if scene.id_scene == id_scene:
+                        scene_selectionnee = scene
+        choix = []
+        compteur = 1
+        for son_alea in scene_selectionnee.sons_aleatoires:
+            mise_en_page_ligne = (
+                f"{compteur}. [ALEATOIRE] |{son_alea.nom}|{son_alea.id_freesound}|' '| 'Etat'"
+            )
+            choix.append(mise_en_page_ligne)
+            compteur += 1
+        for son_cont in scene_selectionnee.sons_continus:
+            mise_en_page_ligne = (
+                f"{compteur}. [CONTINU] |{son_cont.nom}|{son_cont.id_freesound}|' '| 'Etat'"
+            )
+            choix.append(mise_en_page_ligne)
+            compteur += 1
+        for son_manuel in scene_selectionnee.sons_manuels:
+            mise_en_page_ligne = f"{compteur}. [MANUEL] |{son_manuel.nom}|{son_manuel.id_freesound}|{son_manuel.start_key}| 'Etat'"
+            choix.append(mise_en_page_ligne)
+            compteur += 1
         choix.append("Retour au menu de choix des scènes")
         return choix
