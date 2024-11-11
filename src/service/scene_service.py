@@ -148,8 +148,8 @@ class SceneService:
                     duree=son_alea_kwargs["duree"],
                     id_freesound=son_alea_kwargs["id_freesound"],
                     tags=son_alea_kwargs["tags"],
-                    cooldown_min=son_alea_kwargs["cooldown_min"],
-                    cooldown_max=son_alea_kwargs["cooldown_max"],
+                    cooldown_min=son_alea_kwargs["param1"],
+                    cooldown_max=son_alea_kwargs["param2"],
                 )
             )
         print("Sons_Alea_scene:", Sons_Alea_scene)
@@ -171,7 +171,7 @@ class SceneService:
                     duree=son_manu_kwargs["duree"],
                     id_freesound=son_manu_kwargs["id_freesound"],
                     tags=son_alea_kwargs["tags"],
-                    start_key=son_manu_kwargs["start_key"],
+                    start_key=son_manu_kwargs["param1"],
                 )
             )
         scene_to_return = Scene(

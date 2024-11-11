@@ -42,15 +42,15 @@ class SonService:
         choix = []
         compteur = 1
         for son_alea in scene_selectionnee.sons_aleatoires:
-            mise_en_page_ligne = f"{compteur}. [ALEATOIRE] |{son_alea.nom} | {son_alea.duree} | {son_alea.date_creation}"
+            mise_en_page_ligne = f"{compteur}. [ALEATOIRE] |{son_alea.nom} | {son_alea.duree}"
             choix.append(mise_en_page_ligne)
             compteur += 1
         for son_cont in scene_selectionnee.sons_continus:
-            mise_en_page_ligne = f"{compteur}. [CONTINU] |{son_cont.nom} | {son_cont.duree} | {son_cont.date_creation}"
+            mise_en_page_ligne = f"{compteur}. [CONTINU] |{son_cont.nom} | {son_cont.duree}"
             choix.append(mise_en_page_ligne)
             compteur += 1
         for son_manuel in scene_selectionnee.sons_manuels:
-            mise_en_page_ligne = f"{compteur}. [MANUEL] |{son_manuel.nom} | {son_manuel.duree} | {son_manuel.date_creation}"
+            mise_en_page_ligne = f"{compteur}. [MANUEL] |{son_manuel.nom} | {son_manuel.duree}"
             choix.append(mise_en_page_ligne)
             compteur += 1
         choix.append("Ajouter un son via Freesound")
