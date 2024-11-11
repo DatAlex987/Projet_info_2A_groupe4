@@ -2,11 +2,14 @@ from view.abstractview import AbstractView
 from colorama import Fore, Style
 from InquirerPy import prompt
 from view.abstractview import AbstractView
-from service.user_service import UserService
-from view.menusceneview import MenuSceneView
-from view.menuconsulteruser import MenuConsulterUserView
 
-# est-ce que le diagramme d'activité est toujours d'actualité ??
+####
+from service.user_service import UserService
+
+####
+from view.menuconsulteruser import MenuConsulterUserView
+from view.menu_jeu_view import MenuJeuView
+
 # deconnexion : se deconnecter + retour ecran accueil
 
 
@@ -36,7 +39,7 @@ class MenuPrincipalView(AbstractView):
 
             next_view = MenuParamView()
         if answers["Menu principal"] == "Accéder au menu de jeu":
-            next_view = MenuSceneView()
+            next_view = MenuJeuView()
         if answers["Menu principal"] == "Consulter les créations des utilisateurs":
             next_view = MenuConsulterUserView()
         if answers["Menu principal"] == "Se déconnecter":

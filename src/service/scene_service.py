@@ -101,6 +101,23 @@ class SceneService:
         except ValueError as e:
             raise ValueError(f"{e}")
 
+    def formatage_question_scenes_of_sd_menu_jeu(self, id_sd: str):
+        sds_user = Session().utilisateur.SD_possedes
+        sd_selectionne = None
+        for sd in sds_user:
+            if sd.id_sd == id_sd:
+                sd_selectionne = sd
+        choix = []
+        compteur = 1
+        for scene in sd_selectionne.scenes:
+            mise_en_page_ligne = (
+                f"{compteur}. {scene.id_scene} | {scene.nom} | {scene.date_creation}"
+            )
+            choix.append(mise_en_page_ligne)
+            compteur += 1
+        choix.append("Retour au menu de choix des sound-decks")
+        return choix
+
 
 """
     @log

@@ -179,3 +179,14 @@ class SDService:
             compteur += 1
         choix.append("Retour au menu de paramétrage")
         return choix
+
+    def formatage_question_sds_of_user_menu_jeu(self):
+        sds_user = Session().utilisateur.SD_possedes
+        choix = []
+        compteur = 1
+        for sd in sds_user:
+            mise_en_page_ligne = f"{compteur}. {sd.id_sd} | {sd.nom} | {sd.description[:min(len(sd.description), 40)]}... | {sd.date_creation}"
+            choix.append(mise_en_page_ligne)
+            compteur += 1
+        choix.append("Retour au menu principal")
+        return choix

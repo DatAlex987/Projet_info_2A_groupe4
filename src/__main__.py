@@ -26,3 +26,6 @@ while view:
 
 with open("resources/exit.txt", mode="r", encoding="utf-8") as exit_message:
     print(exit_message.read())
+
+
+# pip install pygame
