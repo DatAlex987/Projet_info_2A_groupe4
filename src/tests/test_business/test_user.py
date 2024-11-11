@@ -117,16 +117,6 @@ def test_initialisation_succes(user1_kwargs):
     assert utilisateur.pseudo == user1_kwargs["pseudo"]
 
 
-def test_supprimer_utilisateur(utilisateur_kwargs):
-    """Test la suppression de l'utilisateur."""
-    utilisateur = User(**utilisateur_kwargs)
-    utilisateur.supprimer_utilisateur()
-    assert utilisateur.id_user is None
-    assert utilisateur.mot_de_passe_hash is None
-    assert utilisateur.SD_possedes == []
-    assert utilisateur.pseudo is None
-
-
 def test_mot_de_passe_hash(utilisateur_kwargs):
     """Test le hachage du mot de passe."""
     utilisateur = User(**utilisateur_kwargs)

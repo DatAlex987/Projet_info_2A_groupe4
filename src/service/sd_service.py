@@ -19,6 +19,15 @@ class SDService:
     """Classe contenant les méthodes de service des Sound-decks"""
 
     def input_checking_injection(self, nom: str, description: str):
+        """Vérifier les inputs de l'utilisateur pour empêcher les injections SQL
+
+        Params
+        -------------
+        nom : str
+            nom entré par l'utilisateur
+        description : str
+            description entrée par l'utilisateur
+        """
         # Check inputs pour injection:
         # Définition de pattern regex pour qualifier les caractères acceptés pour chaque input
         pattern = r"^[a-zA-Zà-öø-ÿÀ-ÖØ-ß\s0-9\s,.\-:!@#%^&*()_+=|?/\[\]{}']*$"  # Autorise lettres, et autres caractères
@@ -84,6 +93,20 @@ class SDService:
         # La suppression d'une SD supprime l'objet + toutes les associations dans les tables +
         # les associations en cascade. Mais pas les objets en cascade (car ils peuvent tjrs
         # exister dans d'autres SD)
+        """Supprime une SD dans la BDD ainsi que toutes les associations qui en découlent
+
+        Params
+        -------------
+        sd : SD
+            SD à supprimer
+        schema : str
+            Schema sur lequel opérer la suppression
+
+        Returns
+        -------------
+        bool
+            True si la suppression n'a pas soulevé d'erreur, rien sinon
+        """
         try:
             SDDAO().supprimer_sd(id_sd=sd.id_sd, schema=schema)
             SDDAO().supprimer_toutes_associations_sd(id_sd=sd.id_sd, schema=schema)
@@ -106,6 +129,19 @@ class SDService:
         return True
 
     def instancier_sd_par_id(self, id_sd: str, schema: str):
+        """Instancie un SD (et toutes les scènes, sons qui la composent) à partir de son id
+
+        Params
+        -------------
+        id_sd : str
+            id de la SD sélectionnée par l'utilisateur
+        schema : str
+            Schéma sur lequel faire les requêtes
+        Returns
+        -------------
+        SD
+            Instance de la SD demandée
+        """
         sd_kwargs = SDDAO().rechercher_par_id_sd(id_sd=id_sd, schema=schema)
         Sons_Alea_scene = []
         Sons_Cont_scene = []
@@ -170,6 +206,13 @@ class SDService:
         return sd
 
     def formatage_question_sds_of_user(self):
+        """Construit une liste des choix à afficher dans le menu des SD param
+
+        Returns
+        -------------
+        list
+            Liste des choix proposés à l'utilisateur, incluant tous ses SD
+        """
         sds_user = Session().utilisateur.SD_possedes
         choix = []
         compteur = 1

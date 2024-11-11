@@ -4,10 +4,24 @@ from business_object.son_aleatoire import Son_Aleatoire
 from business_object.son_manuel import Son_Manuel
 from business_object.son_continu import Son_Continu
 from dao.tag_dao import TagDAO
+import datetime
 
 
 class SonDAO:
     """Implémente les méthodes du CRUD pour accéder à la base de données des sons"""
+
+    def time_to_timedelta(self, t: datetime.time) -> datetime.timedelta:
+        str_t = t.strftime("%H:%M:%S")
+        h = str_t[0] + str_t[1]
+        m = str_t[3] + str_t[4]
+        s = str_t[6] + str_t[7]
+        return datetime.timedelta(
+            days=t.days,
+            hours=t.hour,
+            minutes=t.minute,
+            seconds=t.second,
+            microseconds=t.microsecond,
+        )
 
     def param_of_son(self, son):
         if isinstance(son, Son_Aleatoire):
@@ -176,11 +190,16 @@ class SonDAO:
 
             # On convertit les sons trouvés en dict
             for row in res:
+                print(
+                    "CONVERT row['duree'] in Son_DAO:",
+                    datetime.timedelta(row["duree"]),
+                    type(self.datetime.timedelta(row["duree"])),
+                )
                 son_dict = {
                     "id_freesound": row["id_freesound"],
                     "nom": row["nom"],
                     "description": row["description"],
-                    "duree": row["duree"],
+                    "duree": self.time_to_timedelta(t=row["duree"]),
                     "tags": TagDAO().rechercher_tags_par_son(
                         str(row["id_freesound"]), schema=schema
                     ),

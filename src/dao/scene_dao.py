@@ -99,7 +99,7 @@ class SceneDAO:
             )
         return scenes_trouvees
 
-    def rechercher_par_id_scenes(self, id_scene, schema):
+    def rechercher_par_id_scene(self, id_scene, schema):
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
                 query = f"""

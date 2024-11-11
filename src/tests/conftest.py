@@ -176,7 +176,7 @@ def sd_kwargs(scene1_kwargs):
         "id_sd": "1",
         "scenes": [],  # Scene(**scene1_kwargs)
         "date_creation": datetime.date(2024, 1, 4),
-        "id_createur": "x1x2x3x",
+        "id_createur": "jdoe",  # id de user1_kwargs
     }
 
 

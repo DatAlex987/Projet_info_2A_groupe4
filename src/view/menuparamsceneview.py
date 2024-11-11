@@ -18,7 +18,7 @@ class MenuParamSceneView(AbstractView):
             {
                 "type": "list",
                 "name": "Choix Scene",
-                "message": "Que souhaitez-vous faire ? ? \n"
+                "message": "Que souhaitez-vous faire ? \n"
                 " ID         |   Nom   | Date de création \n"
                 "------------------------------------------------------------",
                 "choices": SceneService().formatage_question_scenes_of_sd(
@@ -53,13 +53,13 @@ class MenuParamSceneView(AbstractView):
             from view.menuparamsdview import MenuParamSDView
 
             next_view = MenuParamSDView()
+            return next_view
         if choix["Choix Scene"] == "Supprimer la sound-deck":
             confirmation = prompt(self.question_choix_suppr_sd)
             if confirmation["confirm suppr sd"]:
                 try:
-                    sd_to_delete = (
-                        Session().sd_to_param
-                    )  # Le SD à supprimer est celui sur lequel le user à cliqué
+                    # Le SD à supprimer est celui sur lequel le user à cliqué
+                    sd_to_delete = Session().sd_to_param
                     if SDService().supprimer_sd(
                         sd=sd_to_delete,
                         schema="ProjetInfo",
@@ -82,6 +82,7 @@ class MenuParamSceneView(AbstractView):
                 next_view = MenuParamView()
             else:
                 next_view = MenuParamSceneView()
+            return next_view
             # Contraint de faire l'import ici pour éviter un circular import
             # from view.menuparamsdview import MenuParamSDView
 
@@ -107,12 +108,15 @@ class MenuParamSceneView(AbstractView):
                         Fore.RED + f"Erreur lors de la création de la scène : {e}" + Style.RESET_ALL
                     )
             next_view = MenuParamSceneView()
+            return next_view
         else:
-            id_scene_select = choix["Choix Scene"].split()[1]  # A VERIFIER
+            id_scene_select = choix["Choix Scene"].split()[1]
+            Session().scene_to_param = SceneService().instancier_scene_par_id(
+                id_scene=id_scene_select, schema="ProjetInfo"
+            )
+            from view.menuparamscenespecifiqueview import MenuParamSceneSpecifiqueView
 
-            from view.menuparam_view import MenuParamView
-
-            next_view = MenuParamView()
+            next_view = MenuParamSceneSpecifiqueView()
         return next_view
 
     def display_info(self):

@@ -89,6 +89,11 @@ class UserService:
                 for sd in dic_user["SD_possedes"]:
                     for scene in sd["scenes"]:
                         for son_alea_kwargs in scene["sons_aleatoires"]:
+                            print(
+                                "type son_alea_kwargs duree:",
+                                son_alea_kwargs["duree"],
+                                type(son_alea_kwargs["duree"]),
+                            )
                             Sons_Alea_scene.append(
                                 Son_Aleatoire(
                                     nom=son_alea_kwargs["nom"],
@@ -96,8 +101,8 @@ class UserService:
                                     duree=son_alea_kwargs["duree"],
                                     id_freesound=son_alea_kwargs["id_freesound"],
                                     tags=son_alea_kwargs["tags"],
-                                    cooldown_min=son_alea_kwargs["cooldown_min"],
-                                    cooldown_max=son_alea_kwargs["cooldown_max"],
+                                    cooldown_min=son_alea_kwargs["param1"],
+                                    cooldown_max=son_alea_kwargs["param2"],
                                 )
                             )
                 for sd in dic_user["SD_possedes"]:
@@ -122,7 +127,7 @@ class UserService:
                                     duree=son_manu_kwargs["duree"],
                                     id_freesound=son_manu_kwargs["id_freesound"],
                                     tags=son_alea_kwargs["tags"],
-                                    start_key=son_manu_kwargs["start_key"],
+                                    start_key=son_manu_kwargs["param1"],
                                 )
                             )
                 Scenes_of_user = []

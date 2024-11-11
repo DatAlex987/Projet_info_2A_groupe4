@@ -19,9 +19,46 @@ from view.session import Session
 import hashlib
 import pygame
 
-ResetDatabase().ResetALL()
+# ResetDatabase().ResetALL()
+time = datetime.time(hour=0, minute=1, second=2)
+print("time en datetime:", time)
+str_time = time.strftime("%H:%M:%S")
+print("time apres strftime:", str_time)
+print(str_time[0], str_time[1])
+# delta = SonDAO().time_to_timedelta(time)
+# print(delta)
 
-
+"""son_alea1 = Son_Aleatoire(
+    "SonAlea1", "Description du SonAlea1", datetime.timedelta(seconds=1), "194863", [], 10, 15
+)
+son_alea2 = Son_Aleatoire(
+    "SonAlea2", "Description du SonAlea2", datetime.timedelta(seconds=2), "249135", [], 20, 25
+)
+son_continu1 = Son_Continu(
+    "SonContinu1", "Description du SonContinu1", datetime.timedelta(seconds=5), "123456", []
+)
+son_continu2 = Son_Continu(
+    "SonContinu2", "Description du SonContinu2", datetime.timedelta(seconds=10), "234567", []
+)
+son_manuel1 = Son_Manuel(
+    "SonManuel1", "Description du SonManuel1", datetime.timedelta(seconds=4), "134679", [], "a"
+)
+son_manuel2 = Son_Manuel(
+    "SonManuel2", "Description du SonManuel2", datetime.timedelta(seconds=8), "258258", [], "b"
+)
+son_dao = SonDAO()
+son_dao.ajouter_son(son_alea1, "ProjetInfo")
+son_dao.ajouter_son(son_alea2, "ProjetInfo")
+son_dao.ajouter_son(son_continu1, "ProjetInfo")
+son_dao.ajouter_son(son_continu2, "ProjetInfo")
+son_dao.ajouter_son(son_manuel1, "ProjetInfo")
+son_dao.ajouter_son(son_manuel2, "ProjetInfo")
+son_dao.ajouter_association_scene_son(id_scene="1dLKXrPC", son=son_alea1, schema="ProjetInfo")
+son_dao.ajouter_association_scene_son(id_scene="1dLKXrPC", son=son_alea2, schema="ProjetInfo")
+son_dao.ajouter_association_scene_son(id_scene="1dLKXrPC", son=son_continu1, schema="ProjetInfo")
+son_dao.ajouter_association_scene_son(id_scene="1dLKXrPC", son=son_continu2, schema="ProjetInfo")
+son_dao.ajouter_association_scene_son(id_scene="1dLKXrPC", son=son_manuel1, schema="ProjetInfo")
+son_dao.ajouter_association_scene_son(id_scene="1dLKXrPC", son=son_manuel2, schema="ProjetInfo")"""
 """
 sounddeck1 = SD(
     nom="SoundDeck 1",
