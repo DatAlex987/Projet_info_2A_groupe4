@@ -153,7 +153,6 @@ class SceneService:
             Instance de la scène demandée
         """
         scene_kwargs = SceneDAO().rechercher_par_id_scene(id_scene=id_scene, schema=schema)
-        print("scene_kwargs:", scene_kwargs)
         Sons_Alea_scene = []
         Sons_Cont_scene = []
         Sons_Manu_scene = []
@@ -226,9 +225,25 @@ class SceneService:
         try:
             SceneDAO().supprimer_scene(id_scene=scene.id_scene, schema=schema)
             SceneDAO().supprimer_toutes_associations_scene(id_scene=scene.id_scene, schema=schema)
-            for son in scene.sons_aleatoires + scene.sons_continus + scene.sons_manuels:
+            for son in scene.sons_aleatoires:
                 SonDAO().supprimer_toutes_associations_son(
-                    id_freesound=son.id_freesound, schema=schema
+                    id_freesound=son.id_freesound, type_son="aleatoire", schema=schema
+                )
+                for tag in son.tags:
+                    TagDAO().supprimer_association_son_tag(
+                        id_freesound=son.id_freesound, tag=tag, schema=schema
+                    )
+            for son in scene.sons_continus:
+                SonDAO().supprimer_toutes_associations_son(
+                    id_freesound=son.id_freesound, type_son="continu", schema=schema
+                )
+                for tag in son.tags:
+                    TagDAO().supprimer_association_son_tag(
+                        id_freesound=son.id_freesound, tag=tag, schema=schema
+                    )
+            for son in scene.sons_manuels:
+                SonDAO().supprimer_toutes_associations_son(
+                    id_freesound=son.id_freesound, type_son="manuel", schema=schema
                 )
                 for tag in son.tags:
                     TagDAO().supprimer_association_son_tag(

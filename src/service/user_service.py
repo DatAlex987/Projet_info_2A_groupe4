@@ -83,11 +83,16 @@ class UserService:
                 self.session = Session()  # On lance la session avec le bon user
                 # l.86 - l.152 : On instancie tous les objets liés à l'utilisateur avec les données
                 # fournies par l'appel DAO rechercher_par_pseudo_user()
-                Sons_Alea_scene = []
-                Sons_Cont_scene = []
-                Sons_Manu_scene = []
+                SDs_of_user = []  # List to hold all sounddecks
+
                 for sd in dic_user["SD_possedes"]:
+                    Scenes_of_user = []  # Create scenes list for each SD
+
                     for scene in sd["scenes"]:
+                        Sons_Alea_scene = []  # Create these lists inside the scene loop
+                        Sons_Cont_scene = []
+                        Sons_Manu_scene = []
+                        # Process Sons_Alea_scene for each scene of the sounddeck
                         for son_alea_kwargs in scene["sons_aleatoires"]:
                             Sons_Alea_scene.append(
                                 Son_Aleatoire(
@@ -100,8 +105,7 @@ class UserService:
                                     cooldown_max=son_alea_kwargs["param2"],
                                 )
                             )
-                for sd in dic_user["SD_possedes"]:
-                    for scene in sd["scenes"]:
+                        # Process Sons_Cont_scene for each scene
                         for son_cont_kwargs in scene["sons_continus"]:
                             Sons_Cont_scene.append(
                                 Son_Continu(
@@ -112,8 +116,7 @@ class UserService:
                                     tags=son_alea_kwargs["tags"],
                                 )
                             )
-                for sd in dic_user["SD_possedes"]:
-                    for scene in sd["scenes"]:
+                        # Process Sons_Manu_scene for each scene
                         for son_manu_kwargs in scene["sons_manuels"]:
                             Sons_Manu_scene.append(
                                 Son_Manuel(
@@ -125,32 +128,31 @@ class UserService:
                                     start_key=son_manu_kwargs["param1"],
                                 )
                             )
-                Scenes_of_user = []
-                for sd in dic_user["SD_possedes"]:
-                    for scene_kwargs in sd["scenes"]:
+                        # Create scene objects for this sounddeck
                         Scenes_of_user.append(
                             Scene(
-                                nom=scene_kwargs["nom"],
-                                description=scene_kwargs["description"],
-                                id_scene=scene_kwargs["id_scene"],
+                                nom=scene["nom"],
+                                description=scene["description"],
+                                id_scene=scene["id_scene"],
                                 sons_aleatoires=Sons_Alea_scene,
                                 sons_manuels=Sons_Manu_scene,
                                 sons_continus=Sons_Cont_scene,
-                                date_creation=scene_kwargs["date_creation"],
+                                date_creation=scene["date_creation"],
                             )
                         )
-                SDs_of_user = []
-                for sd_kwargs in dic_user["SD_possedes"]:
+
+                    # Now add the sounddeck with its scenes to SDs_of_user
                     SDs_of_user.append(
                         SD(
-                            nom=sd_kwargs["nom"],
-                            description=sd_kwargs["description"],
-                            id_sd=sd_kwargs["id_sd"],
+                            nom=sd["nom"],
+                            description=sd["description"],
+                            id_sd=sd["id_sd"],
                             scenes=Scenes_of_user,
-                            date_creation=sd_kwargs["date_creation"],
-                            id_createur=sd_kwargs["id_createur"],
+                            date_creation=sd["date_creation"],
+                            id_createur=sd["id_createur"],
                         )
                     )
+
                 utilisateur = User(
                     nom=dic_user["nom"],
                     prenom=dic_user["prenom"],
@@ -159,6 +161,10 @@ class UserService:
                     SD_possedes=SDs_of_user,
                     pseudo=dic_user["pseudo"],
                 )
+                for sd in utilisateur.SD_possedes:
+                    print("Fin de authenticate, sd dans utilisateur:", sd.nom)
+                    for scene in sd.scenes:
+                        print("Fin de authenticate, scene dans sd:", scene.nom)
                 self.session.connexion(utilisateur)
                 return True
             else:
