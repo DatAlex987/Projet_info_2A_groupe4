@@ -1,6 +1,7 @@
 from utils.singleton import Singleton
 from InquirerPy import prompt
 from service.freesound import Freesound
+from view.session import Session
 from colorama import Fore, Style
 
 
@@ -125,6 +126,29 @@ class Recherche(metaclass=Singleton):
             if action == "Écouter le son":
                 pass  # Will be done later
             elif action == "Sauvegarder dans la scène":
-                pass  # Will be done later (must distinguish the type)
+                Session().son_to_dl = son_details
+                # break
+                from view.accueilview import AccueilView
+
+                return AccueilView()
+                question_type = [
+                    {
+                        "type": "list",
+                        "name": "choix type",
+                        "message": "Quel sera le type du son dans cette scène ?",
+                        "choices": [
+                            "Son manuel",
+                            "Son aléatoire",
+                            "Son continu",
+                        ],
+                    }
+                ]
+                type_voulu = prompt(question_type)
+                if type_voulu["choix type"] == "Son manuel":
+                    pass
+                elif type_voulu["choix type"] == "Son aléatoire":
+                    pass
+                elif type_voulu["choix type"] == "Son continu":
+                    pass
             elif action == "Retour aux résultats de recherche":
                 break

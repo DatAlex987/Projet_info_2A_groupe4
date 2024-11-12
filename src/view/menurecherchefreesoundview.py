@@ -8,6 +8,7 @@ from service.sd_service import SDService
 from service.scene_service import SceneService
 from service.freesound import Freesound
 from service.recherche import Recherche
+from view.accueilview import AccueilView
 
 
 class MenuRechercheFreesoundView(AbstractView):
@@ -62,8 +63,11 @@ class MenuRechercheFreesoundView(AbstractView):
                 if Recherche().etat_recherche == -1:
                     print("Aucun critère spécifié pour la recherche. Veuillez ajouter un critère.")
             elif choix == "Quitter le menu recherche":
-                print("Retour au menu principal.")
+                from view.menuparamscenespecifiqueview import MenuParamSceneSpecifiqueView
+
+                next_view = MenuParamSceneSpecifiqueView()
                 break
+        return next_view
 
     def display_info(self):
         print(Fore.BLUE + " MENU DE RECHERCHE ".center(80, "=") + Style.RESET_ALL)

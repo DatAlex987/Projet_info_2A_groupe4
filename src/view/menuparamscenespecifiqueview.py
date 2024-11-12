@@ -71,6 +71,8 @@ class MenuParamSceneSpecifiqueView(AbstractView):
 
                 next_view = MenuParamSceneView()
             else:
+                from view.menuparamsceneview import MenuParamSceneView
+
                 next_view = MenuParamSceneView()
             return next_view
         if choix["Choix Scene Specifique"] == "Ajouter un son via Freesound":
