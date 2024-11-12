@@ -11,7 +11,7 @@ class Freesound(metaclass=Singleton):
     Classe intéragissant avec l'API Freesound
     """
 
-    def rechercher_par_tag(tag: str, limit: int):
+    def rechercher_par_tag(tag: str, limit: int):  # NE RETOURNE QUE 10 SONS
         """
         Envoie une requête à l'API pour récupérer des sons correspondants
         au tag renseigné.
@@ -47,12 +47,12 @@ class Freesound(metaclass=Singleton):
         payload: Dict[str, Union[str, int]] = {"token": f"{KEY}"}
         url_search = f"{URL}search/text/"
         payload_search = payload.copy()
-        payload_search.update({"query": tag})
+        payload_search.update({"query": tag, "page_size": limit})
         req = requests.get(url_search, headers=headers, params=payload_search)
         results = req.json()
         # La sortie est une liste de dico des 10 sons liés au
         # wind (id, name, tags, licence, username)
-        return results["results"][:limit]
+        return results["results"]  # [:limit]
 
     def rechercher_multi_filtres(dico_filtres: dict, limit: int):  # NOT DONE YET
         """
@@ -201,7 +201,7 @@ class Freesound(metaclass=Singleton):
         # Limiter le nombre d'IDs renvoyés à la valeur de `limit`
         return ids[:limit]
 
-    def télécharger_son(self, id_son):
+    def telecharger_son(self, id_son):
         # Modifier la méthode pour prendre en compte les autres formats.
         # Renommer les sons téléchargés au format précisé dans jouer_son (son.py)
         sound_data = self.rechercher_par_id(id_son)
