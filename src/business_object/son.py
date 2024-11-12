@@ -2,6 +2,7 @@ import datetime
 import pygame
 import os
 from dotenv import load_dotenv
+os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 
 
 class Son:
@@ -55,9 +56,38 @@ class Son:
         if not isinstance(id_freesound, str):
             raise TypeError("L'identifiant freesound du son doit être une instance de string.")
 
+    def Arret_Son(self) -> None:
+        if self.charge:
+            self.charge.stop()
+            self.charge = None
+        else:
+            print(f"le son {self.id_freesound} ne joue pas : pygame_error")
+
     def JouerSon(self) -> None:
         """Méthode globale pour charger puis jouer un son avec Pygame"""
         load_dotenv()
+        directory = os.getenv("DOSSIER_SAUVEGARDE")
+        file_path = os.path.join(directory, f"son_{self.id_freesound}.mp3")
+        if not os.path.exists(file_path):
+            print(f"Erreur : Le fichier {file_path} n'existe pas.")
+        else:
+        
+        # Initialiser Pygame est necessaire :pygame.mixer.init()
+        
+            try:
+                self.charge = pygame.mixer.Sound(file_path)
+                self.charge.play()
+                
+                start_time = pygame.time.get_ticks()
+            
+                while pygame.mixer.get_busy():
+                    current_time = pygame.time.get_ticks()
+                    if (current_time - start_time) > 30000:  # 30 000 ms = 30 secondes
+                        self.Arret_Son()
+
+            except pygame.error as e:
+                print(f"Erreur lors de la lecture du fichier : {e}")
+        """
         try:
             expected_path = os.getenv("DOSSIER_SAUVEGARDE")
             if expected_path is None:
@@ -73,8 +103,6 @@ class Son:
         except pygame.error as e:
             print(f"Erreur lors de la lecture du fichier son : {e}")
         except FileNotFoundError:
-            print(rf"Le fichier son {fichier_son} n'a pas été trouvé.")
+            print(rf"Le fichier son {fichier_son} n'a pas été trouvé.")"""
 
-    def Arret_Son(self) -> None:
-        (self.charge).stop()
-        self.charge = None
+    
