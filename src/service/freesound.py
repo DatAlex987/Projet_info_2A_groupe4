@@ -202,6 +202,8 @@ class Freesound(metaclass=Singleton):
         return ids[:limit]
 
     def télécharger_son(self, id_son):
+        # Modifier la méthode pour prendre en compte les autres formats.
+        # Renommer les sons téléchargés au format précisé dans jouer_son (son.py)
         sound_data = self.rechercher_par_id(id_son)
         mp3_url = sound_data["previews"]["preview-hq-mp3"]  # Lien du fichier MP3 haute qualité
         # Télécharger le fichier MP3

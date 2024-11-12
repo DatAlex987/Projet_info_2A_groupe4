@@ -2,6 +2,7 @@ import datetime
 import pygame
 import os
 from dotenv import load_dotenv
+
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 
 
@@ -63,23 +64,26 @@ class Son:
         else:
             print(f"le son {self.id_freesound} ne joue pas : pygame_error")
 
-    def JouerSon(self) -> None:
+    def jouer_son(self) -> None:
         """Méthode globale pour charger puis jouer un son avec Pygame"""
         load_dotenv()
         directory = os.getenv("DOSSIER_SAUVEGARDE")
+        # Ajouter quelques lignes pour faire une recherche préliminaire dans le dossier des
+        # téléchargements pour vérifier le format du son (mp3, wav, ogg, etc.). Stocker ce
+        # format puis le plug dans la fonction ci-dessous :
         file_path = os.path.join(directory, f"son_{self.id_freesound}.mp3")
         if not os.path.exists(file_path):
             print(f"Erreur : Le fichier {file_path} n'existe pas.")
         else:
-        
-        # Initialiser Pygame est necessaire :pygame.mixer.init()
-        
+
+            # Initialiser Pygame est necessaire :pygame.mixer.init()
+
             try:
                 self.charge = pygame.mixer.Sound(file_path)
                 self.charge.play()
-                
+
                 start_time = pygame.time.get_ticks()
-            
+
                 while pygame.mixer.get_busy():
                     current_time = pygame.time.get_ticks()
                     if (current_time - start_time) > 30000:  # 30 000 ms = 30 secondes
@@ -104,5 +108,3 @@ class Son:
             print(f"Erreur lors de la lecture du fichier son : {e}")
         except FileNotFoundError:
             print(rf"Le fichier son {fichier_son} n'a pas été trouvé.")"""
-
-    

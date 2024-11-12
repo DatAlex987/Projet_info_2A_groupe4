@@ -38,7 +38,7 @@ class Son_Manuel(Son):
                 # Vérifier si une touche du clavier est pressée
                 if event.type == pygame.KEYDOWN:
                     if event.key == kpg:
-                        self.JouerSon()
+                        self.jouer_son()
 
     # def jouer_son_manuel(self):                   #ancienne version
     #   """lance le son après déclenchement"""

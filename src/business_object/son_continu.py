@@ -18,4 +18,4 @@ class Son_Continu(Son):
 
     def jouer_son_en_boucle(self):
         """Lancer le son en boucle"""
-        self.JouerSon()
+        self.jouer_son()
