@@ -1,12 +1,15 @@
-from colorama import Fore, Style
+# menu_jeu_scene_view.py
+from colorama import Style
+from rich.console import Console
+from rich.table import Table
+from rich.panel import Panel
+from rich.box import DOUBLE  # Importer le bon type de boîte
 from InquirerPy import prompt
 
-####
+# Importation des services et classes nécessaires
 from service.user_service import UserService
 from service.sd_service import SDService
 from service.scene_service import SceneService
-
-####
 from view.abstractview import AbstractView
 from view.menu_jeu_sons_view import MenuJeuSonsView
 from view.session import Session
@@ -18,13 +21,14 @@ class MenuJeuSceneView(AbstractView):
     def __init__(self):
         super().__init__()
 
+        self.console = Console()
+
+        # Initialisation des données pour la question des scènes
         self.question_choix_scene = [
             {
                 "type": "list",
                 "name": "Choix Scene",
-                "message": "Quelle scène souhaitez-vous lancer ? \n"
-                " ID         |   Nom   | Date de création \n"
-                "------------------------------------------------------------",
+                "message": "Quelle scène souhaitez-vous lancer ? \n",
                 "choices": SceneService().formatage_question_scenes_of_sd_menu_jeu(
                     id_sd=Session().sd_to_play.id_sd
                 ),
@@ -32,9 +36,11 @@ class MenuJeuSceneView(AbstractView):
         ]
 
     def make_choice(self):
+        # Affichage du menu de choix
         choix = prompt(self.question_choix_scene)
         if choix["Choix Scene"] == "Retour au menu de choix des sound-decks":
-            from view.menu_jeu_view import MenuJeuView
+            # Déplacer l'importation ici pour éviter l'import circulaire
+            from view.menu_jeu_view import MenuJeuView  # Importation locale
 
             next_view = MenuJeuView()
         else:
@@ -46,4 +52,24 @@ class MenuJeuSceneView(AbstractView):
         return next_view
 
     def display_info(self):
-        print(Fore.BLUE + " MENU DES SCENES [JEU] ".center(80, "=") + Style.RESET_ALL)
+        # Création du tableau avec Rich
+        table = Table(show_header=True, header_style="bold blue", box=DOUBLE)
+        table.add_column("ID", justify="center")
+        table.add_column("Nom", justify="left")
+        table.add_column("Date de création", justify="center")
+
+        sds_user = Session().utilisateur.SD_possedes
+        sd_selectionne = None
+        for sd in sds_user:
+            if sd.id_sd == Session().sd_to_play.id_sd:
+                sd_selectionne = sd
+        compteur = 1
+        for scene in sd_selectionne.scenes:
+            table.add_row(str(compteur), scene.nom, str(scene.date_creation))
+            compteur += 1
+
+        # Ajouter une ligne pour "Retour au menu de choix des sound-decks"
+        table.add_row("", "Retour au menu de choix des sound-decks", "", style="bold red")
+
+        # Affichage du tableau dans un panneau pour une meilleure présentation
+        self.console.print(Panel(table, title="Liste des scènes", border_style="green"))

@@ -1,16 +1,15 @@
 from view.abstractview import AbstractView
 from colorama import Fore, Style
 from InquirerPy import prompt
-from view.abstractview import AbstractView
 
 ####
-from service.user_service import UserService
+# from service.user_service import UserService
 
 ####
 from view.menuconsulteruser import MenuConsulterUserView
 from view.menu_jeu_view import MenuJeuView
 
-# deconnexion : se deconnecter + retour ecran accueil
+# from view.abstractview import AbstractView
 
 
 class MenuPrincipalView(AbstractView):
