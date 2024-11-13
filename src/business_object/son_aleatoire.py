@@ -10,9 +10,9 @@ class Son_Aleatoire(Son):
     Attributs
     ----------
     cooldown_min : int
-        Temps minimum avant que le son soit rejoué.
+        Temps minimum en secondes avant que le son soit rejoué.
     cooldown_max : int
-        Temps maximum avant que le son soit rejoué.
+        Temps maximum en secondes avant que le son soit rejoué.
     """
 
     def __init__(self, nom, description, duree, id_freesound, tags, cooldown_min, cooldown_max):
@@ -20,6 +20,7 @@ class Son_Aleatoire(Son):
         """Constructeur"""
         self.cooldown_min = cooldown_min
         self.cooldown_max = cooldown_max
+        self.charge = None
 
         if not isinstance(cooldown_min, int) or not isinstance(cooldown_max, int):
             raise TypeError("Les cooldowns doivent être des entiers.")
@@ -44,23 +45,37 @@ class Son_Aleatoire(Son):
         self.cooldown_min = new_cooldown_min
         self.cooldown_max = new_cooldown_max
 
-    def jouer_son_aléatoire(self):
+    def jouer_son(self):
         """Joue le son aléatoire comme attendu"""
-        # Générer un délai initial aléatoire
-        t = random.randint(self.cooldown_min, self.cooldown_max)
-        pygame.time.delay(t)  # Attendre le délai initial avant de jouer le son
+        file_path = self.localise_son()
+        # Initialiser Pygame est necessaire :pygame.mixer.init avant
+        try:
+            self.charge = pygame.mixer.Sound(file_path)
+            t = random.randint(self.cooldown_min, self.cooldown_max) * 1000
+            debut = pygame.time.get_ticks()  # l'heure de début
+            running = True
+            son_joue = False  # Indicateur pour savoir si le son a été joué
 
-        running = True
-        while running:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
-            self.jouer_son()
+            while running:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        running = False
 
-            # Attendre que le son se termine (environ sa durée)
-            # On suppose que le son ne change pas pendant l'exécution
-            pygame.time.delay(int(self.charge.get_length() * 1000))  # Délai en millisecondes
+                    # temps écoulé
+                    temps_ecoule = pygame.time.get_ticks() - debut
+                    if temps_ecoule >= t and not son_joue:
+                        self.charge.play()  # Jouer le son
+                        son_joue = True  # Marquer le son comme joué
+            t = (
+                random.randint(self.cooldown_min, self.cooldown_max) + self.charge.get_length()
+            ) * 1000
+            debut = pygame.time.get_ticks()
+        except pygame.error as e:
+            print(f"Erreur lors de la lecture du fichier : {e}")
 
-            # Attendre un délai aléatoire avant de relancer le son
-            t_prime = random.randint(self.cooldown_min, self.cooldown_max)
-            pygame.time.delay(t_prime)
+    def Arret_Son(self):
+        if self.charge:
+            self.charge.stop()
+            self.charge = None
+        else:
+            print(f"le son {self.id_freesound} ne joue pas : pygame_error")

@@ -20,6 +20,7 @@ class Son_Manuel(Son):
     def __init__(self, nom, description, duree, id_freesound, tags, start_key):
         super().__init__(nom, description, duree, id_freesound, tags)
         self.start_key: str = start_key
+        self.charge = None
         if not isinstance(start_key, str):
             raise TypeError("la touche doit être de type String")
 
@@ -27,28 +28,25 @@ class Son_Manuel(Son):
         """Modifier la touche pour lancer un son"""
         self.start_key = new_key
 
-    def jouer_son_manuel(self):
+    def jouer_son(self):
         """lance le son après déclenchement"""
-        kpg = ord(self.start_key)
-        running = True
-        while running:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
-                # Vérifier si une touche du clavier est pressée
-                if event.type == pygame.KEYDOWN:
-                    if event.key == kpg:
-                        self.JouerSon()
+        file_path = self.localise_son()
+        # Initialiser Pygame est necessaire :pygame.mixer.init avant
+        try:
+            self.charge = pygame.mixer.Sound(file_path)
+            kpg = ord(self.start_key)
+            running = True
+            while running:
+                for event in pygame.event.get():
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == kpg:
+                            self.charge.play()
+        except pygame.error as e:
+            print(f"Erreur lors de la lecture du fichier : {e}")
 
-    # def jouer_son_manuel(self):                   #ancienne version
-    #   """lance le son après déclenchement"""
-    #    chaine = "K_" + self.start_key
-    #    running = True
-    #    while running:
-    #        for event in pygame.event.get():
-    #            if event.type == pygame.QUIT:
-    #                running = False
-    #            # Vérifier si une touche du clavier est pressée
-    #            if event.type == pygame.KEYDOWN:
-    #                if event.key == pygame.chaine:
-    #                    self.JouerSon()
+    def Arret_Son(self):
+        if self.charge:
+            self.charge.stop()
+            self.charge = None
+        else:
+            print(f"le son {self.id_freesound} ne joue pas : pygame_error")

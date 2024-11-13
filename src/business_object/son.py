@@ -1,10 +1,12 @@
 import datetime
-import pygame
 import os
 from dotenv import load_dotenv
+from abc import ABC, abstractmethod
+
+os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 
 
-class Son:
+class Son(ABC):
     """
     Classe représentant tous les sons qui ont été téléchargés afin d'être ajoutés à des scènes
 
@@ -39,8 +41,6 @@ class Son:
         self.duree = duree
         self.id_freesound = id_freesound
         self.tags = tags
-        self.charge = None
-        self.lp = 0
 
         if not isinstance(nom, str):
             raise TypeError("Le nom doit etre une instance de str.")
@@ -55,26 +55,47 @@ class Son:
         if not isinstance(id_freesound, str):
             raise TypeError("L'identifiant freesound du son doit être une instance de string.")
 
-    def JouerSon(self) -> None:
-        """Méthode globale pour charger puis jouer un son avec Pygame"""
+    def localise_son(self):
+        """localise un son à l'aide des variables d'environnement"""
         load_dotenv()
-        try:
-            expected_path = os.getenv("DOSSIER_SAUVEGARDE")
-            if expected_path is None:
-                raise ValueError("Le chemin attendu (expected_path) ne doit pas être None.")
-            else:
-                fichier_son = os.path.normpath(
-                    os.path.join(expected_path, f"{self.id_freesound}.mp3")
-                )
-                # Charger le son
-                self.charge = pygame.mixer.Sound(fichier_son)
-                # Jouer le son
-                (self.charge).play(loops=self.lp)
-        except pygame.error as e:
-            print(f"Erreur lors de la lecture du fichier son : {e}")
-        except FileNotFoundError:
-            print(rf"Le fichier son {fichier_son} n'a pas été trouvé.")
+        directory = os.getenv("DOSSIER_SAUVEGARDE")
+        file_path = os.path.join(directory, f"son_{self.id_freesound}.mp3")
+        if not os.path.exists(file_path):
+            print(f"Erreur : Le fichier {file_path} n'existe pas.")
+        return file_path
 
+    @abstractmethod
     def Arret_Son(self) -> None:
-        (self.charge).stop()
-        self.charge = None
+        """
+        if self.charge:
+            self.charge.stop()
+            self.charge = None
+        else:
+            print(f"le son {self.id_freesound} ne joue pas : pygame_error")"""
+        pass
+
+    @abstractmethod
+    def jouer_son(self) -> None:
+        """Méthode globale pour charger puis jouer un son avec Pygame
+        Utilise pygame.mixer.Sound : appliquer la méthode pour des formats legers
+        tels que wav ou ogg.
+
+        load_dotenv()
+        directory = os.getenv("DOSSIER_SAUVEGARDE")
+        # Ajouter quelques lignes pour faire une recherche préliminaire dans le dossier des
+        # téléchargements pour vérifier le format du son (mp3, wav, ogg, etc.). Stocker ce
+        # format puis le plug dans la fonction ci-dessous :
+        file_path = os.path.join(directory, f"son_{self.id_freesound}.mp3")
+        if not os.path.exists(file_path):
+            print(f"Erreur : Le fichier {file_path} n'existe pas.")
+        else:
+
+            # Initialiser Pygame est necessaire :pygame.mixer.init()
+
+            try:
+                self.charge = pygame.mixer.Sound(file_path)
+                self.charge.play()
+            except pygame.error as e:
+                print(f"Erreur lors de la lecture du fichier : {e}")
+        """
+        pass

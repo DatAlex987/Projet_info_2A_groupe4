@@ -16,12 +16,16 @@ from business_object.son_aleatoire import Son_Aleatoire
 from business_object.son_manuel import Son_Manuel
 from business_object.son_continu import Son_Continu
 from view.session import Session
+from service.freesound import Freesound
 import hashlib
 import pygame
+import os
+
+# os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 
 # ResetDatabase().ResetALL()
 
-son = Son(
+"""LICENSEson = Son(
     nom="The Imperial March",
     description="Luke, I am your father",
     duree=datetime.timedelta(seconds=45),
@@ -29,8 +33,9 @@ son = Son(
     tags=["starwars", "Vador", "JW"],
 )
 pygame.mixer.init()
-son.JouerSon()
-
+"""
+res = Freesound.rechercher_par_tag(tag="piano", limit=15)
+print(res)
 """
 son_alea1 = Son_Aleatoire(
     "SonAlea1", "Description du SonAlea1", datetime.timedelta(seconds=1), "194863", [], 10, 15

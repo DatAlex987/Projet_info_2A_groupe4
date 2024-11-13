@@ -168,7 +168,6 @@ class SceneService:
                     cooldown_max=son_alea_kwargs["param2"],
                 )
             )
-        print("Sons_Alea_scene:", Sons_Alea_scene)
         for son_cont_kwargs in scene_kwargs["sons_continus"]:
             Sons_Cont_scene.append(
                 Son_Continu(
@@ -199,7 +198,6 @@ class SceneService:
             sons_continus=Sons_Cont_scene,
             date_creation=scene_kwargs["date_creation"],
         )
-        print("Scene_to_return:", scene_to_return)
         return scene_to_return
 
     def supprimer_scene(

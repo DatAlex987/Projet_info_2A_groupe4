@@ -7,6 +7,7 @@ from view.session import Session
 from service.sd_service import SDService
 from service.scene_service import SceneService
 from service.son_service import SonService
+from view.menurecherchefreesoundview import MenuRechercheFreesoundView
 
 
 class MenuParamSceneSpecifiqueView(AbstractView):
@@ -70,10 +71,12 @@ class MenuParamSceneSpecifiqueView(AbstractView):
 
                 next_view = MenuParamSceneView()
             else:
+                from view.menuparamsceneview import MenuParamSceneView
+
                 next_view = MenuParamSceneView()
             return next_view
         if choix["Choix Scene Specifique"] == "Ajouter un son via Freesound":
-            pass
+            return MenuRechercheFreesoundView()
         else:
             # choisir un son
             print("print de la ligne choisie", choix["Choix Scene Specifique"])

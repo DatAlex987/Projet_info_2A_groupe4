@@ -161,10 +161,6 @@ class UserService:
                     SD_possedes=SDs_of_user,
                     pseudo=dic_user["pseudo"],
                 )
-                for sd in utilisateur.SD_possedes:
-                    print("Fin de authenticate, sd dans utilisateur:", sd.nom)
-                    for scene in sd.scenes:
-                        print("Fin de authenticate, scene dans sd:", scene.nom)
                 self.session.connexion(utilisateur)
                 return True
             else:
