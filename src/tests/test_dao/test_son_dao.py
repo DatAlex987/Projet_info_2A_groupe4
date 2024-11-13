@@ -85,7 +85,7 @@ def test_supprimer_son_succes(son_aleatoire1_kwargs):
     ResetDatabase().ResetTEST()
 
 
-def test_consulter_sons_succes(son_aleatoire1_kwargs, son2_kwargs):
+def test_consulter_sons_succes(son_aleatoire1_kwargs, son_aleatoire2_kwargs):
     ResetDatabase().ResetTEST()
     schema = "SchemaTest"
     son1_to_add = Son(**son_aleatoire1_kwargs)
