@@ -109,7 +109,7 @@ class MenuRechercheFreesoundView(AbstractView):
                         elif choix_resultat["choix_resultat"] == "Retour au menu de recherche":
                             break
                         else:
-                            Recherche().afficher_details_son(son=choix_resultat["choix_resultat"])
+                            Recherche().afficher_details_son2(son=choix_resultat["choix_resultat"])
                             choix_son = prompt(self.question_son)
                             if choix_son["question son"] == "Écouter le son":
                                 print("Vers l'écoute du son'")

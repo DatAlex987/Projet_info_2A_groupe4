@@ -4,6 +4,9 @@ from service.freesound import Freesound
 from view.session import Session
 from business_object.son import Son
 from colorama import Fore, Style
+from rich.console import Console
+from rich.table import Table
+from rich.style import Style
 
 
 class Recherche(metaclass=Singleton):
@@ -59,29 +62,46 @@ class Recherche(metaclass=Singleton):
             except Exception as e:
                 print(f"Erreur lors de la recherche : {e}")
 
-    def afficher_details_son(self, son):
-        """Affiche les détails dun son avec des options pour écouter, sauvegarder, ou retourner aux résultats."""
-        # Fetch more details using the ID of the sound
+    def afficher_details_son2(self, son):
+        """Affiche les détails d'un son avec des options pour écouter, sauvegarder, ou
+        retourner aux résultats."""
         try:
             son_id = str(son["id"])
-            son_details = Freesound.rechercher_par_id(id=son_id)  # New request to get full details
+            son_details = Freesound.rechercher_par_id(
+                id=son_id
+            )  # Nouvelle requête pour obtenir les détails
         except Exception as e:
             print(f"Erreur lors de la récupération des détails du son : {e}")
             return
 
-        # Display detailed information after successful retrieval
-        duree_formatee = (
-            f"{int(son_details['duration'] // 60)}min{int(son_details['duration'] % 60)}sec"
-        )
-        poids_formate = f"{son_details['filesize'] / (1024 * 1024):.2f}Mo"
-        display = f"""
-        ================Détails du Son================\n
-        ID Freesound: {son_details["id"]}
-        Nom: {son_details["name"]}
-        Tags: {son_details["tags"][:5]}
-        ============INFORMATIONS TECHNIQUES===========
-        Format du fichier: {son_details["type"]}
-        Durée: {duree_formatee}
-        Taille du fichier: {poids_formate}"""
+        # Création d'une instance de Console pour afficher les informations
+        console = Console()
 
-        print(display)
+        # Formatage de la durée et de la taille du fichier
+        duree_formatee = (
+            f"{int(son_details['duration'] // 60)} min {int(son_details['duration'] % 60)} sec"
+        )
+        poids_formate = f"{son_details['filesize'] / (1024 * 1024):.2f} Mo"
+
+        # Création du tableau avec les détails du son
+        table = Table(
+            show_header=True,
+            header_style=Style(color="chartreuse1", bold=True),
+            title="--------------- Détails du Son ---------------",
+            style="white",
+        )
+
+        # Définition de l'alignement centré et de la couleur bleue pour les titres des colonnes
+        table.add_column("Champ", style=Style(color="honeydew2"), width=20)
+        table.add_column("Détails", style=Style(color="honeydew2"))
+
+        # Ajout des informations du son dans le tableau
+        table.add_row("ID Freesound", str(son_details["id"]))
+        table.add_row("Nom", son_details["name"])
+        table.add_row("Tags", ", ".join(son_details["tags"][:5]))  # Afficher les 5 premiers tags
+        table.add_row("Format", son_details["type"])
+        table.add_row("Durée", duree_formatee)
+        table.add_row("Taille", poids_formate)
+
+        # Affichage du tableau dans la console
+        console.print(table)
