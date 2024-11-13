@@ -34,6 +34,7 @@ class Session(metaclass=Singleton):
         self.mixer = pygame.mixer.quit
         self.utilisateur = None
         self.debut_connexion = None
+        # Appels DAO pour supprimer les objets non reliés en BDD.
 
     def afficher(self):
         if self.utilisateur is None:

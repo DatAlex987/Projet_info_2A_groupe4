@@ -32,7 +32,7 @@ class AccueilView(AbstractView):
             {
                 "type": "password",
                 "name": "mdp",
-                "message": "Veuillez entrer votre mot de passe:",
+                "message": "Veuillez entrer votre mot de passe (8 caractères dont: 1 maj, 1 chiffre, 1 symbole):",
             },  # Avec le type password, l'input est remplacé par des "*"
         ]
         self.questions_creation_compte = [
@@ -47,7 +47,7 @@ class AccueilView(AbstractView):
             {
                 "type": "password",
                 "name": "mdp",
-                "message": "Veuillez entrer votre mot de passe:",
+                "message": "Veuillez entrer votre mot de passe(8 caractères dont: 1 maj, 1 chiffre, 1 symbole):",
             },  # Avec le type password, l'input est remplacé par des "*"
         ]
 

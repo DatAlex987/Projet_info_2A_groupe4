@@ -3,12 +3,14 @@
 from colorama import Fore, Style
 from InquirerPy import prompt
 from view.abstractview import AbstractView
-from view.session import Session
-from service.sd_service import SDService
-from service.scene_service import SceneService
-from service.freesound import Freesound
+
+# from view.session import Session
+# from service.sd_service import SDService
+# from service.scene_service import SceneService
+# from service.freesound import Freesound
 from service.recherche import Recherche
-from view.accueilview import AccueilView
+
+# from view.accueilview import AccueilView
 
 
 class MenuRechercheFreesoundView(AbstractView):
@@ -44,6 +46,42 @@ class MenuRechercheFreesoundView(AbstractView):
             # est positif l'utilisation du mot clé lambda permet de définir une fonction en
             # une ligne et évite de la définir ailleurs.
         ]
+        """self.question_resultats = [
+            {
+                "type": "list",
+                "name": "choix_resultat",
+                "message": "Sélectionnez un son ou naviguez dans les pages :",
+                "choices": Recherche().formatage_choix_resultats_recherche(),
+            }
+        ]"""
+        self.question_son = [
+            {
+                "type": "list",
+                "name": "question son",
+                "message": "Que voulez-vous faire ?",
+                "choices": [
+                    "Écouter le son",
+                    "Sauvegarder dans la scène",
+                    "Retour aux résultats de recherche",
+                ],
+            }
+        ]
+
+    # Décorateur qui transforme cette méthode en attribut. Permet de gagner en lisibilité.
+    # Ici, indispensable pour update question_resultats à chaque fois que c'est demandé (on run
+    # la fonction de formatage qui renvoie de nouveaux choix)
+    @property
+    def question_resultats(self):
+        """Dynamically generate question for search results with updated choices."""
+        q = [
+            {
+                "type": "list",
+                "name": "choix_resultat",
+                "message": "Sélectionnez un son ou naviguez dans les pages :",
+                "choices": Recherche().formatage_choix_resultats_recherche(),
+            }
+        ]
+        return q
 
     def make_choice(self):
         while True:
@@ -56,18 +94,34 @@ class MenuRechercheFreesoundView(AbstractView):
             elif choix == "Réinitialiser les critères":
                 if Recherche().reinitialiser_criteres():
                     print("Critères de recherche réinitialisés.")
-            elif choix == "Lancer la recherche":
-                Recherche().lancer_recherche()
-                if Recherche().etat_recherche == 0:
-                    print("Aucun son trouvé avec les critères de recherche.")
-                if Recherche().etat_recherche == -1:
-                    print("Aucun critère spécifié pour la recherche. Veuillez ajouter un critère.")
-            elif choix == "Quitter le menu recherche":
-                from view.menuparamscenespecifiqueview import MenuParamSceneSpecifiqueView
 
-                next_view = MenuParamSceneSpecifiqueView()
+            elif choix == "Lancer la recherche":
+                resultats = Recherche().lancer_recherche()
+                if resultats == []:
+                    print("Aucun son n'a été trouvé")
+                else:
+                    while True:
+                        choix_resultat = prompt(self.question_resultats)
+                        if choix_resultat["choix_resultat"] == "Page précédente":
+                            Recherche().page -= 1
+                        elif choix_resultat["choix_resultat"] == "Page suivante":
+                            Recherche().page += 1
+                        elif choix_resultat["choix_resultat"] == "Retour au menu de recherche":
+                            break
+                        else:
+                            Recherche().afficher_details_son(son=choix_resultat["choix_resultat"])
+                            choix_son = prompt(self.question_son)
+                            if choix_son["question son"] == "Écouter le son":
+                                print("Vers l'écoute du son'")
+                            elif choix_son["question son"] == "Sauvegarder dans la scène":
+                                print("Vers la sauvegarde")
+                            elif choix_son["question son"] == "Retour aux résultats de recherche":
+                                pass
+            elif choix == "Quitter le menu recherche":
                 break
-        return next_view
+        from view.menuparamscenespecifiqueview import MenuParamSceneSpecifiqueView
+
+        return MenuParamSceneSpecifiqueView()
 
     def display_info(self):
         print(Fore.BLUE + " MENU DE RECHERCHE ".center(80, "=") + Style.RESET_ALL)

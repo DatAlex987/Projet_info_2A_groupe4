@@ -112,11 +112,6 @@ class Freesound(metaclass=Singleton):
         """
         if not isinstance(id, str):
             raise TypeError("L'argument id n'est pas un str.")
-
-        # Vérification du format de l'ID (6 chiffres)
-        if not re.match(r"^\d{6}$", id):
-            return "L'ID doit être une chaîne de 6 chiffres."
-
         load_dotenv()
         URL: Optional[str] = os.getenv("URL_API")
         KEY: Optional[str] = os.getenv("API_KEY")
