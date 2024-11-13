@@ -2,6 +2,7 @@ from utils.singleton import Singleton
 from InquirerPy import prompt
 from service.freesound import Freesound
 from view.session import Session
+from business_object.son import Son
 from colorama import Fore, Style
 
 
@@ -97,17 +98,21 @@ class Recherche(metaclass=Singleton):
             return
 
         # Display detailed information after successful retrieval
+        duree_formatee = (
+            f"{int(son_details['duration'] // 60)}min{int(son_details['duration'] % 60)}sec"
+        )
+        poids_formate = f"{son_details['filesize'] / (1024 * 1024):.2f}Mo"
+        display = f"""
+        ================Détails du Son================\n
+        ID Freesound: {son_details["id"]}
+        Nom: {son_details["name"]}
+        Tags: {son_details["tags"][:5]}
+        ============INFORMATIONS TECHNIQUES===========
+        Format du fichier: {son_details["type"]}
+        Durée: {duree_formatee}
+        Taille du fichier:{poids_formate}"""
         while True:
-            print(Fore.YELLOW + f"\nDétails du Son - {son_details['name']}\n" + Style.RESET_ALL)
-            print(f"ID: {son_details['id']}")
-            print(f"Nom: {son_details['name']}")
-            print(f"Tags: {', '.join(son_details['tags'])}")
-            print(f"Licence: {son_details['license']}")
-            print(f"Créateur: {son_details['username']}")
-            print(f"Durée: {son_details.get('duration', 'Non disponible')} secondes")
-            print(f"Taille du fichier: {son_details.get('filesize', 'Non disponible')} octets")
-            print(f"Type: {son_details.get('type', 'Non disponible')}")
-            # Add more fields here if available in the son_details response
+            print(display)
 
             question = [
                 {
