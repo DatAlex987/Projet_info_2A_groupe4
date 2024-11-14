@@ -105,3 +105,9 @@ class Son:
                 print(f"Erreur lors de la lecture du fichier : {e}")
         """
         pass
+
+    def modifier_nom(self, new_nom: str):
+        self.nom = new_nom
+
+    def modifier_description(self, new_desc: str):
+        self.description = new_desc

@@ -100,17 +100,31 @@ class MenuParamModifSonView(AbstractView):
             if choix_modif["choix modif"] == "Voir la fiche du son":
                 pass  # TO DO
             elif choix_modif["choix modif"] == "Modifier le nom":
-                pass
+                Session().son_to_param.modifier_nom(new_nom=choix_modif["modif nom"])
             elif choix_modif["choix modif"] == "Modifier la description":
+                Session().son_to_param.modifier_description(new_desc=choix_modif["modif desc"])
+            elif choix_modif["choix modif"] == "Modifier le cooldown minimal":
                 pass
-            elif choix_modif["choix modif"] == "Modifier le nom":
-                pass
-            elif choix_modif["choix modif"] == "Modifier le nom":
+            elif choix_modif["choix modif"] == "Modifier le cooldown maximal":
                 pass
         elif isinstance(Session().son_to_param, Son_Continu):
             choix_modif = prompt(self.question_modif_continu)
+            if choix_modif["choix modif"] == "Voir la fiche du son":
+                pass  # TO DO
+            elif choix_modif["choix modif"] == "Modifier le nom":
+                pass
+            elif choix_modif["choix modif"] == "Modifier la description":
+                pass
         elif isinstance(Session().son_to_param, Son_Manuel):
             choix_modif = prompt(self.question_modif_manuel)
+            if choix_modif["choix modif"] == "Voir la fiche du son":
+                pass  # TO DO
+            elif choix_modif["choix modif"] == "Modifier le nom":
+                pass
+            elif choix_modif["choix modif"] == "Modifier la description":
+                pass
+            elif choix_modif["choix modif"] == "Modifier la touche de déclenchement":
+                pass
         return MenuParamSceneSpecifiqueView()
 
     def display_info(self):
