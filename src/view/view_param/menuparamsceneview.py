@@ -2,12 +2,15 @@
 
 from colorama import Fore, Style
 from InquirerPy import prompt
+
 ####
 from service.sd_service import SDService
 from service.scene_service import SceneService
+
 ####
 from view.abstractview import AbstractView
 from view.session import Session
+
 
 class MenuParamSceneView(AbstractView):
     """Classe représentant la view de paramétrage des Sound-deck"""
@@ -51,7 +54,7 @@ class MenuParamSceneView(AbstractView):
         choix = prompt(self.question_choix_scene)
         if choix["Choix Scene"] == "Retour au menu de choix des sound-decks":
             # Contraint de faire l'import ici pour éviter un circular import
-            from view.menu_param.menuparamsdview import MenuParamSDView
+            from view.view_param.menuparamsdview import MenuParamSDView
 
             next_view = MenuParamSDView()
             return next_view
@@ -78,7 +81,7 @@ class MenuParamSceneView(AbstractView):
                         + Style.RESET_ALL
                     )
                 # Contraint de faire l'import ici pour éviter un circular import
-                from view.menu_param.menuparam_view import MenuParamView
+                from view.view_param.menuparam_view import MenuParamView
 
                 next_view = MenuParamView()
             else:

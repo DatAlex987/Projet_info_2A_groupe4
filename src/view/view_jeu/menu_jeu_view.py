@@ -9,7 +9,7 @@ from service.sd_service import SDService
 ####
 from view.abstractview import AbstractView
 from view.session import Session
-from view.menu_jeu.menu_jeu_scene_view import MenuJeuSceneView
+from view.view_jeu.menu_jeu_scene_view import MenuJeuSceneView
 
 
 class MenuJeuView(AbstractView):
