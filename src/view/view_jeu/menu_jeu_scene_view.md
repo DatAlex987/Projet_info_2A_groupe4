@@ -8,7 +8,7 @@ from service.scene_service import SceneService
 
 ####
 from view.abstractview import AbstractView
-from view.menu_jeu_sons_view import MenuJeuSonsView
+from view.view_jeu.menu_jeu_sons_view import MenuJeuSonsView
 from view.session import Session
 
 

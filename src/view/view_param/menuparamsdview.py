@@ -2,11 +2,14 @@
 
 from colorama import Fore, Style
 from InquirerPy import prompt
-from view.abstractview import AbstractView
-from view.session import Session
-from view.menuparamsceneview import MenuParamSceneView
+####
 from service.sd_service import SDService
 from service.scene_service import SceneService
+####
+from view.abstractview import AbstractView
+from view.session import Session
+from view.view_param.menuparamsceneview import MenuParamSceneView
+
 
 
 class MenuParamSDView(AbstractView):

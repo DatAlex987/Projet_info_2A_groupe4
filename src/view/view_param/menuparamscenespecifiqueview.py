@@ -3,14 +3,15 @@
 from colorama import Fore, Style
 from InquirerPy import prompt
 import re
-from view.abstractview import AbstractView
-from view.session import Session
+####
 from service.sd_service import SDService
 from service.scene_service import SceneService
 from service.son_service import SonService
+####
 from view.menurecherchefreesoundview import MenuRechercheFreesoundView
-from view.menuparammodifsonview import MenuParamModifSonView
-
+from view.view_param.menuparammodifsonview import MenuParamModifSonView
+from view.abstractview import AbstractView
+from view.session import Session
 
 class MenuParamSceneSpecifiqueView(AbstractView):
     """Classe représentant la view de paramétrage d'une scène'"""
@@ -42,7 +43,7 @@ class MenuParamSceneSpecifiqueView(AbstractView):
         choix = prompt(self.question_choix_scene_specifique)
         if choix["Choix Scene Specifique"] == "Retour au menu de choix des scènes":
             # Contraint de faire l'import ici pour éviter un circular import
-            from view.menuparamsceneview import MenuParamSceneView
+            from view.view_param.menuparamsceneview import MenuParamSceneView
 
             next_view = MenuParamSceneView()
             return next_view
@@ -69,11 +70,11 @@ class MenuParamSceneSpecifiqueView(AbstractView):
                         + Style.RESET_ALL
                     )
                 # Contraint de faire l'import ici pour éviter un circular import
-                from view.menuparamsceneview import MenuParamSceneView
+                from view.view_param.menuparamsceneview import MenuParamSceneView
 
                 next_view = MenuParamSceneView()
             else:
-                from view.menuparamsceneview import MenuParamSceneView
+                from view.view_param.menuparamsceneview import MenuParamSceneView
 
                 next_view = MenuParamSceneView()
             return next_view
