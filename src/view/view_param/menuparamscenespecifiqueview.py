@@ -3,15 +3,18 @@
 from colorama import Fore, Style
 from InquirerPy import prompt
 import re
+
 ####
-from service.sd_service import SDService
+# from service.sd_service import SDService
 from service.scene_service import SceneService
 from service.son_service import SonService
+
 ####
 from view.menurecherchefreesoundview import MenuRechercheFreesoundView
 from view.view_param.menuparammodifsonview import MenuParamModifSonView
 from view.abstractview import AbstractView
 from view.session import Session
+
 
 class MenuParamSceneSpecifiqueView(AbstractView):
     """Classe représentant la view de paramétrage d'une scène'"""
@@ -35,7 +38,10 @@ class MenuParamSceneSpecifiqueView(AbstractView):
             {
                 "type": "confirm",
                 "name": "confirm suppr scene",
-                "message": "Etes-vous sûr de vouloir supprimer votre scène ? Sa suppression entraînera la perte de tout ce qu'elle contient.",
+                "message": (
+                    "Etes-vous sûr de vouloir supprimer votre scène ? "
+                    "Sa suppression entraînera la perte de tout ce qu'elle contient."
+                ),
             }
         ]
 

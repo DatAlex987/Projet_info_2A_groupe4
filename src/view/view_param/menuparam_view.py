@@ -3,12 +3,14 @@
 from colorama import Fore, Style
 from InquirerPy import prompt
 from service.sd_service import SDService
-from dao.sd_dao import SDDAO
+
+# from dao.sd_dao import SDDAO
 ####
-from view.session import Session
+# from view.session import Session
 from view.abstractview import AbstractView
 from view.menuprincipalview import MenuPrincipalView
 from view.view_param.menuparamsdview import MenuParamSDView
+
 
 class MenuParamView(AbstractView):
     """Classe représentant la view de paramétrage des Scènes/Sound-deck"""
