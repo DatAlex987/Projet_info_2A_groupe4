@@ -6,9 +6,8 @@ from InquirerPy import prompt
 # from service.user_service import UserService
 
 ####
-from view.menuconsulteruser import MenuConsulterUserView
-from view.menu_jeu_view import MenuJeuView
-
+from view.view_consulter_user.menuconsulteruser import MenuConsulterUserView
+from view.view_jeu.menu_jeu_view import MenuJeuView
 # from view.abstractview import AbstractView
 
 
@@ -34,7 +33,7 @@ class MenuPrincipalView(AbstractView):
     def make_choice(self):
         answers = prompt(self.question)
         if answers["Menu principal"] == "Accéder au menu de paramétrage":
-            from view.menuparam_view import MenuParamView
+            from view.view_param.menuparam_view import MenuParamView
 
             next_view = MenuParamView()
         if answers["Menu principal"] == "Accéder au menu de jeu":

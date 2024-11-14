@@ -119,7 +119,7 @@ class MenuRechercheFreesoundView(AbstractView):
                                 pass
             elif choix == "Quitter le menu recherche":
                 break
-        from view.menuparamscenespecifiqueview import MenuParamSceneSpecifiqueView
+        from view.view_param.menuparamscenespecifiqueview import MenuParamSceneSpecifiqueView
 
         return MenuParamSceneSpecifiqueView()
 

@@ -34,7 +34,7 @@ class MenuJeuSonsView(AbstractView):
     def make_choice(self):  # voir avec alex : jouer son
         choix = prompt(self.question_choix_son)
         if choix["Choix Son"] == "Retour au menu de choix des scènes":
-            from view.menu_jeu_scene_view import MenuJeuSceneView
+            from view.menu_jeu.menu_jeu_scene_view import MenuJeuSceneView
 
             next_view = MenuJeuSceneView()
         else:
