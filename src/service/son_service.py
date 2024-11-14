@@ -208,7 +208,11 @@ class SonService:
             instance_son = Son_Continu(
                 nom=son_kwargs["nom"],
                 description=son_kwargs["description"],
-                duree=son_kwargs["duree"],
+                duree=datetime.timedelta(
+                    hours=son_kwargs["duree"].hour,
+                    minutes=son_kwargs["duree"].minute,
+                    seconds=son_kwargs["duree"].second,
+                ),
                 id_freesound=son_kwargs["id_freesound"],
                 tags=SonDAO().get_tags_of_son(id_freesound=id_freesound, schema=schema),
             )
@@ -228,7 +232,11 @@ class SonService:
             instance_son = Son_Manuel(
                 nom=son_kwargs["nom"],
                 description=son_kwargs["description"],
-                duree=son_kwargs["duree"],
+                duree=datetime.timedelta(
+                    hours=son_kwargs["duree"].hour,
+                    minutes=son_kwargs["duree"].minute,
+                    seconds=son_kwargs["duree"].second,
+                ),
                 id_freesound=son_kwargs["id_freesound"],
                 tags=SonDAO().get_tags_of_son(id_freesound=id_freesound, schema=schema),
                 start_key=additional_son_kwargs["param1"],
