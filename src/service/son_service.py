@@ -250,23 +250,73 @@ class SonService:
         pass
 
     def modifier_nom_son(self, son, new_nom: str, schema: str):
+        # On update la session
         son.modifier_nom(new_nom=new_nom)
+        # On update le user en session
+        for sd in Session().utilisateur.SD_possedes:
+            for scene in sd.scenes:
+                if isinstance(son, Son_Aleatoire):
+                    for son_alea in scene.sons_aleatoires:
+                        if son_alea.id == son.id_freesound:
+                            son_alea.modifier_nom(new_nom=new_nom)
+                if isinstance(son, Son_Continu):
+                    for son_continu in scene.sons_continus:
+                        if son_continu.id == son.id_freesound:
+                            son_continu.modifier_nom(new_nom=new_nom)
+                if isinstance(son, Son_Manuel):
+                    for son_manuel in scene.sons_manuels:
+                        if son_manuel.id == son.id_freesound:
+                            son_manuel.modifier_nom(new_nom=new_nom)
+        # On update la BDD
         SonDAO().modifier_son(son=son, schema=schema)
 
     def modifier_desc_son(self, son, new_desc: str, schema: str):
+        # On update la session
         son.modifier_description(new_desc=new_desc)
+        # On update le user en session
+        for sd in Session().utilisateur.SD_possedes:
+            for scene in sd.scenes:
+                if isinstance(son, Son_Aleatoire):
+                    for son_alea in scene.sons_aleatoires:
+                        if son_alea.id == son.id_freesound:
+                            son_alea.modifier_description(new_description=new_desc)
+                if isinstance(son, Son_Continu):
+                    for son_continu in scene.sons_continus:
+                        if son_continu.id == son.id_freesound:
+                            son_continu.modifier_description(new_description=new_desc)
+                if isinstance(son, Son_Manuel):
+                    for son_manuel in scene.sons_manuels:
+                        if son_manuel.id == son.id_freesound:
+                            son_manuel.modifier_description(new_description=new_desc)
+        # On update la BDD
         SonDAO().modifier_son(son=son, schema=schema)
 
     def modifier_cdmin_son(self, son_alea: Son_Aleatoire, new_cdmin: int, schema: str):
         son_alea.modifier_cooldown_min(new_cooldown_min=new_cdmin)
+        for sd in Session().utilisateur.SD_possedes:
+            for scene in sd.scenes:
+                for son in scene.sons_aleatoires:
+                    if son.id == son_alea.id_freesound:
+                        son.modifier_cooldown_min(new_cooldown_min=new_cdmin)
+
         SonDAO().modifier_param_son(son_alea, schema=schema)
 
     def modifier_cdmax_son(self, son_alea: Son_Aleatoire, new_cdmax: int, schema: str):
-        son_alea.modifier_cooldown_max(new_cooldown_min=new_cdmax)
+        son_alea.modifier_cooldown_max(new_cooldown_max=new_cdmax)
+        for sd in Session().utilisateur.SD_possedes:
+            for scene in sd.scenes:
+                for son in scene.sons_aleatoires:
+                    if son.id == son_alea.id_freesound:
+                        son.modifier_cooldown_max(new_cooldown_max=new_cdmax)
         SonDAO().modifier_param_son(son_alea, schema=schema)
 
     def modifier_start_key_son(self, son_manuel: Son_Manuel, new_start_key: str, schema: str):
         son_manuel.modifier_start_key(new_start_key=new_start_key)
+        for sd in Session().utilisateur.SD_possedes:
+            for scene in sd.scenes:
+                for son in scene.sons_manuels:
+                    if son.id == son_manuel.id_freesound:
+                        son.modifier_start_key(new_start_key=new_start_key)
         SonDAO().modifier_param_son(son_manuel, schema=schema)
 
     def afficher_details_son_continu(self, son_continu):

@@ -18,18 +18,6 @@ class MenuParamSceneView(AbstractView):
     def __init__(self):
         super().__init__()
 
-        self.question_choix_scene = [
-            {
-                "type": "list",
-                "name": "Choix Scene",
-                "message": "Que souhaitez-vous faire ? \n"
-                " ID         |   Nom   | Date de création \n"
-                "------------------------------------------------------------",
-                "choices": SceneService().formatage_question_scenes_of_sd(
-                    id_sd=Session().sd_to_param.id_sd
-                ),
-            }
-        ]
         self.question_choix_suppr_sd = [
             {
                 "type": "confirm",
@@ -51,6 +39,21 @@ class MenuParamSceneView(AbstractView):
                 "name": "description",
                 "message": "Quelle sera la description de votre scène ?",
             },
+        ]
+
+    @property
+    def question_choix_scene(self):
+        return [
+            {
+                "type": "list",
+                "name": "Choix Scene",
+                "message": "Que souhaitez-vous faire ? \n"
+                " ID         |   Nom   | Date de création \n"
+                "------------------------------------------------------------",
+                "choices": SceneService().formatage_question_scenes_of_sd(
+                    id_sd=Session().sd_to_param.id_sd
+                ),
+            }
         ]
 
     def make_choice(self):
