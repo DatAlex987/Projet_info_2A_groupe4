@@ -22,7 +22,20 @@ class MenuParamSceneSpecifiqueView(AbstractView):
     def __init__(self):
         super().__init__()
 
-        self.question_choix_scene_specifique = [
+        self.question_choix_suppr_scene = [
+            {
+                "type": "confirm",
+                "name": "confirm suppr scene",
+                "message": (
+                    "Etes-vous sûr de vouloir supprimer votre scène ? "
+                    "Sa suppression entraînera la perte de tout ce qu'elle contient."
+                ),
+            }
+        ]
+
+    @property
+    def question_choix_scene_specifique(self):
+        return [
             {
                 "type": "list",
                 "name": "Choix Scene Specifique",
@@ -31,16 +44,6 @@ class MenuParamSceneSpecifiqueView(AbstractView):
                 "------------------------------------------------------------",
                 "choices": SonService().formatage_question_sons_of_scene(
                     id_sd=Session().sd_to_param.id_sd, id_scene=Session().scene_to_param.id_scene
-                ),
-            }
-        ]
-        self.question_choix_suppr_scene = [
-            {
-                "type": "confirm",
-                "name": "confirm suppr scene",
-                "message": (
-                    "Etes-vous sûr de vouloir supprimer votre scène ? "
-                    "Sa suppression entraînera la perte de tout ce qu'elle contient."
                 ),
             }
         ]
