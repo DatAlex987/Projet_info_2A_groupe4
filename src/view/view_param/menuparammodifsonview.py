@@ -94,37 +94,72 @@ class MenuParamModifSonView(AbstractView):
         ]
 
     def make_choice(self):  # NON TESTE YET
-        dico_modifs = {"nom": None, "description": None, "param1": None, "param2": None}
         if isinstance(Session().son_to_param, Son_Aleatoire):
             choix_modif = prompt(self.question_modif_alea)
             if choix_modif["choix modif"] == "Voir la fiche du son":
                 pass  # TO DO
             elif choix_modif["choix modif"] == "Modifier le nom":
-                Session().son_to_param.modifier_nom(new_nom=choix_modif["modif nom"])
+                new_nom = prompt(self.question_modif_nom)
+                SonService().modifier_nom_son(
+                    son=Session().son_to_param, new_nom=new_nom["modif nom"], schema="ProjetInfo"
+                )
             elif choix_modif["choix modif"] == "Modifier la description":
-                Session().son_to_param.modifier_description(new_desc=choix_modif["modif desc"])
+                new_desc = prompt(self.question_modif_desc)
+                SonService().modifier_desc_son(
+                    son=Session().son_to_param, new_desc=new_desc["modif desc"], schema="ProjetInfo"
+                )
             elif choix_modif["choix modif"] == "Modifier le cooldown minimal":
-                pass
+                new_cdmin = prompt(self.question_modif_cdmin)
+                SonService().modifier_cdmin_son(
+                    son=Session().son_to_param,
+                    new_cdmin=new_cdmin["modif cdmin"],
+                    schema="ProjetInfo",
+                )
             elif choix_modif["choix modif"] == "Modifier le cooldown maximal":
-                pass
+                new_cdmax = prompt(self.question_modif_cdmax)
+                SonService().modifier_cdmax_son(
+                    son=Session().son_to_param,
+                    new_cdmax=new_cdmax["modif cdmax"],
+                    schema="ProjetInfo",
+                )
         elif isinstance(Session().son_to_param, Son_Continu):
             choix_modif = prompt(self.question_modif_continu)
             if choix_modif["choix modif"] == "Voir la fiche du son":
                 pass  # TO DO
             elif choix_modif["choix modif"] == "Modifier le nom":
-                pass
+                new_nom = prompt(self.question_modif_nom)
+                SonService().modifier_nom_son(
+                    son=Session().son_to_param, new_nom=new_nom["modif nom"], schema="ProjetInfo"
+                )
             elif choix_modif["choix modif"] == "Modifier la description":
-                pass
+                new_desc = prompt(self.question_modif_desc)
+                SonService().modifier_desc_son(
+                    son=Session().son_to_param, new_desc=new_desc["modif desc"], schema="ProjetInfo"
+                )
         elif isinstance(Session().son_to_param, Son_Manuel):
             choix_modif = prompt(self.question_modif_manuel)
             if choix_modif["choix modif"] == "Voir la fiche du son":
                 pass  # TO DO
             elif choix_modif["choix modif"] == "Modifier le nom":
-                pass
+                new_nom = prompt(self.question_modif_nom)
+                SonService().modifier_nom_son(
+                    son=Session().son_to_param, new_nom=new_nom["modif nom"], schema="ProjetInfo"
+                )
             elif choix_modif["choix modif"] == "Modifier la description":
-                pass
+                new_desc = prompt(self.question_modif_desc)
+                SonService().modifier_desc_son(
+                    son=Session().son_to_param, new_desc=new_desc["modif desc"], schema="ProjetInfo"
+                )
             elif choix_modif["choix modif"] == "Modifier la touche de déclenchement":
-                pass
+                new_key = prompt(self.question_modif_key)
+                SonService().modifier_start_key_son(
+                    son=Session().son_to_param,
+                    new_start_key=new_key["modif key"],
+                    schema="ProjetInfo",
+                )
+        print(Fore.GREEN + "Modification effectuée avec succès" + Style.RESET_ALL)
+        from view.view_param.menuparamscenespecifiqueview import MenuParamSceneSpecifiqueView
+
         return MenuParamSceneSpecifiqueView()
 
     def display_info(self):

@@ -3,7 +3,7 @@
 from colorama import Fore, Style
 from InquirerPy import prompt
 from view.abstractview import AbstractView
-from view.menuparamajoutson import MenuParamAjoutSonView
+from view.view_param.menuparamajoutson import MenuParamAjoutSonView
 from view.session import Session
 
 # from service.sd_service import SDService

@@ -237,3 +237,23 @@ class SonService:
 
     def multi_modifications_son(self, son, modif: dict):
         pass
+
+    def modifier_nom_son(self, son, new_nom: str, schema: str):
+        son.modifier_nom(new_nom=new_nom)
+        SonDAO().modifier_son(son=son, schema=schema)
+
+    def modifier_desc_son(self, son, new_desc: str, schema: str):
+        son.modifier_description(new_desc=new_desc)
+        SonDAO().modifier_son(son=son, schema=schema)
+
+    def modifier_cdmin_son(self, son_alea: Son_Aleatoire, new_cdmin: int, schema: str):
+        son_alea.modifier_cooldown_min(new_cooldown_min=new_cdmin)
+        SonDAO().modifier_param_son(son_alea, schema=schema)
+
+    def modifier_cdmax_son(self, son_alea: Son_Aleatoire, new_cdmax: int, schema: str):
+        son_alea.modifier_cooldown_max(new_cooldown_min=new_cdmax)
+        SonDAO().modifier_param_son(son_alea, schema=schema)
+
+    def modifier_start_key_son(self, son_manuel: Son_Manuel, new_start_key: str, schema: str):
+        son_manuel.modifier_start_key(new_start_key=new_start_key)
+        SonDAO().modifier_param_son(son_manuel, schema=schema)

@@ -27,11 +27,7 @@ from datetime import timedelta
 # os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 
 # ResetDatabase().ResetALL()
-son_alea1 = Son_Aleatoire(
-    "SonAlea1", "Description du SonAlea1", datetime.timedelta(seconds=1), "194863", [], 10, 15
-)
-son_alea1.modifier_nom(new_nom="gneuh")
-print(son_alea1.nom)
+
 """scene1 = Scene(
     nom="Scene1",
     description="Description de la Scene1",

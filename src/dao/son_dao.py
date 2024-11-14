@@ -4,6 +4,7 @@ from business_object.son_aleatoire import Son_Aleatoire
 from business_object.son_manuel import Son_Manuel
 from business_object.son_continu import Son_Continu
 from dao.tag_dao import TagDAO
+from view.session import Session
 import datetime
 
 
@@ -74,6 +75,32 @@ class SonDAO:
                         "duree": son.duree,
                         "id_freesound": son.id_freesound,
                     },
+                )
+        return son
+
+    def modifier_param_son(self, son, schema: str):  # NON TESTED YET
+        dict_f_string = {
+            "param1": None,
+            "param2": None,
+            "id_freesound": son.id_freesound,
+            "id_scene": Session().scene_to_param.id_scene,
+        }
+        if isinstance(son, Son_Aleatoire):
+            dict_f_string["param1"] = son.cooldown_min
+            dict_f_string["param2"] = son.cooldown_max
+        elif isinstance(son, Son_Manuel):
+            dict_f_string["param1"] = son.start_key
+        with DBConnection(schema=schema).connection as connection:
+            with connection.cursor() as cursor:
+                query = f"""
+                UPDATE {schema}.Scene_Son
+                    SET param1 = %(param1)s, param2 = %(param2)s
+                    WHERE id_freesound = %(id_freesound)s AND id_scene = %(id_scene)s;
+                """
+
+                cursor.execute(
+                    query,
+                    dict_f_string,
                 )
         return son
 
