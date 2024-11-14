@@ -59,7 +59,11 @@ class Son(ABC):
         """localise un son à l'aide des variables d'environnement"""
         load_dotenv()
         directory = os.getenv("DOSSIER_SAUVEGARDE")
-        file_path = os.path.join(directory, f"{self.id_freesound}.wav")
+        matching_files = []
+        for filename in os.listdir(directory):
+            if self.id_freesound in filename:
+                matching_files.append(filename)
+        file_path = os.path.join(directory, f"{matching_files[0]}")
         if not os.path.exists(file_path):
             print(f"Erreur : Le fichier {file_path} n'existe pas.")
         else:

@@ -6,6 +6,7 @@ from business_object.personne import Personne
 from business_object.scene import Scene
 from business_object.sd import SD
 import datetime
+from dotenv import load_dotenv
 from utils.reset_database import ResetDatabase
 from dao.user_dao import UserDAO
 from dao.sd_dao import SDDAO
@@ -26,19 +27,23 @@ import os
 # ResetDatabase().ResetALL()
 
 
-pygame.init()
+pygame.mixer.init()
 
-
-LICENSEson = Son_Continu(
+son = Son_Continu(
     nom="The Imperial March",
     description="Luke, I am your father",
     duree=datetime.timedelta(seconds=45),
-    id_freesound="747222__gregorquendel__tchaikovsky-dance-of-the-sugar-plum-fairy-the-nutcracker-suite-op",
+    id_freesound="747222",
     tags=["starwars", "Vador", "JW"],
 )
 
-LICENSEson.Arret_son()
 
+son.jouer_son()
+
+
+"""
+LICENSEson.Arret_son()
+"""
 """
 res = Freesound.rechercher_par_tag(tag="piano", limit=15)
 print(res)
