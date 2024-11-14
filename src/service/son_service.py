@@ -1,18 +1,29 @@
+import re
+import datetime
+import random
+import string
+
+####
+from dao.scene_dao import SceneDAO
+from dao.son_dao import SonDAO
+from dao.tag_dao import TagDAO
+
+####
 from utils.log_decorator import log
 from business_object.scene import Scene
 from business_object.son import Son
 from business_object.son_continu import Son_Continu
 from business_object.son_aleatoire import Son_Aleatoire
 from business_object.son_manuel import Son_Manuel
+
+####
 from view.session import Session
 from service.freesound import Freesound
-import re
-import datetime
-import random
-import string
-from dao.scene_dao import SceneDAO
-from dao.son_dao import SonDAO
-from dao.tag_dao import TagDAO
+
+####
+from rich.console import Console
+from rich.table import Table
+from rich.style import Style
 
 
 class SonService:
@@ -257,3 +268,72 @@ class SonService:
     def modifier_start_key_son(self, son_manuel: Son_Manuel, new_start_key: str, schema: str):
         son_manuel.modifier_start_key(new_start_key=new_start_key)
         SonDAO().modifier_param_son(son_manuel, schema=schema)
+
+    def afficher_details_son_continu(self, son_continu):
+        """Affiche les détails d'un son continu."""
+        console = Console()
+        table = Table(
+            show_header=True,
+            header_style=Style(color="chartreuse1", bold=True),
+            title="--------------- Détails du Son Continu ---------------",
+            style="white",
+        )
+        table.add_column("Champ", style=Style(color="honeydew2"), width=20)
+        table.add_column("Détails", style=Style(color="honeydew2"))
+
+        table.add_row("ID Freesound", str(son_continu.id_freesound))
+        table.add_row("Nom", son_continu.nom)
+        table.add_row("Tags", ", ".join(son_continu.tags[:5]))
+        table.add_row(
+            "Durée",
+            f"{int(son_continu.duree.total_seconds() // 60)} min {int(son_continu.duree.total_seconds() % 60)} sec",
+        )
+
+        console.print(table)
+
+    def afficher_details_son_manuel(self, son_manuel):
+        """Affiche les détails d'un son manuel."""
+        console = Console()
+        table = Table(
+            show_header=True,
+            header_style=Style(color="chartreuse1", bold=True),
+            title="--------------- Détails du Son Manuel ---------------",
+            style="white",
+        )
+        table.add_column("Champ", style=Style(color="honeydew2"), width=20)
+        table.add_column("Détails", style=Style(color="honeydew2"))
+
+        table.add_row("ID Freesound", str(son_manuel.id_freesound))
+        table.add_row("Nom", son_manuel.nom)
+        table.add_row("Tags", ", ".join(son_manuel.tags[:5]))
+        table.add_row(
+            "Durée",
+            f"{int(son_manuel.duree.total_seconds() // 60)} min {int(son_manuel.duree.total_seconds() % 60)} sec",
+        )
+        table.add_row("Touche de démarrage", son_manuel.start_key)
+
+        console.print(table)
+
+    def afficher_details_son_aleatoire(self, son_aleatoire):
+        """Affiche les détails d'un son aléatoire."""
+        console = Console()
+        table = Table(
+            show_header=True,
+            header_style=Style(color="chartreuse1", bold=True),
+            title="--------------- Détails du Son Aléatoire ---------------",
+            style="white",
+        )
+        table.add_column("Champ", style=Style(color="honeydew2"), width=20)
+        table.add_column("Détails", style=Style(color="honeydew2"))
+
+        table.add_row("ID Freesound", str(son_aleatoire.id_freesound))
+        table.add_row("Nom", son_aleatoire.nom)
+        table.add_row("Tags", ", ".join(son_aleatoire.tags[:5]))
+        table.add_row(
+            "Durée",
+            f"{int(son_aleatoire.duree.total_seconds() // 60)} min {int(son_aleatoire.duree.total_seconds() % 60)} sec",
+        )
+        table.add_row("Cooldown Min", f"{son_aleatoire.cooldown_min} sec")
+        table.add_row("Cooldown Max", f"{son_aleatoire.cooldown_max} sec")
+
+        console.print(table)

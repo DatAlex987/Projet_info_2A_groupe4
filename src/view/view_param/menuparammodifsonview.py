@@ -97,7 +97,7 @@ class MenuParamModifSonView(AbstractView):
         if isinstance(Session().son_to_param, Son_Aleatoire):
             choix_modif = prompt(self.question_modif_alea)
             if choix_modif["choix modif"] == "Voir la fiche du son":
-                pass  # TO DO
+                SonService().afficher_details_son_aleatoire(Session().son_to_param)
             elif choix_modif["choix modif"] == "Modifier le nom":
                 new_nom = prompt(self.question_modif_nom)
                 SonService().modifier_nom_son(
@@ -125,7 +125,7 @@ class MenuParamModifSonView(AbstractView):
         elif isinstance(Session().son_to_param, Son_Continu):
             choix_modif = prompt(self.question_modif_continu)
             if choix_modif["choix modif"] == "Voir la fiche du son":
-                pass  # TO DO
+                SonService().afficher_details_son_continu(Session().son_to_param)
             elif choix_modif["choix modif"] == "Modifier le nom":
                 new_nom = prompt(self.question_modif_nom)
                 SonService().modifier_nom_son(
@@ -139,7 +139,7 @@ class MenuParamModifSonView(AbstractView):
         elif isinstance(Session().son_to_param, Son_Manuel):
             choix_modif = prompt(self.question_modif_manuel)
             if choix_modif["choix modif"] == "Voir la fiche du son":
-                pass  # TO DO
+                SonService().afficher_details_son_manuel(Session().son_to_param)
             elif choix_modif["choix modif"] == "Modifier le nom":
                 new_nom = prompt(self.question_modif_nom)
                 SonService().modifier_nom_son(
