@@ -121,7 +121,7 @@ class SonService:
                 nom=son_kwargs["name"],
                 description=son_kwargs["description"],
                 duree=datetime.timedelta(seconds=son_kwargs["duration"]),
-                id_freesound=son_kwargs["id"],
+                id_freesound=str(son_kwargs["id"]),
                 tags=son_kwargs["tags"],
                 cooldown_min=int(son_kwargs["param1"]),
                 cooldown_max=int(son_kwargs["param2"]),
@@ -131,7 +131,7 @@ class SonService:
                 nom=son_kwargs["name"],
                 description=son_kwargs["description"],
                 duree=datetime.timedelta(seconds=son_kwargs["duration"]),
-                id_freesound=son_kwargs["id"],
+                id_freesound=str(son_kwargs["id"]),
                 tags=son_kwargs["tags"],
                 start_key=son_kwargs["param1"],
             )
@@ -140,7 +140,7 @@ class SonService:
                 nom=son_kwargs["name"],
                 description=son_kwargs["description"],
                 duree=datetime.timedelta(seconds=son_kwargs["duration"]),
-                id_freesound=son_kwargs["id"],
+                id_freesound=str(son_kwargs["id"]),
                 tags=son_kwargs["tags"],
             )
 
@@ -152,7 +152,7 @@ class SonService:
                 id_scene=Session().scene_to_param.id_scene, son=son_to_add, schema=schema
             )
 
-            all_tags = TagDAO().consulter_tags
+            all_tags = TagDAO().consulter_tags(schema=schema)
             # On ajoute les tags du son non déjà présents en BDD
             for tag in son_to_add.tags:
                 if tag not in all_tags:
@@ -160,7 +160,7 @@ class SonService:
             # Puis pour chaque tag du son, on le lie au son
             for tag in son_to_add.tags:
                 TagDAO().ajouter_association_son_tag(
-                    id_freesound=son_to_add.id_freesound, tag="X", schema=schema
+                    id_freesound=son_to_add.id_freesound, tag=tag, schema=schema
                 )
 
             # Enfin, on le télécharge:
@@ -253,9 +253,6 @@ class SonService:
                 start_key=additional_son_kwargs["param1"],
             )
             return instance_son
-
-    def multi_modifications_son(self, son, modif: dict):
-        pass
 
     def modifier_nom_son(self, son, new_nom: str, schema: str):
         # On update la session

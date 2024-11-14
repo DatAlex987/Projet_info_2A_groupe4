@@ -52,10 +52,7 @@ class MenuParamAjoutSonView(AbstractView):
 
     def make_choice(self):  # NON TESTE YET
         son_desc = prompt(self.question_description)
-        print(Session().son_to_param)
-        print(Session().son_to_param["description"])
-        print(son_desc)
-        Session().son_to_param["description"] = son_desc["desc"]
+        Session().son_to_dl["description"] = son_desc["desc"]
         choix_type = prompt(self.question_type_son)
         if choix_type["type son"] == "Son aléatoire":
             choix_param = prompt(self.question_param_alea)
@@ -69,9 +66,9 @@ class MenuParamAjoutSonView(AbstractView):
             param1 = None
             param2 = None
         # On stocke ces nouvelles infos en session pour les utiliser ensuite pour l'ajout en DAO
-        Session().son_to_param["type_son"] = choix_type["type son"]
-        Session().son_to_param["param1"] = param1
-        Session().son_to_param["param2"] = param2
+        Session().son_to_dl["type_son"] = choix_type["type son"]
+        Session().son_to_dl["param1"] = param1
+        Session().son_to_dl["param2"] = param2
         if SonService().ajouter_nouveau_son(son_kwargs=Session().son_to_dl, schema="ProjetInfo"):
             print("Ajout du son avec succès. Retour au menu de votre scène.")
         else:
