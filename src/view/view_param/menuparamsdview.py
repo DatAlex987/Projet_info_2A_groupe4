@@ -23,9 +23,13 @@ class MenuParamSDView(AbstractView):
             {
                 "type": "list",
                 "name": "Choix SD",
-                "message": "Quelle Sound-deck souhaitez vous modifier ? \n"
-                " ID   |      Nom       |               Description                   | Date de création \n"
-                "----------------------------------------------------------------------------------",
+                "message": (
+                    "Quelle Sound-deck souhaitez-vous modifier ? \n"
+                    " ID   |      Nom       |    Description               "
+                    "| Date de création \n"
+                    "-------------------------------------------------------------"
+                    "---------------------"
+                ),
                 "choices": SDService().formatage_question_sds_of_user(),
             }
         ]
