@@ -30,7 +30,9 @@ class MenuJeuSceneView(AbstractView):
             {
                 "type": "list",
                 "name": "Choix Scene",
-                "message": "Quelle scène souhaitez-vous lancer ? \n",
+                "message": (
+                    f"Quelle scène de '{Session().sd_to_play.nom}' souhaitez-vous lancer ? \n"
+                ),
                 "choices": SceneService().formatage_question_scenes_of_sd_menu_jeu(
                     id_sd=Session().sd_to_play.id_sd
                 ),
@@ -42,7 +44,7 @@ class MenuJeuSceneView(AbstractView):
         choix = prompt(self.question_choix_scene)
         if choix["Choix Scene"] == "Retour au menu de choix des sound-decks":
             # Déplacer l'importation ici pour éviter l'import circulaire
-            from view.menu_jeu.menu_jeu_view import MenuJeuView  # Importation locale
+            from view.view_jeu.menu_jeu_view import MenuJeuView  # Importation locale
 
             next_view = MenuJeuView()
         else:

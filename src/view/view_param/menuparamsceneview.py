@@ -34,7 +34,10 @@ class MenuParamSceneView(AbstractView):
             {
                 "type": "confirm",
                 "name": "confirm suppr sd",
-                "message": "Etes-vous sûr de vouloir supprimer votre sound-deck ? Sa suppression entraînera la perte de tout ce qu'elle contient.",
+                "message": (
+                    "Etes-vous sûr de vouloir supprimer votre sound-deck ?"
+                    "Sa suppression entraînera la perte de tout ce qu'elle contient."
+                ),
             }
         ]
         self.questions_creation_scene = [
