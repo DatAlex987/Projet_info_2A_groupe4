@@ -52,6 +52,9 @@ class MenuParamAjoutSonView(AbstractView):
 
     def make_choice(self):  # NON TESTE YET
         son_desc = prompt(self.question_description)
+        print(Session().son_to_param)
+        print(Session().son_to_param["description"])
+        print(son_desc)
         Session().son_to_param["description"] = son_desc["desc"]
         choix_type = prompt(self.question_type_son)
         if choix_type["type son"] == "Son aléatoire":
