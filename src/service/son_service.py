@@ -5,6 +5,7 @@ from business_object.son_continu import Son_Continu
 from business_object.son_aleatoire import Son_Aleatoire
 from business_object.son_manuel import Son_Manuel
 from view.session import Session
+from service.freesound import Freesound
 import re
 import datetime
 import random
@@ -102,3 +103,137 @@ class SonService:
             compteur += 1
         choix.append("Retour au menu de choix des scènes")
         return choix
+
+    def ajouter_nouveau_son(self, son_kwargs: dict, schema: str):
+        if son_kwargs["type_son"] == "Son aléatoire":
+            son_to_add = Son_Aleatoire(
+                nom=son_kwargs["name"],
+                description=son_kwargs["description"],
+                duree=datetime.timedelta(seconds=son_kwargs["duration"]),
+                id_freesound=son_kwargs["id"],
+                tags=son_kwargs["tags"],
+                cooldown_min=int(son_kwargs["param1"]),
+                cooldown_max=int(son_kwargs["param2"]),
+            )
+        if son_kwargs["type_son"] == "Son manuel":
+            son_to_add = Son_Manuel(
+                nom=son_kwargs["name"],
+                description=son_kwargs["description"],
+                duree=datetime.timedelta(seconds=son_kwargs["duration"]),
+                id_freesound=son_kwargs["id"],
+                tags=son_kwargs["tags"],
+                start_key=son_kwargs["param1"],
+            )
+        if son_kwargs["type_son"] == "Son continu":
+            son_to_add = Son_Continu(
+                nom=son_kwargs["name"],
+                description=son_kwargs["description"],
+                duree=datetime.timedelta(seconds=son_kwargs["duration"]),
+                id_freesound=son_kwargs["id"],
+                tags=son_kwargs["tags"],
+            )
+
+        try:
+            # On commence par ajouter le son
+            SonDAO().ajouter_son(son=son_to_add, schema=schema)
+            # Puis on le relie à la bonne scène
+            SonDAO().ajouter_association_scene_son(
+                id_scene=Session().scene_to_param.id_scene, son=son_to_add, schema=schema
+            )
+
+            all_tags = TagDAO().consulter_tags
+            # On ajoute les tags du son non déjà présents en BDD
+            for tag in son_to_add.tags:
+                if tag not in all_tags:
+                    TagDAO().ajouter_tag(tag=tag, schema=schema)
+            # Puis pour chaque tag du son, on le lie au son
+            for tag in son_to_add.tags:
+                TagDAO().ajouter_association_son_tag(
+                    id_freesound=son_to_add.id_freesound, tag="X", schema=schema
+                )
+
+            # Enfin, on le télécharge:
+            Freesound().telecharger_son(id_son=son_to_add.id_freesound)
+        except ValueError as e:
+            raise ValueError(f"{e}")
+
+    def instancier_son_par_id_type(self, id_freesound: str, type_son: str, schema: str):
+        """Instancie un son (et tous ses tags) à partir de son id et de son type
+
+        Params
+        -------------
+        id_freesound : str
+            id du son sélectionné par l'utilisateur
+        type_son : str
+            Type du son à instancier
+        schema : str
+            Schéma sur lequel faire les requêtes
+        Returns
+        -------------
+        Son_Aleatoire or Son_Manuel or Son_Continu
+            Instance du son demandé
+        """
+        if type_son == "ALEATOIRE":
+            # On commence par recherche le son en BDD
+            son_kwargs = SonDAO().rechercher_par_id_son(id_freesound=id_freesound, schema=schema)
+            # Puis on recherche ses paramètres dans la table d'association scene_son
+            additional_son_kwargs = {}
+            sons_of_scene = SonDAO().rechercher_sons_par_scene(
+                id_scene=Session().scene_to_param.id_scene, schema=schema
+            )
+            for son in sons_of_scene["sons_aleatoires"]:
+                if son["id_freesound"] == id_freesound:
+                    additional_son_kwargs["param1"] = son["param1"]
+                    additional_son_kwargs["param2"] = son["param2"]
+            # Enfin, on peut l'instancier avec tous nos éléments
+            instance_son = Son_Aleatoire(
+                nom=son_kwargs["nom"],
+                description=son_kwargs["description"],
+                duree=datetime.timedelta(
+                    hours=son_kwargs["duree"].hour,
+                    minutes=son_kwargs["duree"].minute,
+                    seconds=son_kwargs["duree"].second,
+                ),
+                id_freesound=son_kwargs["id_freesound"],
+                tags=SonDAO().get_tags_of_son(id_freesound=id_freesound, schema=schema),
+                cooldown_min=additional_son_kwargs["param1"],
+                cooldown_max=additional_son_kwargs["param2"],
+            )
+            return instance_son
+        if type_son == "CONTINU":
+            # On commence par recherche le son en BDD
+            son_kwargs = SonDAO().rechercher_par_id_son(id_freesound=id_freesound, schema=schema)
+
+            # Enfin, on peut l'instancier avec tous nos éléments
+            instance_son = Son_Continu(
+                nom=son_kwargs["nom"],
+                description=son_kwargs["description"],
+                duree=son_kwargs["duree"],
+                id_freesound=son_kwargs["id_freesound"],
+                tags=SonDAO().get_tags_of_son(id_freesound=id_freesound, schema=schema),
+            )
+            return instance_son
+        if type_son == "MANUEL":
+            # On commence par recherche le son en BDD
+            son_kwargs = SonDAO().rechercher_par_id_son(id_freesound=id_freesound, schema=schema)
+            # Puis on recherche ses paramètres dans la table d'association scene_son
+            additional_son_kwargs = {}
+            sons_of_scene = SonDAO().rechercher_sons_par_scene(
+                id_scene=Session().scene_to_param.id_scene, schema=schema
+            )
+            for son in sons_of_scene["sons_manuels"]:
+                if son["id_freesound"] == id_freesound:
+                    additional_son_kwargs["param1"] = son["param1"]
+            # Enfin, on peut l'instancier avec tous nos éléments
+            instance_son = Son_Manuel(
+                nom=son_kwargs["nom"],
+                description=son_kwargs["description"],
+                duree=son_kwargs["duree"],
+                id_freesound=son_kwargs["id_freesound"],
+                tags=SonDAO().get_tags_of_son(id_freesound=id_freesound, schema=schema),
+                start_key=additional_son_kwargs["param1"],
+            )
+            return instance_son
+
+    def multi_modifications_son(self, son, modif: dict):
+        pass

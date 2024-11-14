@@ -6,7 +6,7 @@ from abc import ABC, abstractmethod
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 
 
-class Son(ABC):
+class Son:
     """
     Classe représentant tous les sons qui ont été téléchargés afin d'être ajoutés à des scènes
 

@@ -11,12 +11,14 @@ from dao.user_dao import UserDAO
 from dao.sd_dao import SDDAO
 from dao.scene_dao import SceneDAO
 from dao.son_dao import SonDAO
+from dao.tag_dao import TagDAO
 from business_object.son import Son
 from business_object.son_aleatoire import Son_Aleatoire
 from business_object.son_manuel import Son_Manuel
 from business_object.son_continu import Son_Continu
 from view.session import Session
 from service.freesound import Freesound
+from service.son_service import SonService
 import hashlib
 import pygame
 import os
@@ -25,22 +27,30 @@ from datetime import timedelta
 # os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 
 # ResetDatabase().ResetALL()
-
-
-pygame.init()
-pygame.mixer.init()
-
-son_man = Son_Manuel(
-    nom="Cloche",
-    description="Cloche qui sonne",
-    duree=datetime.timedelta(seconds=52),
-    id_freesound="662970__ianfsa__mosquito-1-edit",
-    tags=["bell", "chime"],
-    start_key="c",
+scene1 = Scene(
+    nom="Scene1",
+    description="Description de la Scene1",
+    id_scene="ZCokXpxM",
+    sons_aleatoires=[],
+    sons_continus=[],
+    sons_manuels=[],
+    date_creation=datetime.date.today(),
 )
-
-son_man.jouer_son()
-
+Session().scene_to_param = scene1
+son = SonService().instancier_son_par_id_type(
+    id_freesound="249135", type_son="ALEATOIRE", schema="ProjetInfo"
+)
+print(son)
+print(son.id_freesound)
+print(type(son))
+print(son.tags)
+print(son.duree)
+"""TagDAO().ajouter_tag(tag="first", schema="ProjetInfo")
+TagDAO().ajouter_tag(tag="second", schema="ProjetInfo")
+TagDAO().ajouter_tag(tag="third", schema="ProjetInfo")
+TagDAO().ajouter_association_son_tag(id_freesound="249135", tag="first", schema="ProjetInfo")
+TagDAO().ajouter_association_son_tag(id_freesound="249135", tag="second", schema="ProjetInfo")
+TagDAO().ajouter_association_son_tag(id_freesound="249135", tag="third", schema="ProjetInfo")"""
 """
 LICENSEson = Son_Continu(
     nom="The Imperial March",

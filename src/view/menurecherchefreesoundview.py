@@ -3,8 +3,9 @@
 from colorama import Fore, Style
 from InquirerPy import prompt
 from view.abstractview import AbstractView
+from view.menuparamajoutson import MenuParamAjoutSonView
+from view.session import Session
 
-# from view.session import Session
 # from service.sd_service import SDService
 # from service.scene_service import SceneService
 # from service.freesound import Freesound
@@ -109,12 +110,12 @@ class MenuRechercheFreesoundView(AbstractView):
                         elif choix_resultat["choix_resultat"] == "Retour au menu de recherche":
                             break
                         else:
-                            Recherche().afficher_details_son2(son=choix_resultat["choix_resultat"])
+                            Recherche().afficher_details_son(son=choix_resultat["choix_resultat"])
                             choix_son = prompt(self.question_son)
                             if choix_son["question son"] == "Écouter le son":
-                                print("Vers l'écoute du son'")
+                                print("Vers l'écoute du son'")  # NOT DONE YET
                             elif choix_son["question son"] == "Sauvegarder dans la scène":
-                                print("Vers la sauvegarde")
+                                return MenuParamAjoutSonView()
                             elif choix_son["question son"] == "Retour aux résultats de recherche":
                                 pass
             elif choix == "Quitter le menu recherche":

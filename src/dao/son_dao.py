@@ -118,7 +118,7 @@ class SonDAO:
             )
         return sons_trouves
 
-    def rechercher_par_id_son(self, id_freesound, schema: str):
+    def rechercher_par_id_son(self, id_freesound: str, schema: str):
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
                 query = f"""
@@ -234,7 +234,7 @@ class SonDAO:
             print(f"Erreur lors de la récupération des sound-decks : {e}")
             return []
 
-    def ajouter_association_scene_son(self, id_scene: str, son: Son, schema: str):
+    def ajouter_association_scene_son(self, id_scene: str, son, schema: str):
         """
         Ajoute une nouvelle association Scene - Son dans la table d'association.
 
