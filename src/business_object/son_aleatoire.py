@@ -61,11 +61,11 @@ class Son_Aleatoire(Son):
                     if event.type == pygame.QUIT:
                         running = False
 
-                    # temps écoulé
-                    temps_ecoule = pygame.time.get_ticks() - debut
-                    if temps_ecoule >= t and not son_joue:
-                        self.charge.play()  # Jouer le son
-                        son_joue = True  # Marquer le son comme joué
+                # temps écoulé
+                temps_ecoule = pygame.time.get_ticks() - debut
+                if temps_ecoule >= t and not son_joue:
+                    self.charge.play()  # Jouer le son
+                    son_joue = True  # Marquer le son comme joué
             t = (
                 random.randint(self.cooldown_min, self.cooldown_max) + self.charge.get_length()
             ) * 1000

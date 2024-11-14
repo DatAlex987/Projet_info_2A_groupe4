@@ -201,6 +201,7 @@ class Freesound(metaclass=Singleton):
         # Renommer les sons téléchargés au format précisé dans jouer_son (son.py)
         sound_data = self.rechercher_par_id(id_son)
         mp3_url = sound_data["previews"]["preview-hq-mp3"]  # Lien du fichier MP3 haute qualité
+
         # Télécharger le fichier MP3
         print(f"Téléchargement du son à partir de {mp3_url}")
         mp3_response = requests.get(mp3_url)

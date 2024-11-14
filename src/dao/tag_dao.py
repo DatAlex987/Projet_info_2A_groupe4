@@ -10,7 +10,7 @@ class TagDAO:
                 query = f"""
                 INSERT INTO {schema}.Tag(nom_tag)
                     VALUES (%(nom_tag)s)
-                    RETURNING non_tag;
+                    RETURNING nom_tag;
                 """
                 cursor.execute(
                     query,
@@ -225,3 +225,6 @@ class TagDAO:
                 )
                 res = cursor.fetchall()
         return [row["id_freesound"] for row in res]
+
+
+# Ajouter une fonction qui ajoute tous les tags d'une liste si ils n'y sont pas déjà

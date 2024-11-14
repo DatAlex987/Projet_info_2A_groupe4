@@ -6,7 +6,7 @@ from abc import ABC, abstractmethod
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 
 
-class Son(ABC):
+class Son:
     """
     Classe représentant tous les sons qui ont été téléchargés afin d'être ajoutés à des scènes
 
@@ -59,9 +59,15 @@ class Son(ABC):
         """localise un son à l'aide des variables d'environnement"""
         load_dotenv()
         directory = os.getenv("DOSSIER_SAUVEGARDE")
-        file_path = os.path.join(directory, f"son_{self.id_freesound}.mp3")
+        matching_files = []
+        for filename in os.listdir(directory):
+            if self.id_freesound in filename:
+                matching_files.append(filename)
+        file_path = os.path.join(directory, f"{matching_files[0]}")
         if not os.path.exists(file_path):
             print(f"Erreur : Le fichier {file_path} n'existe pas.")
+        else:
+            print(f"fichier {file_path} trouvé")
         return file_path
 
     @abstractmethod

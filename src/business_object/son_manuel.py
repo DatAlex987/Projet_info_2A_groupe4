@@ -34,12 +34,14 @@ class Son_Manuel(Son):
         # Initialiser Pygame est necessaire :pygame.mixer.init avant
         try:
             self.charge = pygame.mixer.Sound(file_path)
-            kpg = ord(self.start_key)
+            print("chargé")
             running = True
             while running:
                 for event in pygame.event.get():
-                    if event.type == pygame.KEYDOWN:
-                        if event.key == kpg:
+                    if event.type == pygame.QUIT:
+                        running = False
+                    elif event.type == pygame.KEYDOWN:
+                        if pygame.key.name(event.key) == self.start_key:
                             self.charge.play()
         except pygame.error as e:
             print(f"Erreur lors de la lecture du fichier : {e}")

@@ -2,12 +2,14 @@
 
 from colorama import Fore, Style
 from InquirerPy import prompt
+import re
 from view.abstractview import AbstractView
 from view.session import Session
 from service.sd_service import SDService
 from service.scene_service import SceneService
 from service.son_service import SonService
 from view.menurecherchefreesoundview import MenuRechercheFreesoundView
+from view.menuparammodifsonview import MenuParamModifSonView
 
 
 class MenuParamSceneSpecifiqueView(AbstractView):
@@ -78,17 +80,16 @@ class MenuParamSceneSpecifiqueView(AbstractView):
         if choix["Choix Scene Specifique"] == "Ajouter un son via Freesound":
             return MenuRechercheFreesoundView()
         else:
-            # choisir un son
-            print("print de la ligne choisie", choix["Choix Scene Specifique"])
-            id_freesound = choix["Choix Scene Specifique"].split("|")[0].split(". ")[1].strip()
-            print("id son striped:", id_freesound)
-            id_scene_select = choix["Choix Scene"].split()[1]
-            Session().scene_to_param = SceneService().instancier_scene_par_id(
-                id_scene=id_scene_select, schema="ProjetInfo"
+            # On extrait l'id du son sélectionné ainsi que son type
+            id_freesound_striped = (
+                choix["Choix Scene Specifique"].split("|")[0].split(". ")[1].strip()
             )
-            from view.menuparamscenespecifiqueview import MenuParamSceneSpecifiqueView
-
-            next_view = MenuParamSceneSpecifiqueView()
+            type_son = re.search(r"\[(.*?)\]", choix["Choix Scene Specifique"]).group(1)
+            # Puis on update la session
+            Session().son_to_param = SonService().instancier_son_par_id_type(
+                id_freesound=id_freesound_striped, type_son=type_son, schema="ProjetInfo"
+            )
+            next_view = MenuParamModifSonView()
         return next_view
 
     def display_info(self):
