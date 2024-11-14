@@ -59,9 +59,11 @@ class Son(ABC):
         """localise un son à l'aide des variables d'environnement"""
         load_dotenv()
         directory = os.getenv("DOSSIER_SAUVEGARDE")
-        file_path = os.path.join(directory, f"son_{self.id_freesound}.mp3")
+        file_path = os.path.join(directory, f"{self.id_freesound}.wav")
         if not os.path.exists(file_path):
             print(f"Erreur : Le fichier {file_path} n'existe pas.")
+        else:
+            print(f"fichier {file_path} trouvé")
         return file_path
 
     @abstractmethod

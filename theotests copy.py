@@ -20,7 +20,6 @@ from service.freesound import Freesound
 import hashlib
 import pygame
 import os
-from datetime import timedelta
 
 # os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 
@@ -28,20 +27,8 @@ from datetime import timedelta
 
 
 pygame.init()
-pygame.mixer.init()
 
-son_man = Son_Manuel(
-    nom="Cloche",
-    description="Cloche qui sonne",
-    duree=datetime.timedelta(seconds=52),
-    id_freesound="662970__ianfsa__mosquito-1-edit",
-    tags=["bell", "chime"],
-    start_key="c",
-)
 
-son_man.jouer_son()
-
-"""
 LICENSEson = Son_Continu(
     nom="The Imperial March",
     description="Luke, I am your father",
@@ -50,8 +37,8 @@ LICENSEson = Son_Continu(
     tags=["starwars", "Vador", "JW"],
 )
 
-LICENSEson.jouer_son()
-"""
+LICENSEson.Arret_son()
+
 """
 res = Freesound.rechercher_par_tag(tag="piano", limit=15)
 print(res)

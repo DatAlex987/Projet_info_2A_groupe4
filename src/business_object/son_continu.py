@@ -22,7 +22,14 @@ class Son_Continu(Son):
         try:
             # faire le pygame.mixer.init() avant
             pygame.mixer.music.load(file_path)
+            print("load")
             pygame.mixer.music.play(loops=self.lp)
+            print("jeu")
+            running = True
+            while running:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        running = False
         except pygame.error as e:
             print(f"Erreur lors de la lecture du fichier : {e}")
 
