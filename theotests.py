@@ -27,7 +27,6 @@ from datetime import timedelta
 # os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 
 # ResetDatabase().ResetALL()
-<<<<<<< HEAD
 
 
 def arr():
@@ -37,13 +36,17 @@ def arr():
 
 arr()
 
-=======
-L = "blabla"
-M = "b"
-N = "B"
-print(M in L)
-print(N in L)
->>>>>>> 109ea6ff0f1c28ec81ec9bc6d60a1720c6d0bb69
+import os
+import requests
+from dotenv import load_dotenv
+from typing import Dict, List, Optional, Union
+from src.service.freesound import Freesound
+
+
+dico_filtres = {"query": "violon", "min_duration": 80, "max_duration": None}
+a = Freesound.rechercher_multi_filtres(dico_filtres=dico_filtres, limit=15)
+print(a)
+
 """scene1 = Scene(
     nom="Scene1",
     description="Description de la Scene1",

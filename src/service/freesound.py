@@ -11,7 +11,7 @@ class Freesound(metaclass=Singleton):
     Classe intéragissant avec l'API Freesound
     """
 
-    def rechercher_par_tag(tag: str, limit: int):  # NE RETOURNE QUE 10 SONS
+    def rechercher_par_tag(tag: str, limit: int):
         """
         Envoie une requête à l'API pour récupérer des sons correspondants
         au tag renseigné.
@@ -54,23 +54,29 @@ class Freesound(metaclass=Singleton):
         # wind (id, name, tags, licence, username)
         return results["results"]  # [:limit]
 
-    def rechercher_multi_filtres(dico_filtres: dict, limit: int):  # NOT DONE YET
+    def rechercher_multi_filtres(
+        dico_filtres: dict, limit: int
+    ) -> list[dict[str, Union[str, int]]]:
         """
-        Envoie une requête à l'API pour récupérer des sons correspondants
+        Envoie une requête à l'API pour récupérer des sons correspondant
         aux filtres renseignés.
 
-        Param
+        Paramètres
         -----------------
         dico_filtres : dict
-            Dictionnaire dont les clés sont les types de filtres et les valeurs
-            les filtres souhaités (None si filtre non utilisé)
+            Dictionnaire contenant les filtres à appliquer :
+            - "query": (str) la recherche principale.
+            - "min_duration": (float) durée minimale des sons.
+            - "max_duration": (float) durée maximale des sons.
+
+        limit : int
+            Nombre maximum de résultats souhaités.
 
         Returns
         -----------------
         results : list
-            Liste de longueur l = limit. Chaque élément est un
-            dictionnaire qui contient les informations
-            d'un son : id, nom, tags, licence, username
+            Liste contenant des dictionnaires pour chaque son trouvé.
+            Chaque dictionnaire contient des informations succintes sur un son.
         """
         if not isinstance(dico_filtres, dict):
             raise TypeError("L'argument dico_filtres n'est pas un dict.")
@@ -82,18 +88,59 @@ class Freesound(metaclass=Singleton):
         load_dotenv()
         URL: Optional[str] = os.getenv("URL_API")
         KEY: Optional[str] = os.getenv("API_KEY")
+        if not URL or not KEY:
+            raise ValueError(
+                "L'URL de l'API ou la clé API n'est pas définie dans les variables d'environnement."
+            )
+
         headers = {
             "Content-type": "application/json",
         }
-        payload: Dict[str, Union[str, int]] = {"token": f"{KEY}"}
-        url_search = f"{URL}search/text/"
-        payload_search = payload.copy()
-        payload_search.update({"query": dict, "limit": limit})
-        req = requests.get(url_search, headers=headers, params=payload_search)
-        results = req.json()
-        # La sortie est une liste de dico des 10 sons liés au
-        # wind (id, name, tags, licence, username)
-        return results["results"]
+
+        # Construire le paramètre `filter` pour inclure les durées uniquement si elles sont valides
+        filters = []
+        if dico_filtres.get("min_duration") is not None:
+            filters.append(f"duration:[{dico_filtres['min_duration']} TO *]")
+        if dico_filtres.get("max_duration") is not None:
+            filters.append(f"duration:[* TO {dico_filtres['max_duration']}]")
+
+        # Fusionner les filtres en une chaîne unique
+        filter_str = " ".join(filters) if filters else None
+
+        # Préparer la requête
+        payload_search: Dict[str, Union[str, int]] = {
+            "token": KEY,
+            "query": dico_filtres.get("query", ""),  # Utilise une chaîne vide par défaut
+            "limit": limit,
+        }
+        if filter_str:
+            payload_search["filter"] = filter_str
+
+        # Faire la requête
+        try:
+            req = requests.get(f"{URL}search/text/", headers=headers, params=payload_search)
+            req.raise_for_status()  # Lève une exception si le code HTTP indique une erreur
+        except requests.RequestException as e:
+            raise RuntimeError(f"Erreur lors de la requête à l'API : {e}")
+
+        # Convertir la réponse en JSON
+        response_json = req.json()
+        if "results" not in response_json:
+            raise ValueError("La réponse de l'API ne contient pas de champ 'results'.")
+
+        # Extraire les données pertinentes
+        results = [
+            {
+                "id": sound["id"],
+                "name": sound["name"],
+                "tags": sound.get("tags", []),
+                "license": sound.get("license", "Unknown"),
+                "username": sound.get("username", "Unknown"),
+            }
+            for sound in response_json["results"]
+        ]
+
+        return results
 
     def rechercher_par_id(id: str):
         """
@@ -214,3 +261,45 @@ class Freesound(metaclass=Singleton):
             print(f"Le fichier a été téléchargé sous le nom {chemin_fichier_mp3}")
         else:
             print(f"Erreur lors du téléchargement du fichier : {mp3_response.status_code}")
+
+
+"""def rechercher_multi_filtres(dico_filtres: dict, limit: int):  # NOT DONE YET
+    "
+    Envoie une requête à l'API pour récupérer des sons correspondants
+    aux filtres renseignés.
+
+    Param
+    -----------------
+    dico_filtres : dict
+        Dictionnaire dont les clés sont les types de filtres et les valeurs
+        les filtres souhaités (None si filtre non utilisé)
+
+    Returns
+    -----------------
+    results : list
+        Liste de longueur l = limit. Chaque élément est un
+        dictionnaire qui contient les informations
+        d'un son : id, nom, tags, licence, username
+    "
+    if not isinstance(dico_filtres, dict):
+        raise TypeError("L'argument dico_filtres n'est pas un dict.")
+    if not isinstance(limit, int):
+        raise TypeError("L'argument limit n'est pas un int.")
+    if limit < 0:
+        raise ValueError("L'argument limit ne peut pas être négatif.")
+
+    load_dotenv()
+    URL: Optional[str] = os.getenv("URL_API")
+    KEY: Optional[str] = os.getenv("API_KEY")
+    headers = {
+        "Content-type": "application/json",
+    }
+    payload: Dict[str, Union[str, int]] = {"token": f"{KEY}"}
+    url_search = f"{URL}search/text/"
+    payload_search = payload.copy()
+    payload_search.update({"query": dict, "limit": limit})
+    req = requests.get(url_search, headers=headers, params=payload_search)
+    results = req.json()
+    # La sortie est une liste de dico des 10 sons liés au
+    # wind (id, name, tags, licence, username)
+    return results["results"]"""
