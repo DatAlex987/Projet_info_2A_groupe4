@@ -41,9 +41,7 @@ class MenuParamSceneView(AbstractView):
             },
         ]
 
-    @property
-    def question_choix_scene(self):
-        return [
+        self.question_choix_scene = [
             {
                 "type": "list",
                 "name": "Choix Scene",

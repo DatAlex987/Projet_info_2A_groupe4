@@ -33,9 +33,7 @@ class MenuParamSceneSpecifiqueView(AbstractView):
             }
         ]
 
-    @property
-    def question_choix_scene_specifique(self):
-        return [
+        self.question_choix_scene_specifique = [
             {
                 "type": "list",
                 "name": "Choix Scene Specifique",

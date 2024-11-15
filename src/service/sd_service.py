@@ -167,7 +167,7 @@ class SDService:
                         description=son_cont_kwargs["description"],
                         duree=son_cont_kwargs["duree"],
                         id_freesound=son_cont_kwargs["id_freesound"],
-                        tags=son_alea_kwargs["tags"],
+                        tags=son_cont_kwargs["tags"],
                     )
                 )
         for scene in sd_kwargs["scenes"]:
@@ -178,7 +178,7 @@ class SDService:
                         description=son_manu_kwargs["description"],
                         duree=son_manu_kwargs["duree"],
                         id_freesound=son_manu_kwargs["id_freesound"],
-                        tags=son_alea_kwargs["tags"],
+                        tags=son_manu_kwargs["tags"],
                         start_key=son_manu_kwargs["param1"],
                     )
                 )
