@@ -12,6 +12,7 @@ from service.son_service import SonService
 ####
 from view.menurecherchefreesoundview import MenuRechercheFreesoundView
 from view.view_param.menuparammodifsonview import MenuParamModifSonView
+from view.view_param.menuparammodifsceneview import MenuParamModifSceneView
 from view.abstractview import AbstractView
 from view.session import Session
 
@@ -33,9 +34,7 @@ class MenuParamSceneSpecifiqueView(AbstractView):
             }
         ]
 
-    @property
-    def question_choix_scene_specifique(self):
-        return [
+        self.question_choix_scene_specifique = [
             {
                 "type": "list",
                 "name": "Choix Scene Specifique",
@@ -56,6 +55,8 @@ class MenuParamSceneSpecifiqueView(AbstractView):
 
             next_view = MenuParamSceneView()
             return next_view
+        if choix["Choix Scene Specifique"] == "Modifier la scène":
+            return MenuParamModifSceneView()
         if choix["Choix Scene Specifique"] == "Supprimer la scène":
             confirmation = prompt(self.question_choix_suppr_scene)
             if confirmation["confirm suppr scene"]:

@@ -1,6 +1,9 @@
 import pytest
 from dao.son_dao import SonDAO
 from business_object.son import Son
+from business_object.son_aleatoire import Son_Aleatoire
+from business_object.son_manuel import Son_Manuel
+from business_object.son_continu import Son_Continu
 from dao.db_connection import DBConnection
 from utils.reset_database import ResetDatabase
 
@@ -8,7 +11,7 @@ from utils.reset_database import ResetDatabase
 def test_ajouter_son_succes(son_aleatoire1_kwargs):
     ResetDatabase().ResetTEST()
     schema = "SchemaTest"
-    son_to_add = Son(**son_aleatoire1_kwargs)
+    son_to_add = Son_Aleatoire(**son_aleatoire1_kwargs)
 
     son_dao = SonDAO()
     added_son = son_dao.ajouter_son(son_to_add, schema)
@@ -38,7 +41,7 @@ def test_ajouter_son_succes(son_aleatoire1_kwargs):
 def test_modifier_son_succes(son_aleatoire1_kwargs, new_nom, new_duree):
     ResetDatabase().ResetTEST()
     schema = "SchemaTest"
-    son_to_add = Son(**son_aleatoire1_kwargs)
+    son_to_add = Son_Aleatoire(**son_aleatoire1_kwargs)
     son_dao = SonDAO()
     added_son = son_dao.ajouter_son(son_to_add, schema)
 
@@ -69,7 +72,7 @@ def test_modifier_son_succes(son_aleatoire1_kwargs, new_nom, new_duree):
 def test_supprimer_son_succes(son_aleatoire1_kwargs):
     ResetDatabase().ResetTEST()
     schema = "SchemaTest"
-    son_to_add = Son(**son_aleatoire1_kwargs)
+    son_to_add = Son_Aleatoire(**son_aleatoire1_kwargs)
     son_dao = SonDAO()
     added_son = son_dao.ajouter_son(son_to_add, schema)
 
@@ -88,8 +91,8 @@ def test_supprimer_son_succes(son_aleatoire1_kwargs):
 def test_consulter_sons_succes(son_aleatoire1_kwargs, son_aleatoire2_kwargs):
     ResetDatabase().ResetTEST()
     schema = "SchemaTest"
-    son1_to_add = Son(**son_aleatoire1_kwargs)
-    son2_to_add = Son(**son_aleatoire2_kwargs)
+    son1_to_add = Son_Aleatoire(**son_aleatoire1_kwargs)
+    son2_to_add = Son_Aleatoire(**son_aleatoire2_kwargs)
     son_dao = SonDAO()
     son_dao.ajouter_son(son1_to_add, schema)
     son_dao.ajouter_son(son2_to_add, schema)
@@ -103,7 +106,7 @@ def test_consulter_sons_succes(son_aleatoire1_kwargs, son_aleatoire2_kwargs):
 def test_rechercher_par_id_son_succes(son_aleatoire1_kwargs):
     ResetDatabase().ResetTEST()
     schema = "SchemaTest"
-    son_to_add = Son(**son_aleatoire1_kwargs)
+    son_to_add = Son_Aleatoire(**son_aleatoire1_kwargs)
     son_dao = SonDAO()
     added_son = son_dao.ajouter_son(son_to_add, schema)
 
