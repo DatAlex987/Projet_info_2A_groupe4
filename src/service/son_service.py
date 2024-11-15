@@ -69,6 +69,7 @@ class SonService:
             compteur += 1
         choix.append("Ajouter un son via Freesound")
         choix.append("Supprimer la scène")
+        choix.append("Modifier la scène")
         choix.append("Retour au menu de choix des scènes")
         return choix
 

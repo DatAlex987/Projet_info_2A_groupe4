@@ -233,3 +233,23 @@ class SDService:
             compteur += 1
         choix.append("Retour au menu principal")
         return choix
+
+    def modifier_nom_sd(self, sd: SD, new_nom: str, schema: str):
+        # On update la session
+        sd.modifier_nom_sd(nouveau_nom=new_nom)
+        # On update le user en session
+        for sounddeck in Session().utilisateur.SD_possedes:
+            if sounddeck.id_sd == sd.id_sd:
+                sounddeck.modifier_nom_sd(nouveau_nom=new_nom)
+        # On update la BDD
+        SDDAO().modifier_sd(sd=sd, schema=schema)
+
+    def modifier_desc_sd(self, sd: SD, new_desc: str, schema: str):
+        # On update la session
+        sd.modifier_description_sd(nouvelle_description=new_desc)
+        # On update le user en session
+        for sounddeck in Session().utilisateur.SD_possedes:
+            if sounddeck.id_sd == sd.id_sd:
+                sounddeck.modifier_description_sd(nouvelle_description=new_desc)
+        # On update la BDD
+        SDDAO().modifier_sd(sd=sounddeck, schema=schema)

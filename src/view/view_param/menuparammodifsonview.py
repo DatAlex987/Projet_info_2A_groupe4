@@ -26,7 +26,7 @@ class MenuParamModifSonView(AbstractView):
                 "choices": [
                     "Voir la fiche du son",
                     "Modifier le nom",
-                    "Modifier sa description",
+                    "Modifier la description",
                     "Modifier le cooldown minimal",
                     "Modifier le cooldown maximal",
                 ],
@@ -40,7 +40,7 @@ class MenuParamModifSonView(AbstractView):
                 "choices": [
                     "Voir la fiche du son",
                     "Modifier le nom",
-                    "Modifier sa description",
+                    "Modifier la description",
                     "Modifier la touche de déclenchement",
                 ],
             }
@@ -53,7 +53,7 @@ class MenuParamModifSonView(AbstractView):
                 "choices": [
                     "Voir la fiche du son",
                     "Modifier le nom",
-                    "Modifier sa description",
+                    "Modifier la description",
                 ],
             }
         ]
