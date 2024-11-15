@@ -23,6 +23,7 @@ class Session(metaclass=Singleton):
         self.scene_to_play = None  # Permet de stocker les choix de naviguation de l'utilisateur
         self.son_to_play = None  # Permet de stocker les choix de naviguation de l'utilisateur
         self.users_to_consult = None
+        self.sds_to_consult = None
         self.user_to_consult = None
         self.sd_to_consult = None
         self.scene_to_consult = None

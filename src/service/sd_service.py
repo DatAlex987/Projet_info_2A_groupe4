@@ -253,3 +253,11 @@ class SDService:
                 sounddeck.modifier_description_sd(nouvelle_description=new_desc)
         # On update la BDD
         SDDAO().modifier_sd(sd=sounddeck, schema=schema)
+
+    def FindCloseNameSDs(self, nom_approx: str, schema: str):  # NOT TESTED YET
+        all_sds = SDDAO().consulter_sds(schema=schema)
+        sds_close_name = []
+        for sd in all_sds:
+            if nom_approx.lower() in sd["nom"].lower():
+                sds_close_name.append(self.instancier_par_id_sd(id_sd=sd["id_sd"], schema=schema))
+        Session().sds_to_consult = sds_close_name
