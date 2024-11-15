@@ -70,6 +70,87 @@ class UserService:
                 "Le mot de passe contient des caractères invalides ou n'est pas de longueur valide."
             )
 
+    def instancier_par_id_user(self, id_user: str, schema: str):
+        dic_user = UserDAO().rechercher_par_id_user(id_user=id_user, schema=schema)
+        SDs_of_user = []  # List to hold all sounddecks
+        for sd in dic_user["SD_possedes"]:
+            Scenes_of_user = []  # Create scenes list for each SD
+
+            for scene in sd["scenes"]:
+                Sons_Alea_scene = []  # Create these lists inside the scene loop
+                Sons_Cont_scene = []
+                Sons_Manu_scene = []
+                # Process Sons_Alea_scene for each scene of the sounddeck
+                for son_alea_kwargs in scene["sons_aleatoires"]:
+                    Sons_Alea_scene.append(
+                        Son_Aleatoire(
+                            nom=son_alea_kwargs["nom"],
+                            description=son_alea_kwargs["description"],
+                            duree=son_alea_kwargs["duree"],
+                            id_freesound=son_alea_kwargs["id_freesound"],
+                            tags=son_alea_kwargs["tags"],
+                            cooldown_min=son_alea_kwargs["param1"],
+                            cooldown_max=son_alea_kwargs["param2"],
+                        )
+                    )
+                # Process Sons_Cont_scene for each scene
+                for son_cont_kwargs in scene["sons_continus"]:
+                    Sons_Cont_scene.append(
+                        Son_Continu(
+                            nom=son_cont_kwargs["nom"],
+                            description=son_cont_kwargs["description"],
+                            duree=son_cont_kwargs["duree"],
+                            id_freesound=son_cont_kwargs["id_freesound"],
+                            tags=son_alea_kwargs["tags"],
+                        )
+                    )
+                # Process Sons_Manu_scene for each scene
+                for son_manu_kwargs in scene["sons_manuels"]:
+                    Sons_Manu_scene.append(
+                        Son_Manuel(
+                            nom=son_manu_kwargs["nom"],
+                            description=son_manu_kwargs["description"],
+                            duree=son_manu_kwargs["duree"],
+                            id_freesound=son_manu_kwargs["id_freesound"],
+                            tags=son_alea_kwargs["tags"],
+                            start_key=son_manu_kwargs["param1"],
+                        )
+                    )
+                # Create scene objects for this sounddeck
+                Scenes_of_user.append(
+                    Scene(
+                        nom=scene["nom"],
+                        description=scene["description"],
+                        id_scene=scene["id_scene"],
+                        sons_aleatoires=Sons_Alea_scene,
+                        sons_manuels=Sons_Manu_scene,
+                        sons_continus=Sons_Cont_scene,
+                        date_creation=scene["date_creation"],
+                    )
+                )
+
+            # Now add the sounddeck with its scenes to SDs_of_user
+            SDs_of_user.append(
+                SD(
+                    nom=sd["nom"],
+                    description=sd["description"],
+                    id_sd=sd["id_sd"],
+                    scenes=Scenes_of_user,
+                    date_creation=sd["date_creation"],
+                    id_createur=sd["id_createur"],
+                )
+            )
+
+        utilisateur = User(
+            nom=dic_user["nom"],
+            prenom=dic_user["prenom"],
+            date_naissance=dic_user["date_naissance"],
+            id_user=dic_user["id_user"],
+            SD_possedes=SDs_of_user,
+            pseudo=dic_user["pseudo"],
+        )
+        return utilisateur
+
     def authenticate_user(self, nom: str, prenom: str, pseudo: str, mdp: str, schema: str):
         """Methode d'authentification : vérifie que les informations fournies
         corrrespondent et instancie la session avec l'objet User qui convient"""
@@ -83,7 +164,7 @@ class UserService:
                 self.session = Session()  # On lance la session avec le bon user
                 # l.86 - l.152 : On instancie tous les objets liés à l'utilisateur avec les données
                 # fournies par l'appel DAO rechercher_par_pseudo_user()
-                SDs_of_user = []  # List to hold all sounddecks
+                """SDs_of_user = []  # List to hold all sounddecks
 
                 for sd in dic_user["SD_possedes"]:
                     Scenes_of_user = []  # Create scenes list for each SD
@@ -160,8 +241,10 @@ class UserService:
                     id_user=dic_user["id_user"],
                     SD_possedes=SDs_of_user,
                     pseudo=dic_user["pseudo"],
+                )"""
+                self.session.connexion(
+                    self.instancier_par_id_user(id_user=dic_user["id_user"], schema=schema)
                 )
-                self.session.connexion(utilisateur)
                 return True
             else:
                 raise ValueError("Les informations renseignées sont incorrectes.")
@@ -195,6 +278,37 @@ class UserService:
             )
         except ValueError as e:
             raise ValueError(f"{e}")
+
+    def FindCloseNameUsers(self, pseudo_approx: str, schema: str):  # NOT TESTED YET
+        all_users = UserDAO().consulter_users(schema=schema)
+        users_close_name = []
+        for user in all_users:
+            if pseudo_approx.lower() in user["pseudo"].lower():
+                users_close_name.append(
+                    self.instancier_par_id_user(id_user=user["id_user"], schema=schema)
+                )
+        Session().users_to_consult = users_close_name
+
+    def formatage_question_users_to_consult(self):  # NOT TESTED YET
+        """Construit une liste des choix à afficher dans le menu consult user
+
+        Returns
+        -------------
+        list
+            Liste des choix proposés à l'utilisateur, incluant tous les users
+            susceptibles de l'intéresser
+        """
+        users = Session().users_to_consult
+        choix = []
+        compteur = 1
+        for user in users:
+            mise_en_page_ligne = (
+                f"{compteur}. {user.id_user} | {user.prenom} | {user.prenom} | {user.pseudo}"
+            )
+            choix.append(mise_en_page_ligne)
+            compteur += 1
+        choix.append("Retour au menu de consultation")
+        return choix
 
 
 """    @log

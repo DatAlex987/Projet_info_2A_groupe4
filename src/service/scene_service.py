@@ -79,6 +79,7 @@ class SceneService:
             compteur += 1
         choix.append("Ajouter une scène")
         choix.append("Supprimer la sound-deck")
+        choix.append("Modifier la sound-deck")
         choix.append("Retour au menu de choix des sound-decks")
         return choix
 
@@ -254,6 +255,28 @@ class SceneService:
         except (ValueError, AttributeError) as e:
             raise ValueError(f"La suppression de la scène n'a pas abouti : {e}")
         return True
+
+    def modifier_nom_scene(self, scene: Scene, new_nom: str, schema: str):
+        # On update la session
+        scene.modifier_nom(nouveau_nom=new_nom)
+        # On update le user en session
+        for sounddeck in Session().utilisateur.SD_possedes:
+            for s in sounddeck.scenes:
+                if s.id_scene == scene.id_scene:
+                    s.modifier_nom(nouveau_nom=new_nom)
+        # On update la BDD
+        SceneDAO().modifier_scene(scene=scene, schema=schema)
+
+    def modifier_desc_scene(self, scene: Scene, new_desc: str, schema: str):
+        # On update la session
+        scene.modifier_description(nouvelle_description=new_desc)
+        # On update le user en session
+        for sounddeck in Session().utilisateur.SD_possedes:
+            for s in sounddeck.scenes:
+                if s.id_scene == scene.id_scene:
+                    s.modifier_description(nouvelle_description=new_desc)
+        # On update la BDD
+        SceneDAO().modifier_scene(scene=scene, schema=schema)
 
 
 """

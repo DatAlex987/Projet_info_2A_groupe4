@@ -1,5 +1,6 @@
 from dao.db_connection import DBConnection
-from business_object.scene import Scene
+
+# from business_object.scene import Scene
 from dao.son_dao import SonDAO
 
 
@@ -363,7 +364,7 @@ class SceneDAO:
                 query = f"""SELECT id_freesound
                         FROM {schema}.Scene_Son
                         WHERE id_scene = %(id_scene)s
-                        AND type = 'continu';"""  # Ces 2 conditions sont celles qui portent sur Son Continus
+                        AND type = 'continu';"""  # Ces 2 conditions portent sur Son Continus
                 cursor.execute(
                     query,
                     {"id_scene": id_scene},
@@ -380,7 +381,7 @@ class SceneDAO:
                 query = f"""SELECT id_freesound
                         FROM {schema}.Scene_Son
                         WHERE id_scene = %(id_scene)s
-                        AND type = 'manuel';"""  # Ces 2 conditions sont celles qui portent sur Son Manuels
+                        AND type = 'manuel';"""  # Ces 2 conditions portent sur Son Manuels
                 cursor.execute(
                     query,
                     {"id_scene": id_scene},

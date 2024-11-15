@@ -7,8 +7,9 @@ from view.session import Session
 from business_object.son_aleatoire import Son_Aleatoire
 from business_object.son_continu import Son_Continu
 from business_object.son_manuel import Son_Manuel
-from service.sd_service import SDService
-from service.scene_service import SceneService
+
+# from service.sd_service import SDService
+# from service.scene_service import SceneService
 from service.son_service import SonService
 
 
@@ -26,7 +27,7 @@ class MenuParamModifSonView(AbstractView):
                 "choices": [
                     "Voir la fiche du son",
                     "Modifier le nom",
-                    "Modifier sa description",
+                    "Modifier la description",
                     "Modifier le cooldown minimal",
                     "Modifier le cooldown maximal",
                 ],
@@ -40,7 +41,7 @@ class MenuParamModifSonView(AbstractView):
                 "choices": [
                     "Voir la fiche du son",
                     "Modifier le nom",
-                    "Modifier sa description",
+                    "Modifier la description",
                     "Modifier la touche de déclenchement",
                 ],
             }
@@ -53,7 +54,7 @@ class MenuParamModifSonView(AbstractView):
                 "choices": [
                     "Voir la fiche du son",
                     "Modifier le nom",
-                    "Modifier sa description",
+                    "Modifier la description",
                 ],
             }
         ]

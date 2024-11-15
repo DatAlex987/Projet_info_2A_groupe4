@@ -27,6 +27,7 @@ from datetime import timedelta
 # os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 
 # ResetDatabase().ResetALL()
+<<<<<<< HEAD
 
 
 def arr():
@@ -36,6 +37,13 @@ def arr():
 
 arr()
 
+=======
+L = "blabla"
+M = "b"
+N = "B"
+print(M in L)
+print(N in L)
+>>>>>>> 109ea6ff0f1c28ec81ec9bc6d60a1720c6d0bb69
 """scene1 = Scene(
     nom="Scene1",
     description="Description de la Scene1",

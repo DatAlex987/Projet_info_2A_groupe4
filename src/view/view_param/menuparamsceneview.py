@@ -9,6 +9,7 @@ from service.scene_service import SceneService
 
 ####
 from view.abstractview import AbstractView
+from view.view_param.menuparammodifsdview import MenuParamModifSDView
 from view.session import Session
 
 
@@ -40,7 +41,6 @@ class MenuParamSceneView(AbstractView):
                 "message": "Quelle sera la description de votre scène ?",
             },
         ]
-
         self.question_choix_scene = [
             {
                 "type": "list",
@@ -62,6 +62,8 @@ class MenuParamSceneView(AbstractView):
 
             next_view = MenuParamSDView()
             return next_view
+        if choix["Choix Scene"] == "Modifier la sound-deck":
+            return MenuParamModifSDView()
         if choix["Choix Scene"] == "Supprimer la sound-deck":
             confirmation = prompt(self.question_choix_suppr_sd)
             if confirmation["confirm suppr sd"]:

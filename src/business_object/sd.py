@@ -33,6 +33,8 @@ class SD:
         self.date_creation = date_creation
         self.id_createur = id_createur
 
+        # Vérifie le type de chaque attribut implémenté
+
         if not isinstance(id_sd, str):
             raise TypeError("L'identifiant sound-deck doit être une instance de str.")
         if not isinstance(nom, str):

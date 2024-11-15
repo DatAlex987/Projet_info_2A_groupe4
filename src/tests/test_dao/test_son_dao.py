@@ -1,6 +1,9 @@
 import pytest
 from dao.son_dao import SonDAO
 from business_object.son import Son
+from business_object.son_aleatoire import Son_Aleatoire
+from business_object.son_manuel import Son_Manuel
+from business_object.son_continu import Son_Continu
 from dao.db_connection import DBConnection
 from utils.reset_database import ResetDatabase
 
@@ -8,12 +11,12 @@ from utils.reset_database import ResetDatabase
 def test_ajouter_son_succes(son_aleatoire1_kwargs):
     ResetDatabase().ResetTEST()
     schema = "SchemaTest"
-    son_to_add = Son(**son_aleatoire1_kwargs)
+    son_to_add = Son_Aleatoire(**son_aleatoire1_kwargs)
 
     son_dao = SonDAO()
     added_son = son_dao.ajouter_son(son_to_add, schema)
 
-    assert added_son.id_son == son_aleatoire1_kwargs["id_son"]
+    assert added_son.id_freesound == son_aleatoire1_kwargs["id_freesound"]
     assert added_son.nom == son_aleatoire1_kwargs["nom"]
     assert added_son.type == son_aleatoire1_kwargs["type"]
     assert added_son.duree == son_aleatoire1_kwargs["duree"]
@@ -26,7 +29,7 @@ def test_ajouter_son_succes(son_aleatoire1_kwargs):
             result = cursor.fetchone()
 
             assert result is not None
-            assert result["id_son"] == son_aleatoire1_kwargs["id_son"]
+            assert result["id_freesound"] == son_aleatoire1_kwargs["id_freesound"]
             assert result["nom"] == son_aleatoire1_kwargs["nom"]
             assert result["type"] == son_aleatoire1_kwargs["type"]
             assert result["duree"] == son_aleatoire1_kwargs["duree"]
@@ -38,7 +41,7 @@ def test_ajouter_son_succes(son_aleatoire1_kwargs):
 def test_modifier_son_succes(son_aleatoire1_kwargs, new_nom, new_duree):
     ResetDatabase().ResetTEST()
     schema = "SchemaTest"
-    son_to_add = Son(**son_aleatoire1_kwargs)
+    son_to_add = Son_Aleatoire(**son_aleatoire1_kwargs)
     son_dao = SonDAO()
     added_son = son_dao.ajouter_son(son_to_add, schema)
 
@@ -69,7 +72,7 @@ def test_modifier_son_succes(son_aleatoire1_kwargs, new_nom, new_duree):
 def test_supprimer_son_succes(son_aleatoire1_kwargs):
     ResetDatabase().ResetTEST()
     schema = "SchemaTest"
-    son_to_add = Son(**son_aleatoire1_kwargs)
+    son_to_add = Son_Aleatoire(**son_aleatoire1_kwargs)
     son_dao = SonDAO()
     added_son = son_dao.ajouter_son(son_to_add, schema)
 
@@ -77,8 +80,8 @@ def test_supprimer_son_succes(son_aleatoire1_kwargs):
 
     with DBConnection(schema=schema).connection as connection:
         with connection.cursor() as cursor:
-            query = f"SELECT * FROM {schema}.Son WHERE id_son = %(id_son)s"
-            cursor.execute(query, {"id_son": added_son.id_son})
+            query = f"SELECT * FROM {schema}.Son WHERE id_freesound = %(id_son)s"
+            cursor.execute(query, {"id_son": added_son.id_freesound})
             result = cursor.fetchall()
             assert len(result) == 0
 
@@ -88,8 +91,8 @@ def test_supprimer_son_succes(son_aleatoire1_kwargs):
 def test_consulter_sons_succes(son_aleatoire1_kwargs, son_aleatoire2_kwargs):
     ResetDatabase().ResetTEST()
     schema = "SchemaTest"
-    son1_to_add = Son(**son_aleatoire1_kwargs)
-    son2_to_add = Son(**son_aleatoire2_kwargs)
+    son1_to_add = Son_Aleatoire(**son_aleatoire1_kwargs)
+    son2_to_add = Son_Aleatoire(**son_aleatoire2_kwargs)
     son_dao = SonDAO()
     son_dao.ajouter_son(son1_to_add, schema)
     son_dao.ajouter_son(son2_to_add, schema)
@@ -103,12 +106,12 @@ def test_consulter_sons_succes(son_aleatoire1_kwargs, son_aleatoire2_kwargs):
 def test_rechercher_par_id_son_succes(son_aleatoire1_kwargs):
     ResetDatabase().ResetTEST()
     schema = "SchemaTest"
-    son_to_add = Son(**son_aleatoire1_kwargs)
+    son_to_add = Son_Aleatoire(**son_aleatoire1_kwargs)
     son_dao = SonDAO()
     added_son = son_dao.ajouter_son(son_to_add, schema)
 
     found_son = son_dao.rechercher_par_id_son(added_son.id_son, schema)
-    assert found_son["id_son"] == str(added_son.id_son)
+    assert found_son["id_freesound"] == str(added_son.id_freesound)
     assert found_son["nom"] == added_son.nom
     assert found_son["type"] == added_son.type
     assert found_son["duree"] == added_son.duree

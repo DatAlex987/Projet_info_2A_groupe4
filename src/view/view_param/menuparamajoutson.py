@@ -4,8 +4,9 @@ from colorama import Fore, Style
 from InquirerPy import prompt
 from view.abstractview import AbstractView
 from view.session import Session
-from service.sd_service import SDService
-from service.scene_service import SceneService
+
+# from service.sd_service import SDService
+# from service.scene_service import SceneService
 from service.son_service import SonService
 
 

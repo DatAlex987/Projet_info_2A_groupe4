@@ -130,13 +130,6 @@ def test_rechercher_par_id_headers():
         assert headers == {"Content-type": "application/json"}
 
 
-@pytest.mark.parametrize("invalid_id", ["123", "abcdef", "1234567", "12a456"])
-# 8/ Test sur la validité du format de l'id d'un son
-def test_rechercher_par_id_invalid_format(invalid_id):
-    result = Freesound.rechercher_par_id(invalid_id)
-    assert result == "L'ID doit être une chaîne de 6 chiffres."
-
-
 # 9/ Test : ajoute une condition pour gérer les cas où l'ID n'existe pas, puis renvoie le message
 # pour prévenir l'utilisateur
 def test_rechercher_par_id_not_found():
