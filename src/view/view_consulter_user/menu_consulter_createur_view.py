@@ -25,5 +25,15 @@ class ConsulterCreateurView:
             },
         ]
 
+    def make_choice(self):
+        createur_voulu = prompt(self.question_createur)
+        UserService().FindCloseNameUsers(
+            pseudo_approx=createur_voulu["createur"], schema="ProjetInfo"
+        )
+        # Rechercher tous les users qui ont un pseudo proche
+        # La liste des Users ayant un nom proche sera stocké en Session
+        # Puis envoyer vers une view pour sélectionner le créateur que l'on veut consulter.
+        return ConsulterUsersProchesView()
+
     def display_info(self):
         print(Fore.BLUE + " MENU DE CONSULTATION [CREATEUR] ".center(80, "=") + Style.RESET_ALL)

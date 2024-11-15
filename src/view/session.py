@@ -18,10 +18,15 @@ class Session(metaclass=Singleton):
         self.sd_to_param = None  # Permet de stocker les choix de naviguation de l'utilisateur
         self.scene_to_param = None  # Permet de stocker les choix de naviguation de l'utilisateur
         self.son_to_param = None  # Permet de stocker les choix de naviguation de l'utilisateur
-        # self.son_to_dl = None  # Permet de stocker les choix de naviguation de l'utilisateur
+        self.son_to_dl = None  # Permet de stocker les choix de naviguation de l'utilisateur
         self.sd_to_play = None  # Permet de stocker les choix de naviguation de l'utilisateur
         self.scene_to_play = None  # Permet de stocker les choix de naviguation de l'utilisateur
         self.son_to_play = None  # Permet de stocker les choix de naviguation de l'utilisateur
+        self.users_to_consult = None
+        self.user_to_consult = None
+        self.sd_to_consult = None
+        self.scene_to_consult = None
+        self.son_to_consult = None
         self.mixer = pygame.mixer.init()
 
     def connexion(self, utilisateur):

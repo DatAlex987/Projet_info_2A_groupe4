@@ -27,7 +27,11 @@ from datetime import timedelta
 # os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 
 # ResetDatabase().ResetALL()
-
+L = "blabla"
+M = "b"
+N = "B"
+print(M in L)
+print(N in L)
 """scene1 = Scene(
     nom="Scene1",
     description="Description de la Scene1",
