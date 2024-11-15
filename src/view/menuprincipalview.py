@@ -8,6 +8,7 @@ from InquirerPy import prompt
 ####
 from view.view_consulter_user.menuconsulteruser import MenuConsulterUserView
 from view.view_jeu.menu_jeu_view import MenuJeuView
+
 # from view.abstractview import AbstractView
 
 

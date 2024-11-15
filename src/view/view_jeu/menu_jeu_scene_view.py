@@ -1,5 +1,5 @@
 # menu_jeu_scene_view.py
-from colorama import Style
+# from colorama import Style
 from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
@@ -7,8 +7,9 @@ from rich.box import DOUBLE  # Importer le bon type de boîte
 from InquirerPy import prompt
 
 # Importation des services et classes nécessaires
-from service.user_service import UserService
-from service.sd_service import SDService
+# from service.user_service import UserService
+
+# from service.sd_service import SDService
 from service.scene_service import SceneService
 
 ####

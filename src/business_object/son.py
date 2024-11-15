@@ -1,6 +1,7 @@
 import datetime
 import os
 from dotenv import load_dotenv
+
 from abc import ABC, abstractmethod
 
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
