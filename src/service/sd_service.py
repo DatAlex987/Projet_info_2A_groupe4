@@ -254,10 +254,40 @@ class SDService:
         # On update la BDD
         SDDAO().modifier_sd(sd=sounddeck, schema=schema)
 
-    def FindCloseNameSDs(self, nom_approx: str, schema: str):  # NOT TESTED YET
+    def FindCloseNameSDs(self, nom_approx: str, schema: str):
         all_sds = SDDAO().consulter_sds(schema=schema)
         sds_close_name = []
         for sd in all_sds:
             if nom_approx.lower() in sd["nom"].lower():
-                sds_close_name.append(self.instancier_par_id_sd(id_sd=sd["id_sd"], schema=schema))
+                sds_close_name.append(self.instancier_sd_par_id(id_sd=sd["id_sd"], schema=schema))
         Session().sds_to_consult = sds_close_name
+
+    def formatage_question_sds_to_consult(self):
+        """Construit une liste des choix à afficher dans le menu des SD à consulter
+
+        Returns
+        -------------
+        list
+            Liste des choix proposés à l'utilisateur, incluant tous les SDs qui
+            correspondent à sa recherche.
+        """
+        if Session().type_recherche_consult == "nom":
+            sds_to_display = Session().sds_to_consult
+            choix = []
+            compteur = 1
+            for sd in sds_to_display:
+                mise_en_page_ligne = f"{compteur}. {sd.id_sd} | {sd.nom} | {sd.description[:min(len(sd.description), 40)]}... | {sd.date_creation}"
+                choix.append(mise_en_page_ligne)
+                compteur += 1
+            choix.append("Retour au menu de recherche de consultation")
+            return choix
+        elif Session().type_recherche_consult == "user":
+            sds_to_display = Session().user_to_consult.SD_possedes
+            choix = []
+            compteur = 1
+            for sd in sds_to_display:
+                mise_en_page_ligne = f"{compteur}. {sd.id_sd} | {sd.nom} | {sd.description[:min(len(sd.description), 40)]}... | {sd.date_creation}"
+                choix.append(mise_en_page_ligne)
+                compteur += 1
+            choix.append("Retour au menu de recherche de consultation")
+            return choix

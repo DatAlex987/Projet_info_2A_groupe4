@@ -4,9 +4,11 @@ from InquirerPy import prompt
 
 ####
 from service.user_service import UserService
+from service.sd_service import SDService
 
 ####
 from view.abstractview import AbstractView
+from view.session import Session
 
 # from view.view_consulter_user.menu_consulter_createur_view import ConsulterCreateurView
 # from view.view_consulter_user.menu_consulter_nom_view import ConsulterNomView
@@ -19,18 +21,31 @@ class ConsulterSDsView(AbstractView):
         self.question = [
             {
                 "type": "list",
-                "name": "Choix User",
+                "name": "Choix SD",
                 "message": (
-                    "De quel utilisateur souhaitez-vous consulter les sound-decks ? \n"
-                    " ID   |    Prénom    |     Nom       |    Pseudo             \n"
-                    "----------------------------------------------------------------"
+                    "Quelle Sound-deck souhaitez-vous consulter ? \n"
+                    " ID   |      Nom       |    Description               "
+                    "| Date de création \n"
+                    "-------------------------------------------------------------"
+                    "---------------------"
                 ),
-                "choices": UserService().formatage_question_users_to_consult(),
+                "choices": SDService().formatage_question_sds_to_consult(),
             }
         ]
 
     def make_choice(self):
-        pass
+        choix = prompt(self.question)
+        if choix["Choix SD"] == "Retour au menu de recherche de consultation":
+            from view.view_consulter_user.menuconsulteruser import MenuConsulterUserView
+
+            next_view = MenuConsulterUserView()
+        else:
+            id_sd_select = choix["Choix SD"].split()[1]
+            Session().sd_to_consult = SDService().instancier_sd_par_id(
+                id_sd=id_sd_select, schema="ProjetInfo"
+            )
+            next_view = MenuConsultScenesView()  # Il faut la créer
+        return next_view
 
     def display_info(self):
-        print(Fore.BLUE + " MENU DE CONSULTATION [CREATEUR] ".center(80, "=") + Style.RESET_ALL)
+        print(Fore.BLUE + " MENU DE CONSULTATION [SD] ".center(80, "=") + Style.RESET_ALL)

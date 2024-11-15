@@ -279,7 +279,7 @@ class UserService:
         except ValueError as e:
             raise ValueError(f"{e}")
 
-    def FindCloseNameUsers(self, pseudo_approx: str, schema: str):  # NOT TESTED YET
+    def FindCloseNameUsers(self, pseudo_approx: str, schema: str):
         all_users = UserDAO().consulter_users(schema=schema)
         users_close_name = []
         for user in all_users:
@@ -289,7 +289,7 @@ class UserService:
                 )
         Session().users_to_consult = users_close_name
 
-    def formatage_question_users_to_consult(self):  # NOT TESTED YET
+    def formatage_question_users_to_consult(self):
         """Construit une liste des choix à afficher dans le menu consult user
 
         Returns
