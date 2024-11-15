@@ -26,8 +26,8 @@ import os
 
 # ResetDatabase().ResetALL()
 
-
-pygame.mixer.init()
+pygame.display.init()  # Initialise le système vidéo
+pygame.mixer.init()  # Initialise le module mixer pour le son
 
 son = Son_Continu(
     nom="The Imperial March",

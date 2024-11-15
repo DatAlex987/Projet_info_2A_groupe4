@@ -28,6 +28,14 @@ from datetime import timedelta
 
 # ResetDatabase().ResetALL()
 
+
+def arr():
+    input("Appuyer sur Entrée pour arrêter le son")
+    print("BB chat")
+
+
+arr()
+
 """scene1 = Scene(
     nom="Scene1",
     description="Description de la Scene1",

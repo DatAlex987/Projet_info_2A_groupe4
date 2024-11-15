@@ -1,6 +1,7 @@
 from business_object.son import Son
 import pygame
 import random
+import threading
 
 
 class Son_Aleatoire(Son):
@@ -37,7 +38,6 @@ class Son_Aleatoire(Son):
             raise TypeError("Les cooldowns doivent être des entiers.")
         if new_cooldown_min < 0:
             raise ValueError("Les cooldowns ne peuvent pas être négatifs.")
-
         self.cooldown_min = new_cooldown_min
 
     def modifier_cooldown_max(self, new_cooldown_max):
@@ -46,8 +46,29 @@ class Son_Aleatoire(Son):
             raise TypeError("Les cooldowns doivent être des entiers.")
         if new_cooldown_max < 0:
             raise ValueError("Les cooldowns ne peuvent pas être négatifs.")
-
         self.cooldown_max = new_cooldown_max
+
+    def activ_son_alea(self, debut, t):
+        t = (random.randint(self.cooldown_min, self.cooldown_max) + self.charge.get_length()) * 1000
+        debut = pygame.time.get_ticks()
+        return [debut, t]
+
+    # Thread Worker qui exécute la fonction chaque fois que l'événement est déclenché
+    def thread_worker(self, event, t, debut):
+        while True:
+            event.wait()  # Attendre que l'événement soit déclenché
+            event.clear()  # Réinitialiser l'événement pour pouvoir attendre à nouveau
+            temps_ecoule = pygame.time.get_ticks() - debut
+            if temps_ecoule >= t:
+                self.charge.play()  # Jouer le son
+
+    def Arret_Son(self):
+        if self.charge:
+            input("Appuyer sur m pour arreter le son aleatoire")
+            self.charge.stop()
+            self.charge = None
+        else:
+            print(f"le son {self.id_freesound} ne joue pas : pygame_error")
 
     def jouer_son(self):
         """Joue le son aléatoire comme attendu"""
@@ -57,29 +78,13 @@ class Son_Aleatoire(Son):
             self.charge = pygame.mixer.Sound(file_path)
             t = random.randint(self.cooldown_min, self.cooldown_max) * 1000
             debut = pygame.time.get_ticks()  # l'heure de début
-            running = True
-            son_joue = False  # Indicateur pour savoir si le son a été joué
-
-            while running:
-                for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
-                        running = False
-
-                # temps écoulé
-                temps_ecoule = pygame.time.get_ticks() - debut
-                if temps_ecoule >= t and not son_joue:
-                    self.charge.play()  # Jouer le son
-                    son_joue = True  # Marquer le son comme joué
-            t = (
-                random.randint(self.cooldown_min, self.cooldown_max) + self.charge.get_length()
-            ) * 1000
-            debut = pygame.time.get_ticks()
+            thread_A = threading.Thread(target=self.Arret_Son)
+            thread_A.daemon = True  # Ensure it exits when the main program does
+            thread_A.start()
+            event = threading.Event()
+            # Démarrage du thread
+            thread_k = threading.Thread(target=self.thread_worker, args=(event, debut, t))
+            thread_k.daemon = True  # Le thread se termine avec le programme principal
+            thread_k.start()
         except pygame.error as e:
             print(f"Erreur lors de la lecture du fichier : {e}")
-
-    def Arret_Son(self):
-        if self.charge:
-            self.charge.stop()
-            self.charge = None
-        else:
-            print(f"le son {self.id_freesound} ne joue pas : pygame_error")
