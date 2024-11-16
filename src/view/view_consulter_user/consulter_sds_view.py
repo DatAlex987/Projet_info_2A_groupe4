@@ -44,7 +44,9 @@ class ConsulterSDsView(AbstractView):
             Session().sd_to_consult = SDService().instancier_sd_par_id(
                 id_sd=id_sd_select, schema="ProjetInfo"
             )
-            next_view = MenuConsultScenesView()  # Il faut la créer
+            from view.view_consulter_user.consulter_choix_sd import ConsulterChoixSD
+
+            next_view = ConsulterChoixSD()  # Il faut la créer
         return next_view
 
     def display_info(self):

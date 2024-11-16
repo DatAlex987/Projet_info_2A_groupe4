@@ -3,10 +3,10 @@ from colorama import Fore, Style
 from InquirerPy import prompt
 
 ####
-from service.user_service import UserService
+# from service.user_service import UserService
 
 ####
-from view.abstractview import AbstractView
+# from view.abstractview import AbstractView
 from view.view_consulter_user.menu_consulter_createur_view import ConsulterCreateurView
 from view.view_consulter_user.menu_consulter_nom_view import ConsulterNomView
 from view.session import Session
@@ -39,7 +39,7 @@ class MenuConsulterUserView(AbstractView):
         elif choix["Premier Choix"] == "Rechercher par créateur":
             Session().type_recherche_consult = "user"
             next_view = ConsulterCreateurView()
-        elif choix["Choix Premier Choix"] == "Retour au menu principal":
+        elif choix["Premier Choix"] == "Retour au menu principal":
             from view.menuprincipalview import MenuPrincipalView
 
             next_view = MenuPrincipalView()

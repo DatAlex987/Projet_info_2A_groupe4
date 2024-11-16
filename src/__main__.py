@@ -15,6 +15,7 @@ from view.accueilview import AccueilView
     pseudo="folsory",
 )
 UserDAO().ajouter_user(user1, "ProjetInfo")
+
 """
 view = AccueilView()
 
