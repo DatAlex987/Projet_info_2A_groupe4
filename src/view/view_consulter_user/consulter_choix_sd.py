@@ -8,7 +8,7 @@ from service.sd_service import SDService
 
 ####
 from view.abstractview import AbstractView
-from view.session import Session
+from service.session import Session
 
 # from view.view_consulter_user.menu_consulter_createur_view import ConsulterCreateurView
 # from view.view_consulter_user.menu_consulter_nom_view import ConsulterNomView
@@ -25,8 +25,8 @@ class ConsulterChoixSD(AbstractView):
                 "message": ("Que souhaitez-vous faire avec la Sound-deck ? \n"),
                 "choices": [
                     "Découvrir la SD",
-                    "Sauvegarder la SD dans ma bibliothèque",
-                    "Dupliquer cette SD dans ma bibliothèque",
+                    "Sauvegarder la SD dans ma bibliothèque (modifications impossibles)",
+                    "Dupliquer cette SD dans ma bibliothèque (modifications possibles)",
                     "Retour au menu précédent",
                 ],
             }
@@ -38,10 +38,29 @@ class ConsulterChoixSD(AbstractView):
             from view.view_consulter_user.consulter_scene_view import ConsulterSceneView
 
             next_view = ConsulterSceneView()
-        if choix["Choix SD"] == "Sauvegarder la SD dans ma bibliothèque":
-            pass  # à faire
-        if choix["Choix SD"] == "Dupliquer cette SD dans ma bibliothèque":
-            pass  # à faire
+        if (
+            choix["Choix SD"]
+            == "Sauvegarder la SD dans ma bibliothèque (modifications impossibles)"
+        ):
+            SDService().ajouter_sd_existante_to_user(schema="ProjetInfo")
+            print(
+                Fore.GREEN
+                + "Sauvegarde de la sound-deck dans votre biliothèque avec succès"
+                + Style.RESET_ALL
+            )
+            from view.view_consulter_user.consulter_sds_view import ConsulterSDsView
+
+            return ConsulterSDsView()
+        if choix["Choix SD"] == "Dupliquer cette SD dans ma bibliothèque (modifications possibles)":
+            SDService().dupliquer_sd_existante_to_user(schema="ProjetInfo")
+            print(
+                Fore.GREEN
+                + "Duplication de la sound-deck dans votre biliothèque avec succès"
+                + Style.RESET_ALL
+            )
+            from view.view_consulter_user.consulter_sds_view import ConsulterSDsView
+
+            return ConsulterSDsView()
         if choix["Choix SD"] == "Retour au menu précédent":
             from view.view_consulter_user.consulter_sds_view import ConsulterSDsView
 

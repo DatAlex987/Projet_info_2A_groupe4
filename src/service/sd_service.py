@@ -264,8 +264,6 @@ class SDService:
         # On update la BDD
         SDDAO().modifier_sd(sd=sounddeck, schema=schema)
 
-<<<<<<< HEAD
-=======
     # TEST PAS ENCORE FONCTIONNEL NE PAS ENLEVER CEST POUR LES TABLEAUX :
 
     def afficher_tableau_sds_user(self):
@@ -296,7 +294,6 @@ class SDService:
         """
         sds_user = Session().utilisateur.SD_possedes
         return [f"{idx}. {sd.id_sd}" for idx, sd in enumerate(sds_user, start=1)]
-
 
     def FindCloseNameSDs(self, nom_approx: str, schema: str):
         all_sds = SDDAO().consulter_sds(schema=schema)
@@ -335,3 +332,28 @@ class SDService:
                 compteur += 1
             choix.append("Retour au menu de recherche de consultation")
             return choix
+
+    def ajouter_sd_existante_to_user(self, schema: str):  # NOT TESTED YET
+        try:
+            Session.utilisateur.ajouter_sd(sd=Session().sd_to_consult)
+            SDDAO().ajouter_association_user_sd(
+                id_user=Session().utilisateur.id_user,
+                id_sd=Session().sd_to_consult.id_sd,
+                schema=schema,
+            )
+        except ValueError as e:
+            raise ValueError(f"Erreur lors de la sauvegarde de la sound-deck: {e}")
+
+    def dupliquer_sd_existante_to_user(self, schema: str):
+        sd_to_dupli = Session().sd_to_consult
+        # On change l'id du créateur pour permettre à l'utilisateur de faire des modifications
+        # à l'avenir sur cette SD
+        sd_to_dupli.id_createur = Session().utilisateur.id_user
+        # Can'tg do anything for now : On doit régler ce pb d'id freesound. id_son
+        for scene in sd_to_dupli.scenes:
+            for son_alea in scene.sons_aleatoires:
+                pass
+            for son_continu in scene.sons_continus:
+                pass
+            for son_manuel in scene.sons_manuels:
+                pass

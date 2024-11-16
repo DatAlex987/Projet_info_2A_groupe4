@@ -53,7 +53,8 @@ class UserDAO(metaclass=Singleton):
 
     def supprimer_user(self, id_user: int, schema: str) -> bool:
         """
-        Supprime un utilisateur par son ID.
+        Supprime un utilisateur par son ID et toutes les associations liées (car ON DELETE CASCADE dans
+        le script de création de la BDD)
 
         Parameters
         ----------
