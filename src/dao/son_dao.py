@@ -1,5 +1,6 @@
 from dao.db_connection import DBConnection
-from business_object.son import Son
+
+# from business_object.son import Son
 from business_object.son_aleatoire import Son_Aleatoire
 from business_object.son_manuel import Son_Manuel
 from business_object.son_continu import Son_Continu
@@ -504,3 +505,33 @@ class SonDAO:
             TagDAO().supprimer_association_son_tag(
                 id_freesound=id_freesound, tag=tag, schema=schema
             )
+
+    # nettoyage
+    def delete_son_if_no_scenes(self, id_freesound: str, schema: str):
+        """
+        Supprime un son s'il n'est associé à aucune scène.
+        """
+        with DBConnection(schema=schema).connection as connection:
+            with connection.cursor() as cursor:
+                # Vérifie si des scènes sont liées au son
+                query = f"""SELECT COUNT(*) AS scene_count
+                            FROM {schema}.Scene_Son
+                            WHERE id_freesound = %(id_freesound)s;"""
+                cursor.execute(
+                    query,
+                    {"id_freesound": id_freesound},
+                )
+                scene_count = cursor.fetchone()["scene_count"]
+
+                # Si aucune scène n'est liée, supprimer le son
+                if scene_count == 0:
+                    delete_query = f"""DELETE FROM {schema}.Son
+                                    WHERE id_freesound = %(id_freesound)s;"""
+                    cursor.execute(
+                        delete_query,
+                        {"id_freesound": id_freesound},
+                    )
+                    connection.commit()
+                    return True  # Indique que la suppression a été effectuée
+                else:
+                    return False  # Le son n'a pas été supprimé car il est encore lié à des scènes

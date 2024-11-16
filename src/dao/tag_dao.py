@@ -1,5 +1,6 @@
 from dao.db_connection import DBConnection
-from business_object.son import Son
+
+# from business_object.son import Son
 
 
 class TagDAO:
@@ -225,6 +226,37 @@ class TagDAO:
                 )
                 res = cursor.fetchall()
         return [row["id_freesound"] for row in res]
+
+    # nettoyage
+
+    def delete_tag_if_no_sons(self, nom_tag: str, schema: str):
+        """
+        Supprime un tag s'il n'est associé à aucun son.
+        """
+        with DBConnection(schema=schema).connection as connection:
+            with connection.cursor() as cursor:
+                # Vérifie si le tag est associé à des sons
+                query = f"""SELECT COUNT(*) AS son_count
+                            FROM {schema}.Son_Tag
+                            WHERE nom_tag = %(nom_tag)s;"""
+                cursor.execute(
+                    query,
+                    {"nom_tag": nom_tag},
+                )
+                son_count = cursor.fetchone()["son_count"]
+
+                # Si aucun son n'est lié, supprimer le tag
+                if son_count == 0:
+                    delete_query = f"""DELETE FROM {schema}.Tag
+                                    WHERE nom_tag = %(nom_tag)s;"""
+                    cursor.execute(
+                        delete_query,
+                        {"nom_tag": nom_tag},
+                    )
+                    connection.commit()
+                    return True  # Indique que la suppression a été effectuée
+                else:
+                    return False  # Le tag n'a pas été supprimé car il est encore lié à des sons
 
 
 # Ajouter une fonction qui ajoute tous les tags d'une liste si ils n'y sont pas déjà

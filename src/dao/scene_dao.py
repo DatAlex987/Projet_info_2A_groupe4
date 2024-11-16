@@ -442,3 +442,29 @@ class SceneDAO:
             SonDAO().supprimer_association_scene_son(
                 id_freesound=id_freesound, id_scene=id_scene, type_son="manuel", schema=schema
             )
+
+    # nettoyage
+
+    def delete_scene_if_no_sds(self, id_scene: str, schema: str):
+        """
+        Supprime une scène si elle n'est reliée à aucune Sounddeck.
+        """
+        with DBConnection(schema=schema).connection as connection:
+            with connection.cursor() as cursor:
+                # Vérifie si des Sounddecks sont liés à la scène
+                cursor.execute(
+                    f"SELECT COUNT(*) AS sd_count FROM {schema}.Sounddeck_Scene WHERE id_scene = %(id_scene)s;",
+                    {"id_scene": id_scene},
+                )
+                sd_count = cursor.fetchone()["sd_count"]
+
+                # Si aucune Sounddeck n'est liée, supprimer la scène
+                if sd_count == 0:
+                    cursor.execute(
+                        f"DELETE FROM {schema}.Scene WHERE id_scene = %(id_scene)s;",
+                        {"id_scene": id_scene},
+                    )
+                    connection.commit()
+                    return True  # Indique que la suppression a été effectuée
+                else:
+                    return False  # La scène n'a pas été supprimée car elle est encore liée à des Sounddecks

@@ -441,3 +441,29 @@ class SDDAO(metaclass=Singleton):
         # Delete all associations in sd_scene for the given Sounddeck
         for id_scene in scenes_incluses:
             SceneDAO().supprimer_association_sd_scene(id_sd=id_sd, id_scene=id_scene, schema=schema)
+
+    # nettoyage
+
+    def delete_sd_if_no_users(self, id_sd: str, schema: str):
+        """
+        Supprime une Sounddeck si elle n'est reliée à aucun utilisateur.
+        """
+        with DBConnection(schema=schema).connection as connection:
+            with connection.cursor() as cursor:
+                # Vérifie si des utilisateurs sont liés à la Sounddeck
+                cursor.execute(
+                    f"SELECT COUNT(*) AS user_count FROM {schema}.User_Sounddeck WHERE id_sd = %(id_sd)s;",
+                    {"id_sd": id_sd},
+                )
+                user_count = cursor.fetchone()["user_count"]
+
+                # Si aucun utilisateur n'est relié, supprimer la Sounddeck
+                if user_count == 0:
+                    cursor.execute(
+                        f"DELETE FROM {schema}.Sounddeck WHERE id_sd = %(id_sd)s;",
+                        {"id_sd": id_sd},
+                    )
+                    connection.commit()
+                    return True  # Indique que la suppression a été effectuée
+                else:
+                    return False  # La Sounddeck n'a pas été supprimée car elle est encore liée à des utilisateurs

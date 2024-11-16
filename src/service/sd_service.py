@@ -13,6 +13,7 @@ from dao.sd_dao import SDDAO
 from dao.scene_dao import SceneDAO
 from dao.son_dao import SonDAO
 from dao.tag_dao import TagDAO
+from rich.table import Table
 
 
 class SDService:
@@ -253,3 +254,34 @@ class SDService:
                 sounddeck.modifier_description_sd(nouvelle_description=new_desc)
         # On update la BDD
         SDDAO().modifier_sd(sd=sounddeck, schema=schema)
+
+    # TEST PAS ENCORE FONCTIONNEL NE PAS ENLEVER CEST POUR LES TABLEAUX :
+
+    def afficher_tableau_sds_user(self):
+        """
+        Affiche un tableau Rich contenant les Sounddecks de l'utilisateur.
+        """
+        sds_user = Session().utilisateur.SD_possedes
+        table = Table(title="Liste des Sounddecks disponibles")
+        table.add_column("Index", justify="center")
+        table.add_column("ID", justify="center")
+        table.add_column("Nom", justify="left")
+        table.add_column("Description", justify="left")
+        table.add_column("Date de création", justify="center")
+
+        for idx, sd in enumerate(sds_user, start=1):
+            table.add_row(
+                str(idx),
+                sd.id_sd,
+                sd.nom,
+                sd.description[:40] + ("..." if len(sd.description) > 40 else ""),
+                sd.date_creation,
+            )
+        return table
+
+    def obtenir_choices_sds_user(self):
+        """
+        Renvoie une liste des choix formatés pour InquirerPy.
+        """
+        sds_user = Session().utilisateur.SD_possedes
+        return [f"{idx}. {sd.id_sd}" for idx, sd in enumerate(sds_user, start=1)]
