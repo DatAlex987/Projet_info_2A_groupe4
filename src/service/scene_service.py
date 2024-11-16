@@ -1,10 +1,9 @@
-from utils.log_decorator import log
 from business_object.scene import Scene
 from business_object.son import Son
 from business_object.son_continu import Son_Continu
 from business_object.son_aleatoire import Son_Aleatoire
 from business_object.son_manuel import Son_Manuel
-from view.session import Session
+from service.session import Session
 import re
 import datetime
 import random

@@ -6,6 +6,7 @@ import psycopg2
 from view.abstractview import AbstractView
 from view.menuprincipalview import MenuPrincipalView
 from service.user_service import UserService
+from service.session import Session
 
 
 class AccueilView(AbstractView):
@@ -100,6 +101,7 @@ class AccueilView(AbstractView):
                     next_view = AccueilView()
 
         if answers["Choix connexion"] == "Quitter l'appli":
+            Session().deconnexion()
             next_view = None
 
         return next_view

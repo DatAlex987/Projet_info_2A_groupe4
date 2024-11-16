@@ -2,7 +2,7 @@ import re
 import datetime
 import random
 import string
-from view.session import Session
+from service.session import Session
 from business_object.sd import SD
 from business_object.scene import Scene
 from business_object.son import Son
@@ -255,7 +255,6 @@ class SDService:
         # On update la BDD
         SDDAO().modifier_sd(sd=sounddeck, schema=schema)
 
-<<<<<<< HEAD
     # TEST PAS ENCORE FONCTIONNEL NE PAS ENLEVER CEST POUR LES TABLEAUX :
 
     def afficher_tableau_sds_user(self):
@@ -286,7 +285,7 @@ class SDService:
         """
         sds_user = Session().utilisateur.SD_possedes
         return [f"{idx}. {sd.id_sd}" for idx, sd in enumerate(sds_user, start=1)]
-=======
+
     def FindCloseNameSDs(self, nom_approx: str, schema: str):
         all_sds = SDDAO().consulter_sds(schema=schema)
         sds_close_name = []
@@ -324,4 +323,3 @@ class SDService:
                 compteur += 1
             choix.append("Retour au menu de recherche de consultation")
             return choix
->>>>>>> 86740a6040067931a5a601b99127d89d1f10d67d

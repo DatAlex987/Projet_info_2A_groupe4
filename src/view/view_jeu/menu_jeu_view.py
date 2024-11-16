@@ -1,7 +1,7 @@
 from rich.console import Console
 from InquirerPy import prompt
 from view.abstractview import AbstractView
-from view.session import Session
+from service.session import Session
 from view.view_jeu.menu_jeu_scene_view import MenuJeuSceneView
 from service.sd_service import SDService
 from colorama import Fore, Style

@@ -7,7 +7,7 @@ from service.user_service import UserService
 
 ####
 from view.abstractview import AbstractView
-from view.session import Session
+from service.session import Session
 from view.view_consulter_user.consulter_sds_view import ConsulterSDsView
 
 # from view.view_consulter_user.menu_consulter_createur_view import ConsulterCreateurView

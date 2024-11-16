@@ -16,7 +16,7 @@ from business_object.son import Son
 from business_object.son_aleatoire import Son_Aleatoire
 from business_object.son_manuel import Son_Manuel
 from business_object.son_continu import Son_Continu
-from view.session import Session
+from view.service.session import Session
 from service.freesound import Freesound
 from service.son_service import SonService
 import hashlib

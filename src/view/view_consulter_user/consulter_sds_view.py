@@ -8,7 +8,7 @@ from service.sd_service import SDService
 
 ####
 from view.abstractview import AbstractView
-from view.session import Session
+from service.session import Session
 
 # from view.view_consulter_user.menu_consulter_createur_view import ConsulterCreateurView
 # from view.view_consulter_user.menu_consulter_nom_view import ConsulterNomView

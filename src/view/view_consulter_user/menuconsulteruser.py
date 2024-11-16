@@ -9,7 +9,7 @@ from service.user_service import UserService
 from view.abstractview import AbstractView
 from view.view_consulter_user.menu_consulter_createur_view import ConsulterCreateurView
 from view.view_consulter_user.menu_consulter_nom_view import ConsulterNomView
-from view.session import Session
+from service.session import Session
 
 
 class MenuConsulterUserView(AbstractView):

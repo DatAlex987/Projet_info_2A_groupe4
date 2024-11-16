@@ -10,7 +10,7 @@ from service.scene_service import SceneService
 ####
 from view.abstractview import AbstractView
 from view.view_param.menuparammodifsdview import MenuParamModifSDView
-from view.session import Session
+from service.session import Session
 
 
 class MenuParamSceneView(AbstractView):
