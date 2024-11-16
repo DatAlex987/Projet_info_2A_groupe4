@@ -78,13 +78,13 @@ class Son_Aleatoire(Son):
             self.charge = pygame.mixer.Sound(file_path)
             t = random.randint(self.cooldown_min, self.cooldown_max) * 1000
             debut = pygame.time.get_ticks()  # l'heure de début
+            while self.charge:
+                temps_ecoule = pygame.time.get_ticks() - debut
+                if temps_ecoule >= t:
+                    self.charge.play()  # Jouer le son
+
             thread_A = threading.Thread(target=self.Arret_Son)
             thread_A.daemon = True  # Ensure it exits when the main program does
             thread_A.start()
-            event = threading.Event()
-            # Démarrage du thread
-            thread_k = threading.Thread(target=self.thread_worker, args=(event, debut, t))
-            thread_k.daemon = True  # Le thread se termine avec le programme principal
-            thread_k.start()
         except pygame.error as e:
             print(f"Erreur lors de la lecture du fichier : {e}")

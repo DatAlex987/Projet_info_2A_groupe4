@@ -27,7 +27,7 @@ class Son_Continu(Son):
             # faire le pygame.mixer.init() avant
             pygame.mixer.music.load(file_path)
             print("load")
-            pygame.mixer.music.play(loops=self.lp)
+            pygame.mixer.music.play(loops=-1)
             print("jeu")
             # Run the input listener in a separate thread
             thread = threading.Thread(target=self.Arret_Son)

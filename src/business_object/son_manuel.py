@@ -29,24 +29,16 @@ class Son_Manuel(Son):
         """Modifier la touche pour lancer un son"""
         self.start_key = new_key
 
-    def activation_touche(self):
-        input(f"Appuyer sur {self.start_key} pour déclencher le son")
-        self.charge.play()
-
     def Arret_Son(self):
-        if self.charge:
-            input("Appuyer sur m pour arreter le son manuel")
-            self.charge.stop()
-            self.charge = None
-        else:
-            print(f"le son {self.id_freesound} ne joue pas : pygame_error")
-
-    # Thread Worker qui exécute la fonction chaque fois que l'événement est déclenché
-    def thread_worker(self, event):
-        while True:
-            event.wait()  # Attendre que l'événement soit déclenché
-            event.clear()  # Réinitialiser l'événement pour pouvoir attendre à nouveau
-            self.charge.play()
+        while self.charge:
+            i = input(
+                f"Appuyer sur m pour arreter le son manuel ou {self.start_key} pour le déclencher "
+            )
+            if i == "m":
+                self.charge.stop()
+                self.charge = None
+            if i == f"{self.start_key}":
+                self.charge.play()
 
     def jouer_son(self):
         """lance le son après déclenchement"""
@@ -55,14 +47,9 @@ class Son_Manuel(Son):
         try:
             self.charge = pygame.mixer.Sound(file_path)
             print("chargé")
-            # Run the input listener in a separate thread
-            thread_A = threading.Thread(target=self.Arret_Son)
-            thread_A.daemon = True  # Ensure it exits when the main program does
-            thread_A.start()
-            event = threading.Event()
-            # Démarrage du thread
-            thread_k = threading.Thread(target=self.thread_worker, args=(event,))
-            thread_k.daemon = True  # Le thread se termine avec le programme principal
-            thread_k.start()
+            while self.charge:
+                thread_A = threading.Thread(target=self.Arret_Son)
+                thread_A.daemon = True
+                thread_A.start()
         except pygame.error as e:
             print(f"Erreur lors de la lecture du fichier : {e}")
