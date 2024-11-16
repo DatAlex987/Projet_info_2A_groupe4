@@ -44,7 +44,6 @@ class Son_Manuel(Son):
     # Thread Worker qui exécute la fonction chaque fois que l'événement est déclenché
     def thread_worker(self, event):
         while True:
-            print("En attente du déclenchement...")
             event.wait()  # Attendre que l'événement soit déclenché
             event.clear()  # Réinitialiser l'événement pour pouvoir attendre à nouveau
             self.charge.play()
