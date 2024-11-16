@@ -21,7 +21,11 @@ class Recherche(metaclass=Singleton):
     def ajouter_critere(self, reponse_critere):
         """Ajouter un critère de recherche au dictionnaire des critères."""
         if reponse_critere["tag"]:
-            self.dict_critere["tag"] = reponse_critere["tag"]
+            self.dict_critere["query"] = reponse_critere["tag"]
+        if reponse_critere["duration_min"]:
+            self.dict_critere["min_duration"] = reponse_critere["duration_min"]
+        if reponse_critere["duration_max"]:
+            self.dict_critere["max_duration"] = reponse_critere["duration_max"]
         if reponse_critere["limit"]:
             self.limit = int(reponse_critere["limit"])
         return True
@@ -51,10 +55,10 @@ class Recherche(metaclass=Singleton):
     def lancer_recherche(self):
         """Exécute la recherche sur Freesound en fonction des critères sélectionnés."""
         self.page = 1
-        if "tag" in self.dict_critere:
+        if "query" in self.dict_critere:
             try:
-                self.results = Freesound.rechercher_par_tag(
-                    tag=self.dict_critere["tag"], limit=self.limit
+                self.results = Freesound.rechercher_multi_filtres(
+                    dico_filtres=self.dict_critere, limit=self.limit
                 )
                 if self.results:
                     self.page = 0  # Set the initial page to 0

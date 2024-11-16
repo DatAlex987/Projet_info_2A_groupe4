@@ -22,7 +22,12 @@ class Session(metaclass=Singleton):
         self.sd_to_play = None  # Permet de stocker les choix de naviguation de l'utilisateur
         self.scene_to_play = None  # Permet de stocker les choix de naviguation de l'utilisateur
         self.son_to_play = None  # Permet de stocker les choix de naviguation de l'utilisateur
+        # Permet de n'avoir qu'une seule view pour afficher les SDs intéressantes. Cet attribut
+        # sera utilisé dans une fonction de formatage de réponses de SDService pour afficher
+        # les SD du user voulu OU les Sd avec un nom similaire à celui recherché (on fait du 2 en 1)
+        self.type_recherche_consult = None
         self.users_to_consult = None
+        self.sds_to_consult = None
         self.user_to_consult = None
         self.sd_to_consult = None
         self.scene_to_consult = None

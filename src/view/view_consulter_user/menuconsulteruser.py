@@ -9,6 +9,7 @@ from service.user_service import UserService
 from view.abstractview import AbstractView
 from view.view_consulter_user.menu_consulter_createur_view import ConsulterCreateurView
 from view.view_consulter_user.menu_consulter_nom_view import ConsulterNomView
+from view.session import Session
 
 
 class MenuConsulterUserView(AbstractView):
@@ -33,8 +34,10 @@ class MenuConsulterUserView(AbstractView):
     def make_choice(self):
         choix = prompt(self.question)
         if choix["Premier Choix"] == "Rechercher par nom":
+            Session().type_recherche_consult = "nom"
             next_view = ConsulterNomView()
         elif choix["Premier Choix"] == "Rechercher par créateur":
+            Session().type_recherche_consult = "user"
             next_view = ConsulterCreateurView()
         elif choix["Choix Premier Choix"] == "Retour au menu principal":
             from view.menuprincipalview import MenuPrincipalView

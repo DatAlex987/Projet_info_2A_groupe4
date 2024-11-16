@@ -279,15 +279,36 @@ class UserService:
         except ValueError as e:
             raise ValueError(f"{e}")
 
-    def FindCloseNameUser(self, pseudo_approx: str, schema: str):
-        all_users = UserDAO().consulter_users()
+    def FindCloseNameUsers(self, pseudo_approx: str, schema: str):
+        all_users = UserDAO().consulter_users(schema=schema)
         users_close_name = []
         for user in all_users:
             if pseudo_approx.lower() in user["pseudo"].lower():
                 users_close_name.append(
-                    self.instancier_par_id_user(id_user=user.id_user, schema=schema)
+                    self.instancier_par_id_user(id_user=user["id_user"], schema=schema)
                 )
-        pass
+        Session().users_to_consult = users_close_name
+
+    def formatage_question_users_to_consult(self):
+        """Construit une liste des choix à afficher dans le menu consult user
+
+        Returns
+        -------------
+        list
+            Liste des choix proposés à l'utilisateur, incluant tous les users
+            susceptibles de l'intéresser
+        """
+        users = Session().users_to_consult
+        choix = []
+        compteur = 1
+        for user in users:
+            mise_en_page_ligne = (
+                f"{compteur}. {user.id_user} | {user.prenom} | {user.prenom} | {user.pseudo}"
+            )
+            choix.append(mise_en_page_ligne)
+            compteur += 1
+        choix.append("Retour au menu de consultation")
+        return choix
 
 
 """    @log

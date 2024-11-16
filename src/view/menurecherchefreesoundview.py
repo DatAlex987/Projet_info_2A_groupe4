@@ -41,6 +41,16 @@ class MenuRechercheFreesoundView(AbstractView):
             },
             {
                 "type": "input",
+                "name": "duration_min",
+                "message": "Entrez la durée minimale d'un son (en secondes) :",
+            },
+            {
+                "type": "input",
+                "name": "duration_max",
+                "message": "Entrez la durée maximale d'un son (en secondes) :",
+            },
+            {
+                "type": "input",
                 "name": "limit",
                 "message": "Combien de résultats voulez-vous afficher ? (par défaut: 10) :",
                 "validate": lambda val: val.isdigit() and int(val) > 0,
@@ -48,14 +58,7 @@ class MenuRechercheFreesoundView(AbstractView):
             # est positif l'utilisation du mot clé lambda permet de définir une fonction en
             # une ligne et évite de la définir ailleurs.
         ]
-        """self.question_resultats = [
-            {
-                "type": "list",
-                "name": "choix_resultat",
-                "message": "Sélectionnez un son ou naviguez dans les pages :",
-                "choices": Recherche().formatage_choix_resultats_recherche(),
-            }
-        ]"""
+
         self.question_son = [
             {
                 "type": "list",

@@ -1,5 +1,6 @@
 from business_object.son import Son
 import pygame
+import threading
 
 
 class Son_Manuel(Son):
@@ -28,6 +29,17 @@ class Son_Manuel(Son):
         """Modifier la touche pour lancer un son"""
         self.start_key = new_key
 
+    def Arret_Son(self):
+        while self.charge:
+            i = input(
+                f"Appuyer sur m pour arreter le son manuel ou {self.start_key} pour le déclencher "
+            )
+            if i == "m":
+                self.charge.stop()
+                self.charge = None
+            if i == f"{self.start_key}":
+                self.charge.play()
+
     def jouer_son(self):
         """lance le son après déclenchement"""
         file_path = self.localise_son()
@@ -35,20 +47,9 @@ class Son_Manuel(Son):
         try:
             self.charge = pygame.mixer.Sound(file_path)
             print("chargé")
-            running = True
-            while running:
-                for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
-                        running = False
-                    elif event.type == pygame.KEYDOWN:
-                        if pygame.key.name(event.key) == self.start_key:
-                            self.charge.play()
+            while self.charge:
+                thread_A = threading.Thread(target=self.Arret_Son)
+                thread_A.daemon = True
+                thread_A.start()
         except pygame.error as e:
             print(f"Erreur lors de la lecture du fichier : {e}")
-
-    def Arret_Son(self):
-        if self.charge:
-            self.charge.stop()
-            self.charge = None
-        else:
-            print(f"le son {self.id_freesound} ne joue pas : pygame_error")
