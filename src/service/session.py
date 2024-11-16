@@ -48,11 +48,12 @@ class Session(metaclass=Singleton):
 
     # a la suite : supprimer sd, scene, son, tag
 
-    def afficher(self):
+
+"""    def afficher(self):
         if self.utilisateur is None:
             print("Il n'y pas de session active")
         else:
             print(
                 f"Nom: {self.utilisateur.nom} \n Prenom: {self.utilisateur.prenom}"
                 + f"\n Id: {self.utilisateur.id_user} \n Debut_connexion: {self.debut_connexion}"
-            )
+            )"""

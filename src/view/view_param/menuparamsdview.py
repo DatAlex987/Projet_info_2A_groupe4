@@ -10,7 +10,7 @@ from service.sd_service import SDService
 
 ####
 from view.abstractview import AbstractView
-from view.session import Session
+from service.session import Session
 from view.view_param.menuparamsceneview import MenuParamSceneView
 
 

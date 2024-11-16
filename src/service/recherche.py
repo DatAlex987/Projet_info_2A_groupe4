@@ -1,7 +1,7 @@
 from utils.singleton import Singleton
 from InquirerPy import prompt
 from service.freesound import Freesound
-from view.session import Session
+from service.session import Session
 from business_object.son import Son
 from colorama import Fore, Style
 from rich.console import Console

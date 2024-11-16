@@ -10,7 +10,7 @@ from service.son_service import SonService
 
 ####
 from view.abstractview import AbstractView
-from view.session import Session
+from service.session import Session
 
 
 class MenuJeuSonsView(AbstractView):

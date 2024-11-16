@@ -14,7 +14,7 @@ from view.menurecherchefreesoundview import MenuRechercheFreesoundView
 from view.view_param.menuparammodifsonview import MenuParamModifSonView
 from view.view_param.menuparammodifsceneview import MenuParamModifSceneView
 from view.abstractview import AbstractView
-from view.session import Session
+from service.session import Session
 
 
 class MenuParamSceneSpecifiqueView(AbstractView):

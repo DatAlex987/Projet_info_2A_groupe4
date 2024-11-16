@@ -22,9 +22,8 @@ class Scene:
         liste des sons continus présents dans la scène
     sons_manuels : list[Son_Manuel]
         liste des sons manuels présents dans la scène
-    auteur : User
-        auteur de la scène
-    date_creation
+    date_creation : datetime.time
+        Date de la création de la sound-deck
     """
 
     def __init__(

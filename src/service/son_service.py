@@ -9,7 +9,6 @@ from dao.son_dao import SonDAO
 from dao.tag_dao import TagDAO
 
 ####
-from utils.log_decorator import log
 from business_object.scene import Scene
 from business_object.son import Son
 from business_object.son_continu import Son_Continu
@@ -17,8 +16,9 @@ from business_object.son_aleatoire import Son_Aleatoire
 from business_object.son_manuel import Son_Manuel
 
 ####
-from view.session import Session
+from service.session import Session
 from service.freesound import Freesound
+from service.sd_service import SDService
 
 ####
 from rich.console import Console
@@ -256,6 +256,7 @@ class SonService:
             return instance_son
 
     def modifier_nom_son(self, son, new_nom: str, schema: str):
+        SDService().input_checking_injection(input_str=new_nom)
         # On update la session
         son.modifier_nom(new_nom=new_nom)
         # On update le user en session
@@ -263,20 +264,21 @@ class SonService:
             for scene in sd.scenes:
                 if isinstance(son, Son_Aleatoire):
                     for son_alea in scene.sons_aleatoires:
-                        if son_alea.id == son.id_freesound:
+                        if son_alea.id_freesound == son.id_freesound:
                             son_alea.modifier_nom(new_nom=new_nom)
                 if isinstance(son, Son_Continu):
                     for son_continu in scene.sons_continus:
-                        if son_continu.id == son.id_freesound:
+                        if son_continu.id_freesound == son.id_freesound:
                             son_continu.modifier_nom(new_nom=new_nom)
                 if isinstance(son, Son_Manuel):
                     for son_manuel in scene.sons_manuels:
-                        if son_manuel.id == son.id_freesound:
+                        if son_manuel.id_freesound == son.id_freesound:
                             son_manuel.modifier_nom(new_nom=new_nom)
         # On update la BDD
         SonDAO().modifier_son(son=son, schema=schema)
 
     def modifier_desc_son(self, son, new_desc: str, schema: str):
+        SDService().input_checking_injection(input_str=new_desc)
         # On update la session
         son.modifier_description(new_desc=new_desc)
         # On update le user en session
@@ -317,6 +319,7 @@ class SonService:
         SonDAO().modifier_param_son(son_alea, schema=schema)
 
     def modifier_start_key_son(self, son_manuel: Son_Manuel, new_start_key: str, schema: str):
+        SDService().input_checking_injection(input_str=new_start_key)
         son_manuel.modifier_start_key(new_start_key=new_start_key)
         for sd in Session().utilisateur.SD_possedes:
             for scene in sd.scenes:

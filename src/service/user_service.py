@@ -7,7 +7,7 @@ import string
 import re
 from business_object.user import User
 from dao.user_dao import UserDAO
-from view.session import Session
+from service.session import Session
 from business_object.sd import SD
 from business_object.scene import Scene
 from business_object.son import Son
@@ -47,20 +47,28 @@ class UserService:
     def input_checking_injection(
         self, nom: str, prenom: str, pseudo: str, mdp: str, date_naissance: str = None
     ):
-        # Check inputs pour injection:
-        # Définition de pattern regex pour qualifier les caractères acceptés pour chaque input
-        name_pattern = r"^[a-zA-ZÀ-ÿ' -]+$"  # Autorise lettres, accents, trait d'union, espace
-        pseudo_pattern = r"^[\w\d]{1,29}$"  # Autorise lettres, chiffres, entre 1 et 29 caractères
-        password_pattern = r"^[\w\d!@#$%^&*()+=]{1,29}$"  # Autorise lettres, chiffres et quelques caractères spéciaux (mais pas ', ",-, ; car utilisés dans des injections SQL.
-        date_of_birth_pattern = r"^[\d/]{10,10}$"  # Autorise chiffres et / .
-        # On vérifie que les inputs sont conformes aux patternes regex.
+        # Patterns pour éviter les injections SQL
+        patterns = [
+            r"(--|#)",  # Commentaires
+            r"(\bUNION\b)",  # UNION
+            r"(;|\bDROP\b|\bDELETE\b|\bINSERT\b|\bUPDATE\b|\bSELECT\b)",  # CRUD
+            r"(\')",  # guillemet simple
+            r"(\bEXEC\b|\bEXECUTE\b)",  # EXECUTE
+        ]
+
+        # Autres patterns, plus spécifiques
+        name_pattern = r"^[a-zA-ZÀ-ÿ' -]{1,29}$"
+        pseudo_pattern = r"^[\w\d]{1,29}$"
+        password_pattern = r"^[\w\d!@#$%^&*()]{1,29}$"
+        date_of_birth_pattern = r"^[\d/]{10,10}$"
+
+        # On vérifie
         if not re.match(name_pattern, nom):
             raise ValueError("Le nom contient des caractères invalides.")
         if not re.match(name_pattern, prenom):
             raise ValueError("Le prénom contient des caractères invalides.")
-        if date_naissance is not None:
-            if not re.match(date_of_birth_pattern, date_naissance):
-                raise ValueError("La date de naissance contient des caractères invalides.")
+        if date_naissance and not re.match(date_of_birth_pattern, date_naissance):
+            raise ValueError("La date de naissance contient des caractères invalides.")
         if not re.match(pseudo_pattern, pseudo):
             raise ValueError(
                 "Le pseudo contient des caractères invalides ou n'est pas de longueur valide."
@@ -69,6 +77,17 @@ class UserService:
             raise ValueError(
                 "Le mot de passe contient des caractères invalides ou n'est pas de longueur valide."
             )
+
+        # On vérifie pour les injections SQL
+        inputs = [nom, prenom, pseudo, mdp]
+        if date_naissance:
+            inputs.append(date_naissance)
+        for input_str in inputs:
+            for pattern in patterns:
+                if re.search(pattern, input_str, re.IGNORECASE):
+                    raise ValueError(
+                        f"La chaîne de caracères {input_str} est invalide car suspecte."
+                    )
 
     def instancier_par_id_user(self, id_user: str, schema: str):
         dic_user = UserDAO().rechercher_par_id_user(id_user=id_user, schema=schema)
@@ -164,84 +183,6 @@ class UserService:
                 self.session = Session()  # On lance la session avec le bon user
                 # l.86 - l.152 : On instancie tous les objets liés à l'utilisateur avec les données
                 # fournies par l'appel DAO rechercher_par_pseudo_user()
-                """SDs_of_user = []  # List to hold all sounddecks
-
-                for sd in dic_user["SD_possedes"]:
-                    Scenes_of_user = []  # Create scenes list for each SD
-
-                    for scene in sd["scenes"]:
-                        Sons_Alea_scene = []  # Create these lists inside the scene loop
-                        Sons_Cont_scene = []
-                        Sons_Manu_scene = []
-                        # Process Sons_Alea_scene for each scene of the sounddeck
-                        for son_alea_kwargs in scene["sons_aleatoires"]:
-                            Sons_Alea_scene.append(
-                                Son_Aleatoire(
-                                    nom=son_alea_kwargs["nom"],
-                                    description=son_alea_kwargs["description"],
-                                    duree=son_alea_kwargs["duree"],
-                                    id_freesound=son_alea_kwargs["id_freesound"],
-                                    tags=son_alea_kwargs["tags"],
-                                    cooldown_min=son_alea_kwargs["param1"],
-                                    cooldown_max=son_alea_kwargs["param2"],
-                                )
-                            )
-                        # Process Sons_Cont_scene for each scene
-                        for son_cont_kwargs in scene["sons_continus"]:
-                            Sons_Cont_scene.append(
-                                Son_Continu(
-                                    nom=son_cont_kwargs["nom"],
-                                    description=son_cont_kwargs["description"],
-                                    duree=son_cont_kwargs["duree"],
-                                    id_freesound=son_cont_kwargs["id_freesound"],
-                                    tags=son_alea_kwargs["tags"],
-                                )
-                            )
-                        # Process Sons_Manu_scene for each scene
-                        for son_manu_kwargs in scene["sons_manuels"]:
-                            Sons_Manu_scene.append(
-                                Son_Manuel(
-                                    nom=son_manu_kwargs["nom"],
-                                    description=son_manu_kwargs["description"],
-                                    duree=son_manu_kwargs["duree"],
-                                    id_freesound=son_manu_kwargs["id_freesound"],
-                                    tags=son_alea_kwargs["tags"],
-                                    start_key=son_manu_kwargs["param1"],
-                                )
-                            )
-                        # Create scene objects for this sounddeck
-                        Scenes_of_user.append(
-                            Scene(
-                                nom=scene["nom"],
-                                description=scene["description"],
-                                id_scene=scene["id_scene"],
-                                sons_aleatoires=Sons_Alea_scene,
-                                sons_manuels=Sons_Manu_scene,
-                                sons_continus=Sons_Cont_scene,
-                                date_creation=scene["date_creation"],
-                            )
-                        )
-
-                    # Now add the sounddeck with its scenes to SDs_of_user
-                    SDs_of_user.append(
-                        SD(
-                            nom=sd["nom"],
-                            description=sd["description"],
-                            id_sd=sd["id_sd"],
-                            scenes=Scenes_of_user,
-                            date_creation=sd["date_creation"],
-                            id_createur=sd["id_createur"],
-                        )
-                    )
-
-                utilisateur = User(
-                    nom=dic_user["nom"],
-                    prenom=dic_user["prenom"],
-                    date_naissance=dic_user["date_naissance"],
-                    id_user=dic_user["id_user"],
-                    SD_possedes=SDs_of_user,
-                    pseudo=dic_user["pseudo"],
-                )"""
                 self.session.connexion(
                     self.instancier_par_id_user(id_user=dic_user["id_user"], schema=schema)
                 )
