@@ -18,6 +18,7 @@ from business_object.son_manuel import Son_Manuel
 ####
 from service.session import Session
 from service.freesound import Freesound
+from service.sd_service import SDService
 
 ####
 from rich.console import Console
@@ -255,6 +256,7 @@ class SonService:
             return instance_son
 
     def modifier_nom_son(self, son, new_nom: str, schema: str):
+        SDService().input_checking_injection(input_str=new_nom)
         # On update la session
         son.modifier_nom(new_nom=new_nom)
         # On update le user en session
@@ -276,6 +278,7 @@ class SonService:
         SonDAO().modifier_son(son=son, schema=schema)
 
     def modifier_desc_son(self, son, new_desc: str, schema: str):
+        SDService().input_checking_injection(input_str=new_desc)
         # On update la session
         son.modifier_description(new_desc=new_desc)
         # On update le user en session
@@ -316,6 +319,7 @@ class SonService:
         SonDAO().modifier_param_son(son_alea, schema=schema)
 
     def modifier_start_key_son(self, son_manuel: Son_Manuel, new_start_key: str, schema: str):
+        SDService().input_checking_injection(input_str=new_start_key)
         son_manuel.modifier_start_key(new_start_key=new_start_key)
         for sd in Session().utilisateur.SD_possedes:
             for scene in sd.scenes:

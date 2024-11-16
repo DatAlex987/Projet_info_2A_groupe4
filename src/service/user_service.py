@@ -47,20 +47,28 @@ class UserService:
     def input_checking_injection(
         self, nom: str, prenom: str, pseudo: str, mdp: str, date_naissance: str = None
     ):
-        # Check inputs pour injection:
-        # Définition de pattern regex pour qualifier les caractères acceptés pour chaque input
-        name_pattern = r"^[a-zA-ZÀ-ÿ' -]+$"  # Autorise lettres, accents, trait d'union, espace
-        pseudo_pattern = r"^[\w\d]{1,29}$"  # Autorise lettres, chiffres, entre 1 et 29 caractères
-        password_pattern = r"^[\w\d!@#$%^&*()+=]{1,29}$"  # Autorise lettres, chiffres et quelques caractères spéciaux (mais pas ', ",-, ; car utilisés dans des injections SQL.
-        date_of_birth_pattern = r"^[\d/]{10,10}$"  # Autorise chiffres et / .
-        # On vérifie que les inputs sont conformes aux patternes regex.
+        # Patterns pour éviter les injections SQL
+        patterns = [
+            r"(--|#)",  # Commentaires
+            r"(\bUNION\b)",  # UNION
+            r"(;|\bDROP\b|\bDELETE\b|\bINSERT\b|\bUPDATE\b|\bSELECT\b)",  # CRUD
+            r"(\')",  # guillemet simple
+            r"(\bEXEC\b|\bEXECUTE\b)",  # EXECUTE
+        ]
+
+        # Autres patterns, plus spécifiques
+        name_pattern = r"^[a-zA-ZÀ-ÿ' -]{1,29}$"
+        pseudo_pattern = r"^[\w\d]{1,29}$"
+        password_pattern = r"^[\w\d!@#$%^&*()]{1,29}$"
+        date_of_birth_pattern = r"^[\d/]{10,10}$"
+
+        # On vérifie
         if not re.match(name_pattern, nom):
             raise ValueError("Le nom contient des caractères invalides.")
         if not re.match(name_pattern, prenom):
             raise ValueError("Le prénom contient des caractères invalides.")
-        if date_naissance is not None:
-            if not re.match(date_of_birth_pattern, date_naissance):
-                raise ValueError("La date de naissance contient des caractères invalides.")
+        if date_naissance and not re.match(date_of_birth_pattern, date_naissance):
+            raise ValueError("La date de naissance contient des caractères invalides.")
         if not re.match(pseudo_pattern, pseudo):
             raise ValueError(
                 "Le pseudo contient des caractères invalides ou n'est pas de longueur valide."
@@ -69,6 +77,17 @@ class UserService:
             raise ValueError(
                 "Le mot de passe contient des caractères invalides ou n'est pas de longueur valide."
             )
+
+        # On vérifie pour les injections SQL
+        inputs = [nom, prenom, pseudo, mdp]
+        if date_naissance:
+            inputs.append(date_naissance)
+        for input_str in inputs:
+            for pattern in patterns:
+                if re.search(pattern, input_str, re.IGNORECASE):
+                    raise ValueError(
+                        f"La chaîne de caracères {input_str} est invalide car suspecte."
+                    )
 
     def instancier_par_id_user(self, id_user: str, schema: str):
         dic_user = UserDAO().rechercher_par_id_user(id_user=id_user, schema=schema)

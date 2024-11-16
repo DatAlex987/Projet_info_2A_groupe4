@@ -4,6 +4,7 @@ from business_object.son_continu import Son_Continu
 from business_object.son_aleatoire import Son_Aleatoire
 from business_object.son_manuel import Son_Manuel
 from service.session import Session
+from service.sd_service import SDService
 import re
 import datetime
 import random
@@ -15,25 +16,6 @@ from dao.tag_dao import TagDAO
 
 class SceneService:
     """Méthodes de service des scènes"""
-
-    def input_checking_injection(self, nom: str, description: str):
-        """Vérifier les inputs de l'utilisateur pour empêcher les injections SQL
-
-        Params
-        -------------
-        nom : str
-            nom entré par l'utilisateur
-        description : str
-            description entrée par l'utilisateur
-        """
-        # Check inputs pour injection:
-        # Définition de pattern regex pour qualifier les caractères acceptés pour chaque input
-        pattern = r"^[a-zA-Zà-öø-ÿÀ-ÖØ-ß\s0-9\s,.\-:!@#%^&*()_+=|?/\[\]{}']*$"  # Autorise lettres, et autres caractères
-        # On vérifie que les inputs sont conformes aux patternes regex.
-        if not re.match(pattern, nom):
-            raise ValueError("Le nom de la scène contient des caractères invalides.")
-        if not re.match(pattern, description):
-            raise ValueError("La description de la scène contient des caractères invalides.")
 
     @staticmethod  # Ne nécessite pas d'instance de SceneService pour exister
     def id_scene_generator():
@@ -99,7 +81,8 @@ class SceneService:
         bool
             True si la création à eu lieu sans soulever d'erreur, rien sinon
         """
-        SceneService().input_checking_injection(nom=nom, description=description)
+        SDService().input_checking_injection(input_str=nom)
+        SDService().input_checking_injection(input_str=description)
         try:
             new_scene = Scene(
                 nom=nom,
@@ -256,6 +239,7 @@ class SceneService:
         return True
 
     def modifier_nom_scene(self, scene: Scene, new_nom: str, schema: str):
+        SDService().input_checking_injection(input_str=new_nom)
         # On update la session
         scene.modifier_nom(nouveau_nom=new_nom)
         # On update le user en session
@@ -267,6 +251,7 @@ class SceneService:
         SceneDAO().modifier_scene(scene=scene, schema=schema)
 
     def modifier_desc_scene(self, scene: Scene, new_desc: str, schema: str):
+        SDService().input_checking_injection(input_str=new_desc)
         # On update la session
         scene.modifier_description(nouvelle_description=new_desc)
         # On update le user en session

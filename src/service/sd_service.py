@@ -19,24 +19,30 @@ from rich.table import Table
 class SDService:
     """Classe contenant les méthodes de service des Sound-decks"""
 
-    def input_checking_injection(self, nom: str, description: str):
-        """Vérifier les inputs de l'utilisateur pour empêcher les injections SQL
-
-        Params
-        -------------
-        nom : str
-            nom entré par l'utilisateur
-        description : str
-            description entrée par l'utilisateur
+    def input_checking_injection(self, input_str: str):
         """
-        # Check inputs pour injection:
-        # Définition de pattern regex pour qualifier les caractères acceptés pour chaque input
-        pattern = r"^[a-zA-Zà-öø-ÿÀ-ÖØ-ß\s0-9\s,.\-:!@#%^&*()_+=|?/\[\]{}']*$"  # Autorise lettres, et autres caractères
-        # On vérifie que les inputs sont conformes aux patternes regex.
-        if not re.match(pattern, nom):
-            raise ValueError("Le nom de la SD contient des caractères invalides.")
-        if not re.match(pattern, description):
-            raise ValueError("La description de la SD contient des caractères invalides.")
+        Vérifie qu'une chaîne de caractères n'est pas une injection SQL
+
+        Param
+        ---------------
+        input_str : str
+            La chaîne de caractères à tester
+        """
+        # Patterns pour éviter les injections SQL
+        patterns = [
+            r"(--|#)",  # Commentaires
+            r"(\bUNION\b)",  # UNION
+            r"(;|\bDROP\b|\bDELETE\b|\bINSERT\b|\bUPDATE\b|\bSELECT\b)",  # CRUD
+            r"(\')",  # guillemet simple
+            r"(\bEXEC\b|\bEXECUTE\b)",  # EXECUTE
+        ]
+
+        # Pour chaque pattern, on vérifie que l'input est correct
+        for pattern in patterns:
+            if re.search(pattern, input_str, re.IGNORECASE):
+                raise ValueError(
+                    f"La chaîne de caractère {input_str} comporte des caracètres invalides"
+                )
 
     @staticmethod  # Ne nécessite pas d'instance de SDService pour exister
     def id_sd_generator():
@@ -69,7 +75,8 @@ class SDService:
         ------------
         ???
         """
-        SDService().input_checking_injection(nom=nom, description=description)
+        SDService().input_checking_injection(input_str=nom)
+        SDService().input_checking_injection(input_str=description)
         try:
             new_sd = SD(
                 nom=nom,
@@ -236,6 +243,7 @@ class SDService:
         return choix
 
     def modifier_nom_sd(self, sd: SD, new_nom: str, schema: str):
+        SDService().input_checking_injection(input_str=new_nom)
         # On update la session
         sd.modifier_nom_sd(nouveau_nom=new_nom)
         # On update le user en session
@@ -246,6 +254,7 @@ class SDService:
         SDDAO().modifier_sd(sd=sd, schema=schema)
 
     def modifier_desc_sd(self, sd: SD, new_desc: str, schema: str):
+        SDService().input_checking_injection(input_str=new_desc)
         # On update la session
         sd.modifier_description_sd(nouvelle_description=new_desc)
         # On update le user en session
