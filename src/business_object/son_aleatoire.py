@@ -1,6 +1,7 @@
 from business_object.son import Son
 import pygame
 import random
+import time
 import threading
 
 
@@ -50,27 +51,11 @@ class Son_Aleatoire(Son):
             raise ValueError("Les cooldowns ne peuvent pas être négatifs.")
         self.cooldown_max = new_cooldown_max
 
-    def activ_son_alea(self, debut, t):
-        t = (random.randint(self.cooldown_min, self.cooldown_max) + self.charge.get_length()) * 1000
-        debut = pygame.time.get_ticks()
-        return [debut, t]
-
-    # Thread Worker qui exécute la fonction chaque fois que l'événement est déclenché
-    def thread_worker(self, event, t, debut):
-        while True:
-            event.wait()  # Attendre que l'événement soit déclenché
-            event.clear()  # Réinitialiser l'événement pour pouvoir attendre à nouveau
-            temps_ecoule = pygame.time.get_ticks() - debut
-            if temps_ecoule >= t:
-                self.charge.play()  # Jouer le son
-
     def Arret_Son(self):
         if self.charge:
-            input("Appuyer sur m pour arreter le son aleatoire")
+            input("Appuyer sur Entrée pour arreter le son aleatoire")
             self.charge.stop()
             self.charge = None
-        else:
-            print(f"le son {self.id_freesound} ne joue pas : pygame_error")
 
     def jouer_son(self):
         """Joue le son aléatoire comme attendu"""
@@ -78,15 +63,21 @@ class Son_Aleatoire(Son):
         # Initialiser Pygame est necessaire :pygame.mixer.init avant
         try:
             self.charge = pygame.mixer.Sound(file_path)
-            t = random.randint(self.cooldown_min, self.cooldown_max) * 1000
-            debut = pygame.time.get_ticks()  # l'heure de début
-            while self.charge:
-                temps_ecoule = pygame.time.get_ticks() - debut
-                if temps_ecoule >= t:
-                    self.charge.play()  # Jouer le son
-
+            t = random.randint(self.cooldown_min, self.cooldown_max)
+            longueur = self.charge.get_length() // 1000
+            time.sleep(t)
+            self.charge.play()  # Jouer le son
+            t = random.randint(self.cooldown_min, self.cooldown_max) + longueur
+            debut = pygame.time.get_ticks()
             thread_A = threading.Thread(target=self.Arret_Son)
             thread_A.daemon = True  # Ensure it exits when the main program does
             thread_A.start()
+            while self.charge:
+                temps_ecoule = pygame.time.get_ticks() - debut
+                if (temps_ecoule // 1000) >= t:
+                    self.charge.play()  # Jouer le son
+                    t = longueur + (random.randint(self.cooldown_min, self.cooldown_max))
+                    debut = pygame.time.get_ticks()
+
         except pygame.error as e:
             print(f"Erreur lors de la lecture du fichier : {e}")
