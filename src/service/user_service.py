@@ -107,6 +107,7 @@ class UserService:
                             description=son_alea_kwargs["description"],
                             duree=son_alea_kwargs["duree"],
                             id_freesound=son_alea_kwargs["id_freesound"],
+                            id_son=son_alea_kwargs["id_son"],
                             tags=son_alea_kwargs["tags"],
                             cooldown_min=son_alea_kwargs["param1"],
                             cooldown_max=son_alea_kwargs["param2"],
@@ -120,7 +121,8 @@ class UserService:
                             description=son_cont_kwargs["description"],
                             duree=son_cont_kwargs["duree"],
                             id_freesound=son_cont_kwargs["id_freesound"],
-                            tags=son_alea_kwargs["tags"],
+                            id_son=son_cont_kwargs["id_son"],
+                            tags=son_cont_kwargs["tags"],
                         )
                     )
                 # Process Sons_Manu_scene for each scene
@@ -131,7 +133,8 @@ class UserService:
                             description=son_manu_kwargs["description"],
                             duree=son_manu_kwargs["duree"],
                             id_freesound=son_manu_kwargs["id_freesound"],
-                            tags=son_alea_kwargs["tags"],
+                            id_son=son_manu_kwargs["id_son"],
+                            tags=son_manu_kwargs["tags"],
                             start_key=son_manu_kwargs["param1"],
                         )
                     )

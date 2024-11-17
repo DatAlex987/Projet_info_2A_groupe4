@@ -123,12 +123,10 @@ class SDService:
                     id_scene=scene.id_scene, schema=schema
                 )
                 for son in scene.sons_aleatoires + scene.sons_continus + scene.sons_manuels:
-                    SonDAO().supprimer_toutes_associations_son(
-                        id_freesound=son.id_freesound, schema=schema
-                    )
+                    SonDAO().supprimer_toutes_associations_son(id_son=son.id_son, schema=schema)
                     for tag in son.tags:
                         TagDAO().supprimer_association_son_tag(
-                            id_freesound=son.id_freesound, tag=tag, schema=schema
+                            id_son=son.id_son, tag=tag, schema=schema
                         )
             # On termine par actualiser la session
             Session().utilisateur.enlever_sd(sd=sd)
@@ -162,6 +160,7 @@ class SDService:
                         description=son_alea_kwargs["description"],
                         duree=son_alea_kwargs["duree"],
                         id_freesound=son_alea_kwargs["id_freesound"],
+                        id_son=son_alea_kwargs["id_son"],
                         tags=son_alea_kwargs["tags"],
                         cooldown_min=son_alea_kwargs["param1"],
                         cooldown_max=son_alea_kwargs["param2"],
@@ -175,6 +174,7 @@ class SDService:
                         description=son_cont_kwargs["description"],
                         duree=son_cont_kwargs["duree"],
                         id_freesound=son_cont_kwargs["id_freesound"],
+                        id_son=son_cont_kwargs["id_son"],
                         tags=son_cont_kwargs["tags"],
                     )
                 )
@@ -186,6 +186,7 @@ class SDService:
                         description=son_manu_kwargs["description"],
                         duree=son_manu_kwargs["duree"],
                         id_freesound=son_manu_kwargs["id_freesound"],
+                        id_son=son_manu_kwargs["id_son"],
                         tags=son_manu_kwargs["tags"],
                         start_key=son_manu_kwargs["param1"],
                     )
@@ -332,3 +333,28 @@ class SDService:
                 compteur += 1
             choix.append("Retour au menu de recherche de consultation")
             return choix
+
+    def ajouter_sd_existante_to_user(self, schema: str):  # NOT TESTED YET
+        try:
+            Session.utilisateur.ajouter_sd(sd=Session().sd_to_consult)
+            SDDAO().ajouter_association_user_sd(
+                id_user=Session().utilisateur.id_user,
+                id_sd=Session().sd_to_consult.id_sd,
+                schema=schema,
+            )
+        except ValueError as e:
+            raise ValueError(f"Erreur lors de la sauvegarde de la sound-deck: {e}")
+
+    def dupliquer_sd_existante_to_user(self, schema: str):  # TO BE DONE
+        sd_to_dupli = Session().sd_to_consult
+        # On change l'id du créateur pour permettre à l'utilisateur de faire des modifications
+        # à l'avenir sur cette SD
+        sd_to_dupli.id_createur = Session().utilisateur.id_user
+        # Can'tg do anything for now : On doit régler ce pb d'id freesound. id_son
+        for scene in sd_to_dupli.scenes:
+            for son_alea in scene.sons_aleatoires:
+                pass
+            for son_continu in scene.sons_continus:
+                pass
+            for son_manuel in scene.sons_manuels:
+                pass

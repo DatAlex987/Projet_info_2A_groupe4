@@ -36,7 +36,8 @@ CREATE TABLE SchemaTest.Scene (
 
 DROP TABLE IF EXISTS SchemaTest.Son CASCADE ;
 CREATE TABLE SchemaTest.Son (
-    id_freesound VARCHAR(30) PRIMARY KEY,
+    id_son VARCHAR(30) PRIMARY KEY,
+    id_freesound VARCHAR(30),
     nom TEXT,
     description VARCHAR(280),
     duree TIME
@@ -71,21 +72,21 @@ CREATE TABLE SchemaTest.Sounddeck_Scene(
 DROP TABLE IF EXISTS SchemaTest.Scene_Son CASCADE ;
 CREATE TABLE SchemaTest.Scene_Son(
     id_scene VARCHAR(30),
-    id_freesound VARCHAR(30),
+    id_son VARCHAR(30),
     param1 TEXT,
     param2 TEXT,
     type VARCHAR(30),
-    PRIMARY KEY (id_scene, id_freesound, type),
+    PRIMARY KEY (id_scene, id_son, type),
     FOREIGN KEY (id_scene) REFERENCES SchemaTest.Scene(id_scene) ON DELETE CASCADE,
-    FOREIGN KEY (id_freesound) REFERENCES SchemaTest.Son(id_freesound) ON DELETE CASCADE
+    FOREIGN KEY (id_son) REFERENCES SchemaTest.Son(id_son) ON DELETE CASCADE
 );
 
 
 DROP TABLE IF EXISTS SchemaTest.Son_Tag CASCADE ;
 CREATE TABLE  SchemaTest.Son_Tag(
-    id_freesound VARCHAR(30),
+    id_son VARCHAR(30),
     nom_tag TEXT,
-    PRIMARY KEY (id_freesound, nom_tag),
-    FOREIGN KEY (id_freesound) REFERENCES SchemaTest.Son(id_freesound) ON DELETE CASCADE,
+    PRIMARY KEY (id_son, nom_tag),
+    FOREIGN KEY (id_son) REFERENCES SchemaTest.Son(id_son) ON DELETE CASCADE,
     FOREIGN KEY (nom_tag) REFERENCES SchemaTest.Tag(nom_tag) ON DELETE CASCADE
 );
