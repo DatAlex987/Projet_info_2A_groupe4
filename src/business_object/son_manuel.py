@@ -30,7 +30,7 @@ class Son_Manuel(Son):
         self.start_key = new_key
 
     def Arret_Son(self):
-        while self.charge:
+        if self.charge:
             i = input(
                 f"Appuyer sur m pour arreter le son manuel ou {self.start_key} pour le déclencher "
             )
