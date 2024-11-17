@@ -18,8 +18,8 @@ class Son_Manuel(Son):
     --------
     """
 
-    def __init__(self, nom, description, duree, id_freesound, tags, start_key):
-        super().__init__(nom, description, duree, id_freesound, tags)
+    def __init__(self, nom, description, duree, id_son, id_freesound, tags, start_key):
+        super().__init__(nom, description, duree, id_son, id_freesound, tags)
         self.start_key: str = start_key
         self.charge = None
         if not isinstance(start_key, str):

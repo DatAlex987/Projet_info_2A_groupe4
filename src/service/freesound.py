@@ -137,7 +137,7 @@ class Freesound(metaclass=Singleton):
                 "license": sound.get("license", "Unknown"),
                 "username": sound.get("username", "Unknown"),
             }
-            for sound in response_json["results"]
+            for sound in response_json["results"][:limit]
         ]
 
         return results
@@ -243,24 +243,32 @@ class Freesound(metaclass=Singleton):
         # Limiter le nombre d'IDs renvoyés à la valeur de `limit`
         return ids[:limit]
 
-    def telecharger_son(self, id_son):
-        # Modifier la méthode pour prendre en compte les autres formats.
+    def telecharger_son(self, id_freesound):
         # Renommer les sons téléchargés au format précisé dans jouer_son (son.py)
-        sound_data = Freesound.rechercher_par_id(id_son)
+        sound_data = Freesound.rechercher_par_id(id_freesound)
         mp3_url = sound_data["previews"]["preview-hq-mp3"]  # Lien du fichier MP3 haute qualité
+
+        # Chemin complet vers le fichier dans le dossier Fichiers_audio
+        dossier_sauvegarde: str = os.getenv("DOSSIER_SAUVEGARDE")
+        chemin_fichier_mp3 = os.path.join(dossier_sauvegarde, f"{id_freesound}.mp3")
+
+        # Vérifier si le fichier existe déjà
+        if os.path.exists(chemin_fichier_mp3):
+            print(f"Le fichier {chemin_fichier_mp3} existe déjà. Téléchargement non nécessaire.")
+            return chemin_fichier_mp3
 
         # Télécharger le fichier MP3
         print(f"Téléchargement du son à partir de {mp3_url}")
         mp3_response = requests.get(mp3_url)
         if mp3_response.status_code == 200:
-            # Chemin complet vers le fichier dans le dossier Fichiers_audio
-            dossier_sauvegarde: str = os.getenv("DOSSIER_SAUVEGARDE")
-            chemin_fichier_mp3 = os.path.join(dossier_sauvegarde, f"{id_son}.mp3")
+            # Enregistrer le fichier dans le dossier spécifié
             with open(chemin_fichier_mp3, "wb") as f:
                 f.write(mp3_response.content)
             print(f"Le fichier a été téléchargé sous le nom {chemin_fichier_mp3}")
+            return chemin_fichier_mp3
         else:
             print(f"Erreur lors du téléchargement du fichier : {mp3_response.status_code}")
+            return None
 
 
 """def rechercher_multi_filtres(dico_filtres: dict, limit: int):  # NOT DONE YET

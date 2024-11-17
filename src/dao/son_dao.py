@@ -1,10 +1,11 @@
 from dao.db_connection import DBConnection
-from business_object.son import Son
+
+# from business_object.son import Son
 from business_object.son_aleatoire import Son_Aleatoire
 from business_object.son_manuel import Son_Manuel
 from business_object.son_continu import Son_Continu
 from dao.tag_dao import TagDAO
-from view.session import Session
+from service.session import Session
 import datetime
 
 
@@ -42,20 +43,21 @@ class SonDAO:
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
                 query = f"""
-                INSERT INTO {schema}.Son (id_freesound, nom, description, duree)
-                    VALUES (%(id_freesound)s, %(nom)s, %(description)s, %(duree)s)
-                    RETURNING id_freesound;
+                INSERT INTO {schema}.Son (id_freesound, id_son, nom, description, duree)
+                    VALUES (%(id_freesound)s, %(id_son)s, %(nom)s, %(description)s, %(duree)s)
+                    RETURNING id_son;
                  """
                 cursor.execute(
                     query,
                     {
                         "id_freesound": son.id_freesound,
+                        "id_son": son.id_son,
                         "nom": son.nom,
                         "description": son.description,
                         "duree": son.duree,
                     },
                 )
-                son.id = cursor.fetchone()["id_freesound"]
+                son.id = cursor.fetchone()["id_son"]
         return son
 
     def modifier_son(self, son, schema: str):
@@ -64,7 +66,7 @@ class SonDAO:
                 query = f"""
                 UPDATE {schema}.Son
                     SET nom = %(nom)s, description = %(description)s, duree = %(duree)s
-                    WHERE id_freesound = %(id_freesound)s;
+                    WHERE id_son = %(id_son)s;
                 """
 
                 cursor.execute(
@@ -73,7 +75,7 @@ class SonDAO:
                         "nom": son.nom,
                         "description": son.description,
                         "duree": son.duree,
-                        "id_freesound": son.id_freesound,
+                        "id_son": son.id_son,
                     },
                 )
         return son
@@ -82,7 +84,7 @@ class SonDAO:
         dict_f_string = {
             "param1": None,
             "param2": None,
-            "id_freesound": son.id_freesound,
+            "id_son": son.id_son,
             "id_scene": Session().scene_to_param.id_scene,
         }
         if isinstance(son, Son_Aleatoire):
@@ -95,7 +97,7 @@ class SonDAO:
                 query = f"""
                 UPDATE {schema}.Scene_Son
                     SET param1 = %(param1)s, param2 = %(param2)s
-                    WHERE id_freesound = %(id_freesound)s AND id_scene = %(id_scene)s;
+                    WHERE id_son = %(id_son)s AND id_scene = %(id_scene)s;
                 """
 
                 cursor.execute(
@@ -104,24 +106,24 @@ class SonDAO:
                 )
         return son
 
-    def supprimer_son(self, id_freesound, schema: str):
+    def supprimer_son(self, id_son, schema: str):
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
                 query = f"""
                 DELETE FROM {schema}.Son
-                    WHERE id_freesound = %(id_freesound)s;
+                    WHERE id_son = %(id_son)s;
                 """
 
                 cursor.execute(
                     query,
-                    {"id_freesound": id_freesound},
+                    {"id_son": id_son},
                 )
 
     def consulter_sons(self, schema: str):
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
                 query = f"""
-                 SELECT id_freesound, nom, description, duree
+                 SELECT id_freesound, id_son, nom, description, duree
                     FROM {schema}.Son;
                 """
                 cursor.execute(query)
@@ -135,27 +137,26 @@ class SonDAO:
             sons_trouves.append(
                 {
                     "id_freesound": str(row["id_freesound"]),
+                    "id_son": str(row["id_son"]),
                     "nom": row["nom"],
                     "description": row["description"],
-                    "tags": TagDAO().rechercher_tags_par_son(
-                        str(row["id_freesound"]), schema=schema
-                    ),
+                    "tags": TagDAO().rechercher_tags_par_son(str(row["id_son"]), schema=schema),
                     "duree": row["duree"],
                 }
             )
         return sons_trouves
 
-    def rechercher_par_id_son(self, id_freesound: str, schema: str):
+    def rechercher_par_id_son(self, id_son: str, schema: str):
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
                 query = f"""
-                SELECT id_freesound, nom, description, duree
+                SELECT id_freesound, id_son, nom, description, duree
                     FROM {schema}.Son
-                    WHERE id_freesound = %(id_freesound)s;
+                    WHERE id_son = %(id_son)s;
                 """
                 cursor.execute(
                     query,
-                    {"id_freesound": id_freesound},
+                    {"id_son": id_son},
                 )
                 res = cursor.fetchone()
 
@@ -164,9 +165,10 @@ class SonDAO:
 
         son_trouve = {
             "id_freesound": str(res["id_freesound"]),
+            "id_son": str(res["id_son"]),
             "nom": res["nom"],
             "description": res["description"],
-            "tags": TagDAO().rechercher_tags_par_son(str(res["id_freesound"]), schema=schema),
+            "tags": TagDAO().rechercher_tags_par_son(str(res["id_son"]), schema=schema),
             "duree": res["duree"],
         }
         return son_trouve
@@ -194,10 +196,10 @@ class SonDAO:
             with DBConnection(schema=schema).connection as conn:
                 with conn.cursor() as cursor:
                     query = f"""
-                    SELECT s.id_freesound, s.nom, s.description, s.duree, ss.param1, ss.param2, ss.type
+                    SELECT s.id_freesound, s.id_son, s.nom, s.description, s.duree, ss.param1, ss.param2, ss.type
                     FROM {schema}.Scene_Son ss
                     LEFT JOIN {schema}.Son s
-                    ON s.id_freesound = ss.id_freesound
+                    ON s.id_son = ss.id_son
                     WHERE ss.id_scene = %(id_scene)s;
                     """
 
@@ -219,12 +221,11 @@ class SonDAO:
                 if row["type"] == "aleatoire":
                     son_dict = {
                         "id_freesound": row["id_freesound"],
+                        "id_son": row["id_son"],
                         "nom": row["nom"],
                         "description": row["description"],
                         "duree": self.time_to_timedelta(t=row["duree"]),
-                        "tags": TagDAO().rechercher_tags_par_son(
-                            str(row["id_freesound"]), schema=schema
-                        ),
+                        "tags": TagDAO().rechercher_tags_par_son(str(row["id_son"]), schema=schema),
                         "param1": int(row["param1"]),
                         "param2": int(row["param2"]),
                     }
@@ -232,12 +233,11 @@ class SonDAO:
                 elif row["type"] == "continu":
                     son_dict = {
                         "id_freesound": row["id_freesound"],
+                        "id_son": row["id_son"],
                         "nom": row["nom"],
                         "description": row["description"],
                         "duree": self.time_to_timedelta(t=row["duree"]),
-                        "tags": TagDAO().rechercher_tags_par_son(
-                            str(row["id_freesound"]), schema=schema
-                        ),
+                        "tags": TagDAO().rechercher_tags_par_son(str(row["id_son"]), schema=schema),
                         "param1": None,
                         "param2": None,
                     }
@@ -245,12 +245,11 @@ class SonDAO:
                 elif row["type"] == "manuel":
                     son_dict = {
                         "id_freesound": row["id_freesound"],
+                        "id_son": row["id_son"],
                         "nom": row["nom"],
                         "description": row["description"],
                         "duree": self.time_to_timedelta(t=row["duree"]),
-                        "tags": TagDAO().rechercher_tags_par_son(
-                            str(row["id_freesound"]), schema=schema
-                        ),
+                        "tags": TagDAO().rechercher_tags_par_son(str(row["id_son"]), schema=schema),
                         "param1": str(row["param1"]),
                         "param2": None,
                     }
@@ -282,14 +281,14 @@ class SonDAO:
             with DBConnection(schema=schema).connection as conn:
                 with conn.cursor() as cursor:
                     query = f"""
-                        INSERT INTO {schema}.Scene_Son(id_scene, id_freesound, type, param1, param2)
-                        VALUES (%(id_scene)s, %(id_freesound)s, %(type)s, %(param1)s, %(param2)s);
+                        INSERT INTO {schema}.Scene_Son(id_scene, id_son, type, param1, param2)
+                        VALUES (%(id_scene)s, %(id_son)s, %(type)s, %(param1)s, %(param2)s);
                         """
                     cursor.execute(
                         query,
                         {
                             "id_scene": id_scene,
-                            "id_freesound": son.id_freesound,
+                            "id_son": son.id_son,
                             "type": SonDAO().type_of_son(son),
                             "param1": SonDAO().param_of_son(son)[0],
                             "param2": SonDAO().param_of_son(son)[1],
@@ -304,7 +303,7 @@ class SonDAO:
             return None
 
     def supprimer_association_scene_son(
-        self, id_scene: str, id_freesound: str, type_son: str, schema: str
+        self, id_scene: str, id_son: str, type_son: str, schema: str
     ):
         """
         Supprimer une association Scene - Son dans la table d'association.
@@ -313,7 +312,7 @@ class SonDAO:
         ----------
         id_scene : str
             ID de la scène concernée
-        id_freesound : str
+        id_son : str
             ID du son concerné
         type_son : str
             Type du son dont l'appartenance doit être supprimée
@@ -329,11 +328,11 @@ class SonDAO:
                 with conn.cursor() as cursor:
                     query = f"""
                         DELETE FROM {schema}.Scene_Son
-                        WHERE id_scene = %(id_scene)s and id_freesound = %(id_freesound)s and type = %(type)s ;
+                        WHERE id_scene = %(id_scene)s and id_son = %(id_son)s and type = %(type)s ;
                         """
                     cursor.execute(
                         query,
-                        {"id_scene": id_scene, "id_freesound": id_freesound, "type": type_son},
+                        {"id_scene": id_scene, "id_son": id_son, "type": type_son},
                     )
                     nb_lignes_supp = cursor.rowcount
             return nb_lignes_supp  # Permet notamment de savoir si aucune ligne n'a été trouvée
@@ -341,7 +340,7 @@ class SonDAO:
             print(f"Erreur lors de la suppression de l'association : {e}")
             return None
 
-    def check_if_son_in_scene(self, id_scene: str, id_freesound: str, type_son: str, schema: str):
+    def check_if_son_in_scene(self, id_scene: str, id_son: str, type_son: str, schema: str):
         """
         Vérifie si un son appartient à une scène
 
@@ -349,7 +348,7 @@ class SonDAO:
         ----------
         id_scene : str
             L'ID de la scène à vérifier
-        id_freesound : str
+        id_son : str
             L'ID du son à vérifier
         type_son : str
             Type du son dont l'appartenance à la scène est vérifiée
@@ -365,14 +364,14 @@ class SonDAO:
                     query = f"""
                     SELECT COUNT(*) AS count
                     FROM {schema}.Scene_Son
-                    WHERE id_scene = %(id_scene)s AND id_freesound = %(id_freesound)s AND type = %(type)s ;
+                    WHERE id_scene = %(id_scene)s AND id_son = %(id_son)s AND type = %(type)s ;
                     """
 
                     cursor.execute(
                         query,
                         {
                             "id_scene": id_scene,
-                            "id_freesound": id_freesound,
+                            "id_son": id_son,
                             "type": type_son,
                         },
                     )
@@ -386,7 +385,7 @@ class SonDAO:
             print(f"Erreur lors de la vérification : {id_scene},{id_freesound},{type_son} : {e}")
             return False
 
-    def get_scenes_of_son_aleatoire(self, id_freesound: str, schema: str):
+    def get_scenes_of_son_aleatoire(self, id_son: str, schema: str):
         """
         Renvoie la liste des scenes qui ont le son mentionné en "aléatoire".
         """
@@ -394,16 +393,16 @@ class SonDAO:
             with connection.cursor() as cursor:
                 query = f"""SELECT id_scene
                         FROM {schema}.Scene_Son
-                        WHERE id_freesound = %(id_freesound)s
+                        WHERE id_son = %(id_son)s
                         AND type = "aleatoire";"""
                 cursor.execute(
                     query,
-                    {"id_freesound": id_freesound},
+                    {"id_son": id_son},
                 )
                 res = cursor.fetchall()
         return [row["id_scene"] for row in res]
 
-    def get_scenes_of_son_continu(self, id_freesound: str, schema: str):
+    def get_scenes_of_son_continu(self, id_son: str, schema: str):
         """
         Renvoie la liste des scenes qui ont le son mentionné en "continu".
         """
@@ -411,16 +410,16 @@ class SonDAO:
             with connection.cursor() as cursor:
                 query = f"""SELECT id_scene
                         FROM {schema}.Scene_Son
-                        WHERE id_freesound = %(id_freesound)s
+                        WHERE id_son = %(id_son)s
                         AND type = "continu";"""
                 cursor.execute(
                     query,
-                    {"id_freesound": id_freesound},
+                    {"id_son": id_son},
                 )
                 res = cursor.fetchall()
         return [row["id_scene"] for row in res]
 
-    def get_scenes_of_son_manuel(self, id_freesound: str, schema: str):
+    def get_scenes_of_son_manuel(self, id_son: str, schema: str):
         """
         Renvoie la liste des scenes qui ont le son mentionné en "manuel".
         """
@@ -428,39 +427,37 @@ class SonDAO:
             with connection.cursor() as cursor:
                 query = f"""SELECT id_scene
                         FROM {schema}.Scene_Son
-                        WHERE id_freesound = %(id_freesound)s
+                        WHERE id_son = %(id_son)s
                         AND type = "manuel";"""
                 cursor.execute(
                     query,
-                    {"id_freesound": id_freesound},
+                    {"id_son": id_son},
                 )
                 res = cursor.fetchall()
         return [row["id_scene"] for row in res]
 
-    def get_tags_of_son(self, id_freesound: str, schema: str):
+    def get_tags_of_son(self, id_son: str, schema: str):
         """
-        Renvoie la liste des tags de id_freesound
+        Renvoie la liste des tags de id_son
         """
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
                 cursor.execute(
-                    f"SELECT nom_tag FROM {schema}.Son_Tag WHERE id_freesound = %(id_freesound)s;",
-                    {"id_freesound": id_freesound},
+                    f"SELECT nom_tag FROM {schema}.Son_Tag WHERE id_son = %(id_son)s;",
+                    {"id_son": id_son},
                 )
                 res = cursor.fetchall()
         return [row["nom_tag"] for row in res]
 
-    def supprimer_toutes_associations_son(self, id_freesound: str, type_son: str, schema: str):
+    def supprimer_toutes_associations_son(self, id_son: str, type_son: str, schema: str):
         # Get all scenes having the given son as type_son
         if type_son == "aleatoire":
             scenes_possedants = [
                 scene_id
-                for scene_id in self.get_scenes_of_son_aleatoire(
-                    id_freesound=id_freesound, schema=schema
-                )
+                for scene_id in self.get_scenes_of_son_aleatoire(id_son=id_son, schema=schema)
                 if self.check_if_son_in_scene(
                     id_scene=scene_id,
-                    id_freesound=id_freesound,
+                    id_son=id_son,
                     type_son="aleatoire",
                     schema=schema,
                 )
@@ -469,22 +466,18 @@ class SonDAO:
         if type_son == "continu":
             scenes_possedants = [
                 scene_id
-                for scene_id in self.get_scenes_of_son_aleatoire(
-                    id_freesound=id_freesound, schema=schema
-                )
+                for scene_id in self.get_scenes_of_son_aleatoire(id_son=id_son, schema=schema)
                 if self.check_if_son_in_scene(
-                    id_scene=scene_id, id_freesound=id_freesound, type_son="continu", schema=schema
+                    id_scene=scene_id, id_son=id_son, type_son="continu", schema=schema
                 )
             ]
 
         if type_son == "manuel":
             scenes_possedants = [
                 scene_id
-                for scene_id in self.get_scenes_of_son_aleatoire(
-                    id_freesound=id_freesound, schema=schema
-                )
+                for scene_id in self.get_scenes_of_son_aleatoire(id_son=id_son, schema=schema)
                 if self.check_if_son_in_scene(
-                    id_scene=scene_id, id_freesound=id_freesound, type_son="manuel", schema=schema
+                    id_scene=scene_id, id_son=id_son, type_son="manuel", schema=schema
                 )
             ]
         # Delete all associations in scene_son for the given son
@@ -504,3 +497,33 @@ class SonDAO:
             TagDAO().supprimer_association_son_tag(
                 id_freesound=id_freesound, tag=tag, schema=schema
             )
+
+    # nettoyage
+    def delete_son_if_no_scenes(self, id_son: str, schema: str):
+        """
+        Supprime un son s'il n'est associé à aucune scène.
+        """
+        with DBConnection(schema=schema).connection as connection:
+            with connection.cursor() as cursor:
+                # Vérifie si des scènes sont liées au son
+                query = f"""SELECT COUNT(*) AS scene_count
+                            FROM {schema}.Scene_Son
+                            WHERE id_son = %(id_son)s;"""
+                cursor.execute(
+                    query,
+                    {"id_son": id_son},
+                )
+                scene_count = cursor.fetchone()["scene_count"]
+
+                # Si aucune scène n'est liée, supprimer le son
+                if scene_count == 0:
+                    delete_query = f"""DELETE FROM {schema}.Son
+                                    WHERE id_son = %(id_son)s;"""
+                    cursor.execute(
+                        delete_query,
+                        {"id_son": id_son},
+                    )
+                    connection.commit()
+                    return True  # Indique que la suppression a été effectuée
+                else:
+                    return False  # Le son n'a pas été supprimé car il est encore lié à des scènes

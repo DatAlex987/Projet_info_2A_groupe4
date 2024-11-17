@@ -3,13 +3,15 @@
 from colorama import Fore, Style
 from InquirerPy import prompt
 from view.abstractview import AbstractView
-from view.session import Session
-from business_object.son_aleatoire import Son_Aleatoire
-from business_object.son_continu import Son_Continu
-from business_object.son_manuel import Son_Manuel
-from service.sd_service import SDService
+from service.session import Session
+
+# from business_object.son_aleatoire import Son_Aleatoire
+# from business_object.son_continu import Son_Continu
+# from business_object.son_manuel import Son_Manuel
+# from service.sd_service import SDService
 from service.scene_service import SceneService
-from service.son_service import SonService
+
+# from service.son_service import SonService
 
 
 class MenuParamModifSceneView(AbstractView):
@@ -42,31 +44,31 @@ class MenuParamModifSceneView(AbstractView):
             {
                 "type": "input",
                 "name": "modif desc",
-                "message": "Entrez la nouvelle description pour cette scène:",
+                "message": "Entrez la nouvelle description pour cette scène :",
             }
         ]
 
     def make_choice(self):
         choix_modif = prompt(self.question_modif_scene)
         if choix_modif["choix modif"] == "Voir la fiche de la scène":
-            pass  # méthode service pour display les infos de la scène
+            SceneService().afficher_details_scene(Session().scene_to_param)
         elif choix_modif["choix modif"] == "Modifier le nom":
             new_nom = prompt(self.question_modif_nom)
             SceneService().modifier_nom_scene(
                 scene=Session().scene_to_param, new_nom=new_nom["modif nom"], schema="ProjetInfo"
             )
+            print(Fore.GREEN + "Modification effectuée avec succès" + Style.RESET_ALL)
+
         elif choix_modif["choix modif"] == "Modifier la description":
             new_desc = prompt(self.question_modif_desc)
             SceneService().modifier_desc_scene(
                 scene=Session().scene_to_param, new_desc=new_desc["modif desc"], schema="ProjetInfo"
             )
+            print(Fore.GREEN + "Modification effectuée avec succès" + Style.RESET_ALL)
 
-        print(
-            Fore.GREEN + "Modification effectuée avec succès" + Style.RESET_ALL
-        )  # A déplacer pour ne pas l'afficher automatiquement
         from view.view_param.menuparamsceneview import MenuParamSceneView
 
         return MenuParamSceneView()
 
     def display_info(self):
-        print(Fore.BLUE + " MENU DE PARAMETRAGE ".center(80, "=") + Style.RESET_ALL)
+        print(Fore.BLUE + " [PARAMETRAGE] MENU SCENE ".center(80, "=") + Style.RESET_ALL)

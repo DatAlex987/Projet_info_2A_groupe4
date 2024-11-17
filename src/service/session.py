@@ -46,11 +46,14 @@ class Session(metaclass=Singleton):
         self.debut_connexion = None
         # Appels DAO pour supprimer les objets non reliés en BDD.
 
-    def afficher(self):
+    # a la suite : supprimer sd, scene, son, tag
+
+
+"""    def afficher(self):
         if self.utilisateur is None:
             print("Il n'y pas de session active")
         else:
             print(
                 f"Nom: {self.utilisateur.nom} \n Prenom: {self.utilisateur.prenom}"
                 + f"\n Id: {self.utilisateur.id_user} \n Debut_connexion: {self.debut_connexion}"
-            )
+            )"""

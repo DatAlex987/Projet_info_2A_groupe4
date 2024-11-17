@@ -16,20 +16,19 @@ from business_object.son import Son
 from business_object.son_aleatoire import Son_Aleatoire
 from business_object.son_manuel import Son_Manuel
 from business_object.son_continu import Son_Continu
-from view.session import Session
+from service.session import Session
 from service.freesound import Freesound
 from service.son_service import SonService
 import hashlib
 import pygame
 import os
+import re
 from datetime import timedelta
 
 # os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 
-# ResetDatabase().ResetALL()
-
-
-def arr():
+ResetDatabase().ResetALL()
+"""def arr():
     input("Appuyer sur Entrée pour arrêter le son")
     print("BB chat")
 
@@ -46,6 +45,9 @@ from src.service.freesound import Freesound
 dico_filtres = {"query": "violon", "min_duration": 80, "max_duration": None}
 a = Freesound.rechercher_multi_filtres(dico_filtres=dico_filtres, limit=15)
 print(a)
+
+"""
+
 
 """scene1 = Scene(
     nom="Scene1",

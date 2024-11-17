@@ -6,7 +6,7 @@ from InquirerPy import prompt
 from service.user_service import UserService
 
 ####
-from view.abstractview import AbstractView
+# from view.abstractview import AbstractView
 from view.view_consulter_user.consulter_users_proches_view import ConsulterUsersProchesView
 
 # from view.view_consulter_user.menu_consulter_createur_view import ConsulterCreateurView
@@ -37,4 +37,4 @@ class ConsulterCreateurView(AbstractView):
         return ConsulterUsersProchesView()
 
     def display_info(self):
-        print(Fore.BLUE + " MENU DE CONSULTATION [CREATEUR] ".center(80, "=") + Style.RESET_ALL)
+        print(Fore.BLUE + " [JEU] MENU RECHERCHE CREATEUR ".center(80, "=") + Style.RESET_ALL)

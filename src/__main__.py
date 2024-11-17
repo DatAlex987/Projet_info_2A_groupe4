@@ -15,6 +15,7 @@ from view.accueilview import AccueilView
     pseudo="folsory",
 )
 UserDAO().ajouter_user(user1, "ProjetInfo")
+
 """
 view = AccueilView()
 
@@ -24,6 +25,8 @@ with open("resources/banner.txt", mode="r", encoding="utf-8") as title:
 while view:
     view.display_info()
     view = view.make_choice()
+
+# Insérer la suppression des objets orphelins ici
 
 with open("resources/exit.txt", mode="r", encoding="utf-8") as exit_message:
     print(exit_message.read())

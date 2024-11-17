@@ -3,7 +3,7 @@
 from colorama import Fore, Style
 from InquirerPy import prompt
 from view.abstractview import AbstractView
-from view.session import Session
+from service.session import Session
 from business_object.son_aleatoire import Son_Aleatoire
 from business_object.son_continu import Son_Continu
 from business_object.son_manuel import Son_Manuel
@@ -69,7 +69,7 @@ class MenuParamModifSonView(AbstractView):
             {
                 "type": "input",
                 "name": "modif desc",
-                "message": "Entrez la nouvelle description pour ce son:",
+                "message": "Entrez la nouvelle description pour ce son (max. 280 caractères):",
             }
         ]
         self.question_modif_key = [
@@ -151,6 +151,8 @@ class MenuParamModifSonView(AbstractView):
                 SonService().modifier_desc_son(
                     son=Session().son_to_param, new_desc=new_desc["modif desc"], schema="ProjetInfo"
                 )
+                print(Fore.GREEN + "Modification effectuée avec succès" + Style.RESET_ALL)
+
             elif choix_modif["choix modif"] == "Modifier la touche de déclenchement":
                 new_key = prompt(self.question_modif_key)
                 SonService().modifier_start_key_son(
@@ -158,10 +160,11 @@ class MenuParamModifSonView(AbstractView):
                     new_start_key=new_key["modif key"],
                     schema="ProjetInfo",
                 )
-        print(Fore.GREEN + "Modification effectuée avec succès" + Style.RESET_ALL)
+                print(Fore.GREEN + "Modification effectuée avec succès" + Style.RESET_ALL)
+
         from view.view_param.menuparamscenespecifiqueview import MenuParamSceneSpecifiqueView
 
         return MenuParamSceneSpecifiqueView()
 
     def display_info(self):
-        print(Fore.BLUE + " MENU DE PARAMETRAGE ".center(80, "=") + Style.RESET_ALL)
+        print(Fore.BLUE + " [PARAMETRAGE] MENU SON ".center(80, "=") + Style.RESET_ALL)

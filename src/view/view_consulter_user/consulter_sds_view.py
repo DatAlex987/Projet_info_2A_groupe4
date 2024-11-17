@@ -3,12 +3,12 @@ from colorama import Fore, Style
 from InquirerPy import prompt
 
 ####
-from service.user_service import UserService
+# from service.user_service import UserService
 from service.sd_service import SDService
 
 ####
-from view.abstractview import AbstractView
-from view.session import Session
+# from view.abstractview import AbstractView
+from service.session import Session
 
 # from view.view_consulter_user.menu_consulter_createur_view import ConsulterCreateurView
 # from view.view_consulter_user.menu_consulter_nom_view import ConsulterNomView
@@ -44,8 +44,10 @@ class ConsulterSDsView(AbstractView):
             Session().sd_to_consult = SDService().instancier_sd_par_id(
                 id_sd=id_sd_select, schema="ProjetInfo"
             )
-            next_view = MenuConsultScenesView()  # Il faut la créer
+            from view.view_consulter_user.consulter_choix_sd import ConsulterChoixSD
+
+            next_view = ConsulterChoixSD()  # Il faut la créer
         return next_view
 
     def display_info(self):
-        print(Fore.BLUE + " MENU DE CONSULTATION [SD] ".center(80, "=") + Style.RESET_ALL)
+        print(Fore.BLUE + " [JEU] MENU SOUND-DECK ".center(80, "=") + Style.RESET_ALL)

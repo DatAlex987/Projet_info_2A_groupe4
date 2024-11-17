@@ -1,5 +1,6 @@
 from dao.db_connection import DBConnection
-from business_object.son import Son
+
+# from business_object.son import Son
 
 
 class TagDAO:
@@ -51,13 +52,13 @@ class TagDAO:
                     tags_trouves.append(row["nom_tag"])
         return tags_trouves
 
-    def rechercher_tags_par_son(self, id_freesound: str, schema: str):
+    def rechercher_tags_par_son(self, id_son: str, schema: str):
         """
         Recherche les tags appartenant à un son.
 
         Parameters
         ----------
-        id_freesound : str
+        id_son : str
             L'ID du son concerné
 
         Returns
@@ -65,7 +66,7 @@ class TagDAO:
         list[str]
             Liste des tags trouvés
         """
-        if not isinstance(id_freesound, str):
+        if not isinstance(id_son, str):
             print("ID du son invalide pour la recherche.")
             return None
 
@@ -75,12 +76,12 @@ class TagDAO:
                     query = f"""
                     SELECT nom_tag
                     FROM {schema}.Son_tag
-                    WHERE id_freesound = %(id_freesound)s;
+                    WHERE id_son = %(id_son)s;
                     """
 
                     cursor.execute(
                         query,
-                        {"id_freesound": id_freesound},
+                        {"id_son": id_son},
                     )
 
                     res = cursor.fetchall()
@@ -97,13 +98,13 @@ class TagDAO:
             print(f"Erreur lors de la récupération des sound-decks : {e}")
             return []
 
-    def ajouter_association_son_tag(self, id_freesound: str, tag: str, schema: str):
+    def ajouter_association_son_tag(self, id_son: str, tag: str, schema: str):
         """
         Ajoute une nouvelle association Son - Tag dans la table d'association.
 
         Parameters
         ----------
-        id_freesound : str
+        id_son : str
             ID du son concerné
         tag : str
             tag concerné
@@ -117,13 +118,13 @@ class TagDAO:
             with DBConnection(schema=schema).connection as conn:
                 with conn.cursor() as cursor:
                     query = f"""
-                            INSERT INTO {schema}.Son_tag(id_freesound, nom_tag)
-                            VALUES (%(id_freesound)s, %(nom_tag)s);
+                            INSERT INTO {schema}.Son_tag(id_son, nom_tag)
+                            VALUES (%(id_son)s, %(nom_tag)s);
                             """
                     cursor.execute(
                         query,
                         {
-                            "id_freesound": id_freesound,
+                            "id_son": id_son,
                             "nom_tag": tag,
                         },
                     )
@@ -134,13 +135,13 @@ class TagDAO:
             print(f"Erreur lors de l'ajout de l'association : {e}")
             return None
 
-    def supprimer_association_son_tag(self, id_freesound: str, tag: str, schema: str):
+    def supprimer_association_son_tag(self, id_son: str, tag: str, schema: str):
         """
         Supprimer une association Son - Tag dans la table d'association.
 
         Parameters
         ----------
-        id_freesound : str
+        id_son : str
             ID du son concerné
         tag : str
             tag concernée
@@ -156,12 +157,12 @@ class TagDAO:
                 with conn.cursor() as cursor:
                     query = f"""
                         DELETE FROM {schema}.Son_Tag
-                        WHERE id_freesound = %(id_freesound)s and nom_tag = %(nom_tag)s;
+                        WHERE id_son = %(id_son)s and nom_tag = %(nom_tag)s;
                         """
                     cursor.execute(
                         query,
                         {
-                            "id_freesound": id_freesound,
+                            "id_son": id_son,
                             "nom_tag": tag,
                         },
                     )
@@ -171,13 +172,13 @@ class TagDAO:
             print(f"Erreur lors de la suppression de l'association : {e}")
             return None
 
-    def check_if_son_has_tag(self, id_freesound: str, tag: str, schema: str):
+    def check_if_son_has_tag(self, id_son: str, tag: str, schema: str):
         """
         Vérifie si un son possède un tag
 
         Parameters
         ----------
-        id_freesound : str
+        id_son : str
             L'ID du son à vérifier.
         tag : str
            tag à vérifier.
@@ -193,13 +194,13 @@ class TagDAO:
                     query = f"""
                     SELECT COUNT(*) AS count
                     FROM {schema}.Son_Tag
-                    WHERE id_freesoung = %(id_freesound)s AND nom_tag = %(nom_tag)s;
+                    WHERE id_son = %(id_son)s AND nom_tag = %(nom_tag)s;
                     """
 
                     cursor.execute(
                         query,
                         {
-                            "id_freesound": id_freesound,
+                            "id_son": id_son,
                             "nom_tag": tag,
                         },
                     )
@@ -220,11 +221,42 @@ class TagDAO:
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
                 cursor.execute(
-                    f"SELECT id_freesound FROM {schema}.Son_Tag WHERE nom_tag = %(nom_tag)s;",
+                    f"SELECT id_son FROM {schema}.Son_Tag WHERE nom_tag = %(nom_tag)s;",
                     {"nom_tag": nom_tag},
                 )
                 res = cursor.fetchall()
-        return [row["id_freesound"] for row in res]
+        return [row["id_son"] for row in res]
+
+    # nettoyage
+
+    def delete_tag_if_no_sons(self, nom_tag: str, schema: str):
+        """
+        Supprime un tag s'il n'est associé à aucun son.
+        """
+        with DBConnection(schema=schema).connection as connection:
+            with connection.cursor() as cursor:
+                # Vérifie si le tag est associé à des sons
+                query = f"""SELECT COUNT(*) AS son_count
+                            FROM {schema}.Son_Tag
+                            WHERE nom_tag = %(nom_tag)s;"""
+                cursor.execute(
+                    query,
+                    {"nom_tag": nom_tag},
+                )
+                son_count = cursor.fetchone()["son_count"]
+
+                # Si aucun son n'est lié, supprimer le tag
+                if son_count == 0:
+                    delete_query = f"""DELETE FROM {schema}.Tag
+                                    WHERE nom_tag = %(nom_tag)s;"""
+                    cursor.execute(
+                        delete_query,
+                        {"nom_tag": nom_tag},
+                    )
+                    connection.commit()
+                    return True  # Indique que la suppression a été effectuée
+                else:
+                    return False  # Le tag n'a pas été supprimé car il est encore lié à des sons
 
 
 # Ajouter une fonction qui ajoute tous les tags d'une liste si ils n'y sont pas déjà

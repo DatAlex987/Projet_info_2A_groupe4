@@ -1,10 +1,10 @@
-from utils.log_decorator import log
 from business_object.scene import Scene
 from business_object.son import Son
 from business_object.son_continu import Son_Continu
 from business_object.son_aleatoire import Son_Aleatoire
 from business_object.son_manuel import Son_Manuel
-from view.session import Session
+from service.session import Session
+from service.sd_service import SDService
 import re
 import datetime
 import random
@@ -13,28 +13,14 @@ from dao.scene_dao import SceneDAO
 from dao.son_dao import SonDAO
 from dao.tag_dao import TagDAO
 
+####
+from rich.console import Console
+from rich.table import Table
+from rich.style import Style
+
 
 class SceneService:
     """Méthodes de service des scènes"""
-
-    def input_checking_injection(self, nom: str, description: str):
-        """Vérifier les inputs de l'utilisateur pour empêcher les injections SQL
-
-        Params
-        -------------
-        nom : str
-            nom entré par l'utilisateur
-        description : str
-            description entrée par l'utilisateur
-        """
-        # Check inputs pour injection:
-        # Définition de pattern regex pour qualifier les caractères acceptés pour chaque input
-        pattern = r"^[a-zA-Zà-öø-ÿÀ-ÖØ-ß\s0-9\s,.\-:!@#%^&*()_+=|?/\[\]{}']*$"  # Autorise lettres, et autres caractères
-        # On vérifie que les inputs sont conformes aux patternes regex.
-        if not re.match(pattern, nom):
-            raise ValueError("Le nom de la scène contient des caractères invalides.")
-        if not re.match(pattern, description):
-            raise ValueError("La description de la scène contient des caractères invalides.")
 
     @staticmethod  # Ne nécessite pas d'instance de SceneService pour exister
     def id_scene_generator():
@@ -100,7 +86,8 @@ class SceneService:
         bool
             True si la création à eu lieu sans soulever d'erreur, rien sinon
         """
-        SceneService().input_checking_injection(nom=nom, description=description)
+        SDService().input_checking_injection(input_str=nom)
+        SDService().input_checking_injection(input_str=description)
         try:
             new_scene = Scene(
                 nom=nom,
@@ -139,6 +126,23 @@ class SceneService:
         choix.append("Retour au menu de choix des sound-decks")
         return choix
 
+    def formatage_question_scenes_of_sd_menu_consult(self, id_sd: str):
+        sds_consult = Session().sds_to_consult
+        sd_selectionne = None
+        for sd in sds_consult:
+            if sd.id_sd == id_sd:
+                sd_selectionne = sd
+        choix = []
+        compteur = 1
+        for scene in sd_selectionne.scenes:
+            mise_en_page_ligne = (
+                f"{compteur}. {scene.id_scene} | {scene.nom} | {scene.date_creation}"
+            )
+            choix.append(mise_en_page_ligne)
+            compteur += 1
+        choix.append("Retour au menu de choix des sound-decks")
+        return choix
+
     def instancier_scene_par_id(self, id_scene: str, schema: str):
         """Instancie une Scène (et tous les sons qui la composent) à partir de son id
 
@@ -164,6 +168,7 @@ class SceneService:
                     description=son_alea_kwargs["description"],
                     duree=son_alea_kwargs["duree"],
                     id_freesound=son_alea_kwargs["id_freesound"],
+                    id_son=son_alea_kwargs["id_son"],
                     tags=son_alea_kwargs["tags"],
                     cooldown_min=son_alea_kwargs["param1"],
                     cooldown_max=son_alea_kwargs["param2"],
@@ -176,6 +181,7 @@ class SceneService:
                     description=son_cont_kwargs["description"],
                     duree=son_cont_kwargs["duree"],
                     id_freesound=son_cont_kwargs["id_freesound"],
+                    id_son=son_cont_kwargs["id_son"],
                     tags=son_cont_kwargs["tags"],
                 )
             )
@@ -186,6 +192,7 @@ class SceneService:
                     description=son_manu_kwargs["description"],
                     duree=son_manu_kwargs["duree"],
                     id_freesound=son_manu_kwargs["id_freesound"],
+                    id_son=son_manu_kwargs["id_son"],
                     tags=son_manu_kwargs["tags"],
                     start_key=son_manu_kwargs["param1"],
                 )
@@ -226,27 +233,27 @@ class SceneService:
             SceneDAO().supprimer_toutes_associations_scene(id_scene=scene.id_scene, schema=schema)
             for son in scene.sons_aleatoires:
                 SonDAO().supprimer_toutes_associations_son(
-                    id_freesound=son.id_freesound, type_son="aleatoire", schema=schema
+                    id_son=son.id_son, type_son="aleatoire", schema=schema
                 )
                 for tag in son.tags:
                     TagDAO().supprimer_association_son_tag(
-                        id_freesound=son.id_freesound, tag=tag, schema=schema
+                        id_son=son.id_son, tag=tag, schema=schema
                     )
             for son in scene.sons_continus:
                 SonDAO().supprimer_toutes_associations_son(
-                    id_freesound=son.id_freesound, type_son="continu", schema=schema
+                    id_son=son.id_son, type_son="continu", schema=schema
                 )
                 for tag in son.tags:
                     TagDAO().supprimer_association_son_tag(
-                        id_freesound=son.id_freesound, tag=tag, schema=schema
+                        id_son=son.id_son, tag=tag, schema=schema
                     )
             for son in scene.sons_manuels:
                 SonDAO().supprimer_toutes_associations_son(
-                    id_freesound=son.id_freesound, type_son="manuel", schema=schema
+                    id_son=son.id_son, type_son="manuel", schema=schema
                 )
                 for tag in son.tags:
                     TagDAO().supprimer_association_son_tag(
-                        id_freesound=son.id_freesound, tag=tag, schema=schema
+                        id_son=son.id_son, tag=tag, schema=schema
                     )
             # On termine par actualiser la session
             Session().utilisateur.supprimer_scene_a_sd(
@@ -257,6 +264,7 @@ class SceneService:
         return True
 
     def modifier_nom_scene(self, scene: Scene, new_nom: str, schema: str):
+        SDService().input_checking_injection(input_str=new_nom)
         # On update la session
         scene.modifier_nom(nouveau_nom=new_nom)
         # On update le user en session
@@ -268,6 +276,7 @@ class SceneService:
         SceneDAO().modifier_scene(scene=scene, schema=schema)
 
     def modifier_desc_scene(self, scene: Scene, new_desc: str, schema: str):
+        SDService().input_checking_injection(input_str=new_desc)
         # On update la session
         scene.modifier_description(nouvelle_description=new_desc)
         # On update le user en session
@@ -277,6 +286,24 @@ class SceneService:
                     s.modifier_description(nouvelle_description=new_desc)
         # On update la BDD
         SceneDAO().modifier_scene(scene=scene, schema=schema)
+
+    def afficher_details_scene(self, scene):
+        """Affiche les détails d'un son aléatoire."""
+        console = Console()
+        table = Table(
+            show_header=True,
+            header_style=Style(color="chartreuse1", bold=True),
+            title="--------------- Détails de la scène ---------------",
+            style="white",
+        )
+        table.add_column("Champ", style=Style(color="honeydew2"), width=20)
+        table.add_column("Détails", style=Style(color="honeydew2"))
+        table.add_row("ID de scène", str(scene.id_scene))
+        table.add_row("Nom", scene.nom)
+        table.add_row("description", str(scene.description))
+        table.add_row("Date de création", str(scene.date_creation))
+
+        console.print(table)
 
 
 """

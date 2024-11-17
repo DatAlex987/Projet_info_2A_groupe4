@@ -17,8 +17,10 @@ class Son_Aleatoire(Son):
         Temps maximum en secondes avant que le son soit rejoué.
     """
 
-    def __init__(self, nom, description, duree, id_freesound, tags, cooldown_min, cooldown_max):
-        super().__init__(nom, description, duree, id_freesound, tags)
+    def __init__(
+        self, nom, description, duree, id_son, id_freesound, tags, cooldown_min, cooldown_max
+    ):
+        super().__init__(nom, description, duree, id_son, id_freesound, tags)
         """Constructeur"""
         self.cooldown_min = cooldown_min
         self.cooldown_max = cooldown_max

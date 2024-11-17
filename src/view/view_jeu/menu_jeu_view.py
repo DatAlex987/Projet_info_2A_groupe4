@@ -8,7 +8,7 @@ from service.sd_service import SDService
 # from service.scene_service import SceneService
 ####
 from view.abstractview import AbstractView
-from view.session import Session
+from service.session import Session
 from view.view_jeu.menu_jeu_scene_view import MenuJeuSceneView
 
 
@@ -44,4 +44,4 @@ class MenuJeuView(AbstractView):
         return next_view
 
     def display_info(self):
-        print(Fore.BLUE + " MENU DE JEU ".center(80, "=") + Style.RESET_ALL)
+        print(Fore.BLUE + " [JEU] MENU SOUND-DECK ".center(80, "=") + Style.RESET_ALL)

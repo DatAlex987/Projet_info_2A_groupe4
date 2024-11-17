@@ -344,7 +344,7 @@ class SceneDAO:
         """
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
-                query = f"""SELECT id_freesound
+                query = f"""SELECT id_son
                         FROM {schema}.Scene_Son
                         WHERE id_scene = %(id_scene)s
                         AND type = 'aleatoire';"""
@@ -353,7 +353,7 @@ class SceneDAO:
                     {"id_scene": id_scene},
                 )
                 res = cursor.fetchall()
-        return [row["id_freesound"] for row in res]
+        return [row["id_son"] for row in res]
 
     def get_sons_continus_of_scene(self, id_scene: str, schema: str):
         """
@@ -361,7 +361,7 @@ class SceneDAO:
         """
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
-                query = f"""SELECT id_freesound
+                query = f"""SELECT id_son
                         FROM {schema}.Scene_Son
                         WHERE id_scene = %(id_scene)s
                         AND type = 'continu';"""  # Ces 2 conditions portent sur Son Continus
@@ -370,7 +370,7 @@ class SceneDAO:
                     {"id_scene": id_scene},
                 )
                 res = cursor.fetchall()
-        return [row["id_freesound"] for row in res]
+        return [row["id_son"] for row in res]
 
     def get_sons_manuels_of_scene(self, id_scene: str, schema: str):
         """
@@ -378,7 +378,7 @@ class SceneDAO:
         """
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
-                query = f"""SELECT id_freesound
+                query = f"""SELECT id_son
                         FROM {schema}.Scene_Son
                         WHERE id_scene = %(id_scene)s
                         AND type = 'manuel';"""  # Ces 2 conditions portent sur Son Manuels
@@ -387,7 +387,7 @@ class SceneDAO:
                     {"id_scene": id_scene},
                 )
                 res = cursor.fetchall()
-        return [row["id_freesound"] for row in res]
+        return [row["id_son"] for row in res]
 
     def supprimer_toutes_associations_scene(self, id_scene: str, schema):
         # Get all sd having the given scene
@@ -403,42 +403,62 @@ class SceneDAO:
 
         # Get all sons associated with the given scene
         sons_inclus = [
-            freesound_id
-            for freesound_id in self.get_sons_aleatoires_of_scene(id_scene=id_scene, schema=schema)
-            if SonDAO().check_if_son_in_scene(
-                id_freesound=freesound_id, id_scene=id_scene, schema=schema
-            )
+            son_id
+            for son_id in self.get_sons_aleatoires_of_scene(id_scene=id_scene, schema=schema)
+            if SonDAO().check_if_son_in_scene(id_son=son_id, id_scene=id_scene, schema=schema)
         ]
 
         # Delete all associations in scene_son for the given scene
-        for id_freesound in sons_inclus:
+        for id_son in sons_inclus:
             SonDAO().supprimer_association_scene_son(
-                id_freesound=id_freesound, id_scene=id_scene, type_son="aleatoire", schema=schema
+                id_son=id_son, id_scene=id_scene, type_son="aleatoire", schema=schema
             )
 
         sons_inclus = [
-            freesound_id
-            for freesound_id in self.get_sons_continus_of_scene(id_scene=id_scene, schema=schema)
-            if SonDAO().check_if_son_in_scene(
-                id_freesound=freesound_id, id_scene=id_scene, schema=schema
-            )
+            son_id
+            for son_id in self.get_sons_continus_of_scene(id_scene=id_scene, schema=schema)
+            if SonDAO().check_if_son_in_scene(id_son=son_id, id_scene=id_scene, schema=schema)
         ]
 
         # Delete all associations in scene_son for the given scene
-        for id_freesound in sons_inclus:
+        for id_son in sons_inclus:
             SonDAO().supprimer_association_scene_son(
-                id_freesound=id_freesound, id_scene=id_scene, type_son="continu", schema=schema
+                id_son=id_son, id_scene=id_scene, type_son="continu", schema=schema
             )
 
         sons_inclus = [
-            freesound_id
-            for freesound_id in self.get_sons_manuels_of_scene(id_scene=id_scene, schema=schema)
-            if SonDAO().check_if_son_in_scene(
-                id_freesound=freesound_id, id_scene=id_scene, schema=schema
-            )
+            son_id
+            for son_id in self.get_sons_manuels_of_scene(id_scene=id_scene, schema=schema)
+            if SonDAO().check_if_son_in_scene(id_son=son_id, id_scene=id_scene, schema=schema)
         ]
         # Delete all associations in scene_son for the given scene
-        for id_freesound in sons_inclus:
+        for id_son in sons_inclus:
             SonDAO().supprimer_association_scene_son(
-                id_freesound=id_freesound, id_scene=id_scene, type_son="manuel", schema=schema
+                id_son=id_son, id_scene=id_scene, type_son="manuel", schema=schema
             )
+
+    # nettoyage
+
+    def delete_scene_if_no_sds(self, id_scene: str, schema: str):
+        """
+        Supprime une scène si elle n'est reliée à aucune Sounddeck.
+        """
+        with DBConnection(schema=schema).connection as connection:
+            with connection.cursor() as cursor:
+                # Vérifie si des Sounddecks sont liés à la scène
+                cursor.execute(
+                    f"SELECT COUNT(*) AS sd_count FROM {schema}.Sounddeck_Scene WHERE id_scene = %(id_scene)s;",
+                    {"id_scene": id_scene},
+                )
+                sd_count = cursor.fetchone()["sd_count"]
+
+                # Si aucune Sounddeck n'est liée, supprimer la scène
+                if sd_count == 0:
+                    cursor.execute(
+                        f"DELETE FROM {schema}.Scene WHERE id_scene = %(id_scene)s;",
+                        {"id_scene": id_scene},
+                    )
+                    connection.commit()
+                    return True  # Indique que la suppression a été effectuée
+                else:
+                    return False  # La scène n'a pas été supprimée car elle est encore liée à des Sounddecks

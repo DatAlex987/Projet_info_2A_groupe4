@@ -10,7 +10,7 @@ from service.scene_service import SceneService
 ####
 from view.abstractview import AbstractView
 from view.view_param.menuparammodifsdview import MenuParamModifSDView
-from view.session import Session
+from service.session import Session
 
 
 class MenuParamSceneView(AbstractView):
@@ -38,7 +38,7 @@ class MenuParamSceneView(AbstractView):
             {
                 "type": "input",
                 "name": "description",
-                "message": "Quelle sera la description de votre scène ?",
+                "message": "Quelle sera la description de votre scène ? (max 280. caractères)",
             },
         ]
         self.question_choix_scene = [
@@ -130,4 +130,4 @@ class MenuParamSceneView(AbstractView):
         return next_view
 
     def display_info(self):
-        print(Fore.BLUE + " MENU DE PARAMETRAGE ".center(80, "=") + Style.RESET_ALL)
+        print(Fore.BLUE + " [PARAMETRAGE] MENU SOUND-DECK ".center(80, "=") + Style.RESET_ALL)

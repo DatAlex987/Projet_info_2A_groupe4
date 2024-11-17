@@ -35,12 +35,13 @@ class Son(ABC):
     )
     """
 
-    def __init__(self, nom, description, duree, id_freesound, tags):
+    def __init__(self, nom, description, duree, id_son, id_freesound, tags):
         """Constructeur"""
         self.nom = nom
         self.description = description
         self.duree = duree
         self.id_freesound = id_freesound
+        self.id_son = id_son
         self.tags = tags
 
         if not isinstance(nom, str):
@@ -55,6 +56,8 @@ class Son(ABC):
             raise TypeError("La durée doit etre une durée format datetime.timedelta.")
         if not isinstance(id_freesound, str):
             raise TypeError("L'identifiant freesound du son doit être une instance de string.")
+        if not isinstance(id_son, str):
+            raise TypeError("L'identifiant unique du son doit être une instance de string.")
 
     def localise_son(self):
         """localise un son à l'aide des variables d'environnement"""
@@ -78,7 +81,8 @@ class Son(ABC):
             self.charge.stop()
             self.charge = None
         else:
-            print(f"le son {self.id_freesound} ne joue pas : pygame_error")"""
+            print(f"le son {self.id_son} (Freesound : {self.id_freesound}) ne joue pas : pygame_error")
+        """
         pass
 
     @abstractmethod

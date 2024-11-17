@@ -6,8 +6,8 @@ from InquirerPy import prompt
 from service.user_service import UserService
 
 ####
-from view.abstractview import AbstractView
-from view.session import Session
+# from view.abstractview import AbstractView
+from service.session import Session
 from view.view_consulter_user.consulter_sds_view import ConsulterSDsView
 
 # from view.view_consulter_user.menu_consulter_createur_view import ConsulterCreateurView
@@ -41,4 +41,4 @@ class ConsulterUsersProchesView(AbstractView):
         return ConsulterSDsView()  # On va vers la view qui affiche toutes les SD de ce user
 
     def display_info(self):
-        print(Fore.BLUE + " MENU DE CONSULTATION [CREATEUR] ".center(80, "=") + Style.RESET_ALL)
+        print(Fore.BLUE + " [JEU] MENU RECHERCHE CREATEUR ".center(80, "=") + Style.RESET_ALL)

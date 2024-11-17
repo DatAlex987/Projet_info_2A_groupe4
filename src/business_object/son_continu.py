@@ -14,8 +14,8 @@ class Son_Continu(Son):
     --------
     """
 
-    def __init__(self, nom, description, duree, id_freesound, tags):
-        super().__init__(nom, description, duree, id_freesound, tags)
+    def __init__(self, nom, description, duree, id_son, id_freesound, tags):
+        super().__init__(nom, description, duree, id_son, id_freesound, tags)
 
     def Arret_Son(self):
         input("Appuyer sur Entrée pour arrêter le son")
