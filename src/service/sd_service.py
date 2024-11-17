@@ -13,7 +13,11 @@ from dao.sd_dao import SDDAO
 from dao.scene_dao import SceneDAO
 from dao.son_dao import SonDAO
 from dao.tag_dao import TagDAO
+
+####
+from rich.console import Console
 from rich.table import Table
+from rich.style import Style
 
 
 class SDService:
@@ -358,3 +362,22 @@ class SDService:
                 pass
             for son_manuel in scene.sons_manuels:
                 pass
+
+    def afficher_details_sd(self, sd):
+        """Affiche les détails d'un son aléatoire."""
+        console = Console()
+        table = Table(
+            show_header=True,
+            header_style=Style(color="chartreuse1", bold=True),
+            title="--------------- Détails de la sound-deck ---------------",
+            style="white",
+        )
+        table.add_column("Champ", style=Style(color="honeydew2"), width=20)
+        table.add_column("Détails", style=Style(color="honeydew2"))
+        table.add_row("ID de sound-deck", str(sd.id_sd))
+        table.add_row("Nom", sd.nom)
+        table.add_row("description", str(sd.description))
+        table.add_row("Date de création", str(sd.date_creation))
+        table.add_row("ID Créateur", str(sd.id_createur))
+
+        console.print(table)

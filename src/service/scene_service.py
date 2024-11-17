@@ -13,6 +13,11 @@ from dao.scene_dao import SceneDAO
 from dao.son_dao import SonDAO
 from dao.tag_dao import TagDAO
 
+####
+from rich.console import Console
+from rich.table import Table
+from rich.style import Style
+
 
 class SceneService:
     """Méthodes de service des scènes"""
@@ -281,6 +286,24 @@ class SceneService:
                     s.modifier_description(nouvelle_description=new_desc)
         # On update la BDD
         SceneDAO().modifier_scene(scene=scene, schema=schema)
+
+    def afficher_details_scene(self, scene):
+        """Affiche les détails d'un son aléatoire."""
+        console = Console()
+        table = Table(
+            show_header=True,
+            header_style=Style(color="chartreuse1", bold=True),
+            title="--------------- Détails de la scène ---------------",
+            style="white",
+        )
+        table.add_column("Champ", style=Style(color="honeydew2"), width=20)
+        table.add_column("Détails", style=Style(color="honeydew2"))
+        table.add_row("ID de scène", str(scene.id_scene))
+        table.add_row("Nom", scene.nom)
+        table.add_row("description", str(scene.description))
+        table.add_row("Date de création", str(scene.date_creation))
+
+        console.print(table)
 
 
 """
