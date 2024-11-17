@@ -20,7 +20,7 @@ class MenuParamAjoutSonView(AbstractView):
             {
                 "type": "input",
                 "name": "desc",
-                "message": "Donnez une description à votre son (max. 280 caractères) :",
+                "message": "Donnez une description à votre son :",
             }
         ]
         self.question_type_son = [

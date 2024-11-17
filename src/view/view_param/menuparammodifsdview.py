@@ -4,12 +4,14 @@ from colorama import Fore, Style
 from InquirerPy import prompt
 from view.abstractview import AbstractView
 from service.session import Session
-from business_object.son_aleatoire import Son_Aleatoire
-from business_object.son_continu import Son_Continu
-from business_object.son_manuel import Son_Manuel
+
+# from business_object.son_aleatoire import Son_Aleatoire
+# from business_object.son_continu import Son_Continu
+# from business_object.son_manuel import Son_Manuel
 from service.sd_service import SDService
-from service.scene_service import SceneService
-from service.son_service import SonService
+
+# from service.scene_service import SceneService
+# from service.son_service import SonService
 
 
 class MenuParamModifSDView(AbstractView):
@@ -42,14 +44,14 @@ class MenuParamModifSDView(AbstractView):
             {
                 "type": "input",
                 "name": "modif desc",
-                "message": "Entrez la nouvelle description pour cette sound-deck (max. 280 caractères):",
+                "message": "Entrez la nouvelle description pour cette sound-deck:",
             }
         ]
 
     def make_choice(self):
         choix_modif = prompt(self.question_modif_sd)
         if choix_modif["choix modif"] == "Voir la fiche de la sound-deck":
-            pass  # méthode service pour display les infos de la SD
+            SDService().afficher_details_sd(Session().sd_to_param)
         elif choix_modif["choix modif"] == "Modifier le nom":
             new_nom = prompt(self.question_modif_nom)
             SDService().modifier_nom_sd(
