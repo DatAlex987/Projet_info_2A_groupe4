@@ -131,6 +131,45 @@ class SonService:
         choix.append("Retour au menu de choix des scènes")
         return choix
 
+    def formatage_question_sons_of_scene_menu_consult(self, id_sd: str, id_scene: str):
+        """Construit une liste des choix à afficher après sélection d'une Scène
+
+        Params
+        -------------
+        if_sd : str
+            id du SD sélectionné par l'utilisateur
+        id_scene : str
+            id de la scène sélectionnée par l'utilisateur
+
+        Returns
+        -------------
+        list
+            Liste des choix proposés à l'utilisateur
+        """
+        sds_consult = Session().sds_to_consult
+        scene_selectionnee = None
+        for sd in sds_consult:
+            if sd.id_sd == id_sd:
+                for scene in sd.scenes:
+                    if scene.id_scene == id_scene:
+                        scene_selectionnee = scene
+        choix = []
+        compteur = 1
+        for son_alea in scene_selectionnee.sons_aleatoires:
+            mise_en_page_ligne = f"{compteur}. [ALEATOIRE] |{son_alea.nom}|{son_alea.id_freesound}|{son_alea.id_son}|' '| 'Etat'"
+            choix.append(mise_en_page_ligne)
+            compteur += 1
+        for son_cont in scene_selectionnee.sons_continus:
+            mise_en_page_ligne = f"{compteur}. [CONTINU] |{son_cont.nom}|{son_cont.id_freesound}|{son_cont.id_son}|' '| 'Etat'"
+            choix.append(mise_en_page_ligne)
+            compteur += 1
+        for son_manuel in scene_selectionnee.sons_manuels:
+            mise_en_page_ligne = f"{compteur}. [MANUEL] |{son_manuel.nom}|{son_manuel.id_freesound}|{son_manuel.id_son}|{son_manuel.start_key}| 'Etat'"
+            choix.append(mise_en_page_ligne)
+            compteur += 1
+        choix.append("Retour au menu de choix des scènes")
+        return choix
+
     def ajouter_nouveau_son(self, son_kwargs: dict, schema: str):
         if son_kwargs["type_son"] == "Son aléatoire":
             son_to_add = Son_Aleatoire(

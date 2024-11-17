@@ -6,7 +6,7 @@ from InquirerPy import prompt
 from service.sd_service import SDService
 
 ####
-from view.abstractview import AbstractView
+# from view.abstractview import AbstractView
 from view.view_consulter_user.consulter_sds_view import ConsulterSDsView
 
 # from view.view_consulter_user.menu_consulter_createur_view import ConsulterCreateurView

@@ -27,7 +27,7 @@ class MenuConsulterSonsView(AbstractView):
                 "message": "Sélectionnez un son pour l'enclencher ou l'arrêter \n"
                 "  Type        |   Nom   | ID Freesound | ID du son | Déclenchement | Etat \n"
                 "------------------------------------------------------------",
-                "choices": SonService().formatage_question_sons_of_scene_menu_jeu(
+                "choices": SonService().formatage_question_sons_of_scene_menu_consult(
                     id_sd=Session().sd_to_consult.id_sd,
                     id_scene=Session().scene_to_consult.id_scene,
                 ),

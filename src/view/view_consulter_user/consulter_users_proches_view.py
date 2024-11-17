@@ -6,7 +6,7 @@ from InquirerPy import prompt
 from service.user_service import UserService
 
 ####
-from view.abstractview import AbstractView
+# from view.abstractview import AbstractView
 from service.session import Session
 from view.view_consulter_user.consulter_sds_view import ConsulterSDsView
 
