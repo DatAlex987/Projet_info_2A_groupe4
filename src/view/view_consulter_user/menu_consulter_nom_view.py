@@ -32,4 +32,4 @@ class ConsulterNomView(AbstractView):
         return ConsulterSDsView()
 
     def display_info(self):
-        print(Fore.BLUE + " MENU DE CONSULTATION [NOM] ".center(80, "=") + Style.RESET_ALL)
+        print(Fore.BLUE + " [JEU] MENU RECHERCHE NOM ".center(80, "=") + Style.RESET_ALL)

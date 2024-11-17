@@ -55,4 +55,4 @@ class ConsulterSceneView(AbstractView):
         return next_view
 
     def display_info(self):
-        print(Fore.BLUE + " MENU DES SCENES [CONSULTATION] ".center(80, "=") + Style.RESET_ALL)
+        print(Fore.BLUE + " [JEU] MENU SCENE ".center(80, "=") + Style.RESET_ALL)

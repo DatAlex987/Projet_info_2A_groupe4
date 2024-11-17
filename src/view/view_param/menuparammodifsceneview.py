@@ -42,7 +42,7 @@ class MenuParamModifSceneView(AbstractView):
             {
                 "type": "input",
                 "name": "modif desc",
-                "message": "Entrez la nouvelle description pour cette scène:",
+                "message": "Entrez la nouvelle description pour cette scène (max. 280 caractères) :",
             }
         ]
 
@@ -55,18 +55,18 @@ class MenuParamModifSceneView(AbstractView):
             SceneService().modifier_nom_scene(
                 scene=Session().scene_to_param, new_nom=new_nom["modif nom"], schema="ProjetInfo"
             )
+            print(Fore.GREEN + "Modification effectuée avec succès" + Style.RESET_ALL)
+
         elif choix_modif["choix modif"] == "Modifier la description":
             new_desc = prompt(self.question_modif_desc)
             SceneService().modifier_desc_scene(
                 scene=Session().scene_to_param, new_desc=new_desc["modif desc"], schema="ProjetInfo"
             )
+            print(Fore.GREEN + "Modification effectuée avec succès" + Style.RESET_ALL)
 
-        print(
-            Fore.GREEN + "Modification effectuée avec succès" + Style.RESET_ALL
-        )  # A déplacer pour ne pas l'afficher automatiquement
         from view.view_param.menuparamsceneview import MenuParamSceneView
 
         return MenuParamSceneView()
 
     def display_info(self):
-        print(Fore.BLUE + " MENU DE PARAMETRAGE ".center(80, "=") + Style.RESET_ALL)
+        print(Fore.BLUE + " [PARAMETRAGE] MENU SCENE ".center(80, "=") + Style.RESET_ALL)

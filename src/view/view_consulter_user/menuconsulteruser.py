@@ -46,4 +46,4 @@ class MenuConsulterUserView(AbstractView):
         return next_view
 
     def display_info(self):
-        print(Fore.BLUE + " MENU CONSULTATION ".center(80, "=") + Style.RESET_ALL)
+        print(Fore.BLUE + " [CONSULTATION] ".center(80, "=") + Style.RESET_ALL)

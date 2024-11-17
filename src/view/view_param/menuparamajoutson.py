@@ -20,7 +20,7 @@ class MenuParamAjoutSonView(AbstractView):
             {
                 "type": "input",
                 "name": "desc",
-                "message": "Donnez une description à votre son:",
+                "message": "Donnez une description à votre son (max. 280 caractères) :",
             }
         ]
         self.question_type_son = [
@@ -79,4 +79,4 @@ class MenuParamAjoutSonView(AbstractView):
         return MenuParamSceneSpecifiqueView()
 
     def display_info(self):
-        print(Fore.BLUE + " MENU DE PARAMETRAGE ".center(80, "=") + Style.RESET_ALL)
+        print(Fore.BLUE + " [PARAMETRAGE] MENU SON ".center(80, "=") + Style.RESET_ALL)

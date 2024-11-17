@@ -50,4 +50,4 @@ class ConsulterSDsView(AbstractView):
         return next_view
 
     def display_info(self):
-        print(Fore.BLUE + " MENU DE CONSULTATION [SD] ".center(80, "=") + Style.RESET_ALL)
+        print(Fore.BLUE + " [JEU] MENU SOUND-DECK ".center(80, "=") + Style.RESET_ALL)

@@ -49,4 +49,4 @@ class MenuParamSDView(AbstractView):
         return next_view
 
     def display_info(self):
-        print(Fore.BLUE + " MENU DE PARAMETRAGE ".center(80, "=") + Style.RESET_ALL)
+        print(Fore.BLUE + " [PARAMETRAGE] MENU SOUND-DECK ".center(80, "=") + Style.RESET_ALL)

@@ -37,4 +37,4 @@ class ConsulterCreateurView(AbstractView):
         return ConsulterUsersProchesView()
 
     def display_info(self):
-        print(Fore.BLUE + " MENU DE CONSULTATION [CREATEUR] ".center(80, "=") + Style.RESET_ALL)
+        print(Fore.BLUE + " [JEU] MENU RECHERCHE CREATEUR ".center(80, "=") + Style.RESET_ALL)

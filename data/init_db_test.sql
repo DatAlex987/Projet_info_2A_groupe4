@@ -19,7 +19,7 @@ DROP TABLE IF EXISTS SchemaTest.Sounddeck CASCADE ;
 CREATE TABLE SchemaTest.Sounddeck(
     id_sd VARCHAR(30) PRIMARY KEY,
     nom TEXT,
-    description TEXT,
+    description VARCHAR(280),
     date_creation DATE,
     id_createur VARCHAR(30),
     FOREIGN KEY (id_createur) REFERENCES SchemaTest.Utilisateur(id_user) ON DELETE CASCADE
@@ -30,7 +30,7 @@ DROP TABLE IF EXISTS SchemaTest.Scene CASCADE ;
 CREATE TABLE SchemaTest.Scene (
     id_scene VARCHAR(30) PRIMARY KEY,
     nom TEXT,
-    description TEXT,
+    description VARCHAR(280),
     date_creation DATE
 );
 
@@ -38,7 +38,7 @@ DROP TABLE IF EXISTS SchemaTest.Son CASCADE ;
 CREATE TABLE SchemaTest.Son (
     id_freesound VARCHAR(30) PRIMARY KEY,
     nom TEXT,
-    description TEXT,
+    description VARCHAR(280),
     duree TIME
 );
 

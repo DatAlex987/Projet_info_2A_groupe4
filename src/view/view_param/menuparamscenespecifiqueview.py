@@ -104,4 +104,4 @@ class MenuParamSceneSpecifiqueView(AbstractView):
         return next_view
 
     def display_info(self):
-        print(Fore.BLUE + " MENU DE PARAMETRAGE ".center(80, "=") + Style.RESET_ALL)
+        print(Fore.BLUE + "[PARAMETRAGE] MENU SCENE ".center(80, "=") + Style.RESET_ALL)
