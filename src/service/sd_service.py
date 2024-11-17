@@ -264,8 +264,6 @@ class SDService:
         # On update la BDD
         SDDAO().modifier_sd(sd=sounddeck, schema=schema)
 
-<<<<<<< HEAD
-=======
     # TEST PAS ENCORE FONCTIONNEL NE PAS ENLEVER CEST POUR LES TABLEAUX :
 
     def afficher_tableau_sds_user(self):
@@ -296,7 +294,6 @@ class SDService:
         """
         sds_user = Session().utilisateur.SD_possedes
         return [f"{idx}. {sd.id_sd}" for idx, sd in enumerate(sds_user, start=1)]
-
 
     def FindCloseNameSDs(self, nom_approx: str, schema: str):
         all_sds = SDDAO().consulter_sds(schema=schema)
