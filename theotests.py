@@ -27,12 +27,7 @@ from datetime import timedelta
 
 # os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 
-# ResetDatabase().ResetALL()
-
-t = datetime.datetime.today()
-print(t)
-print(type(t))
-
+ResetDatabase().ResetALL()
 """def arr():
     input("Appuyer sur Entrée pour arrêter le son")
     print("BB chat")

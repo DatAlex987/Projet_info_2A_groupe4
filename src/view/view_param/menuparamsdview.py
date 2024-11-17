@@ -45,6 +45,13 @@ class MenuParamSDView(AbstractView):
             Session().sd_to_param = SDService().instancier_sd_par_id(
                 id_sd=id_sd_select, schema="ProjetInfo"
             )
+            if not Session().utilisateur.id_user == Session().sd_to_param.id_createur:
+                print(
+                    Fore.RED
+                    + "Cette sound-deck ne vous appartient pas, vous ne pouvez pas la modifier"
+                    + Style.RESET_ALL
+                )
+                return MenuParamSDView()
             next_view = MenuParamSceneView()
         return next_view
 

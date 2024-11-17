@@ -3,7 +3,7 @@
 INSERT INTO ProjetInfo.Utilisateur (id_user, mdp_hashe, date_naissance, nom, prenom, pseudo)
 VALUES
 ('IUSZEM', 'df45a38d72964fbe867eaaf20589bdcb394c0f4b680760b91097ee3f78170c43', '1111-11-11', 't', 't', 't'),
-('user2', 'hashedpassword2', '1985-05-15', 'Smith', 'Jane', 'jane_smith');
+('LBNVXN', 'e8d9f96e04790fce95a5cb00f217f73e7b4e73547af3710ae1ceeb4aa9cb4371', '1111-11-11', 'n', 'n', 'n');
 
 -- Insert data into Sounddeck
 INSERT INTO ProjetInfo.Sounddeck (id_sd, nom, description, date_creation, id_createur)
@@ -11,9 +11,9 @@ VALUES
 ('sd1', 'Fantasy Ambience', 'A mystical sounddeck for fantasy RPGs.', '2024-01-01', 'IUSZEM'),
 ('sd2', 'Sci-fi Sounds', 'Futuristic sound effects for space adventures.', '2024-01-02', 'IUSZEM'),
 ('sd3', 'Horror Atmosphere', 'Spooky sounds for horror games.', '2024-01-03', 'IUSZEM'),
-('sd4', 'Nature Sounds', 'Relaxing nature-themed sounddeck.', '2024-01-01', 'user2'),
-('sd5', 'City Ambience', 'Urban sounds for city-based games.', '2024-01-02', 'user2'),
-('sd6', 'Battle Effects', 'Intense battle sounds.', '2024-01-03', 'user2');
+('sd4', 'Nature Sounds', 'Relaxing nature-themed sounddeck.', '2024-01-01', 'LBNVXN'),
+('sd5', 'City Ambience', 'Urban sounds for city-based games.', '2024-01-02', 'LBNVXN'),
+('sd6', 'Battle Effects', 'Intense battle sounds.', '2024-01-03', 'LBNVXN');
 
 -- Insert data into Scene
 INSERT INTO ProjetInfo.Scene (id_scene, nom, description, date_creation)
@@ -75,9 +75,9 @@ VALUES
 ('IUSZEM', 'sd2'),
 ('IUSZEM', 'sd3'),
 -- User 2's Sounddecks
-('user2', 'sd4'),
-('user2', 'sd5'),
-('user2', 'sd6');
+('LBNVXN', 'sd4'),
+('LBNVXN', 'sd5'),
+('LBNVXN', 'sd6');
 
 -- Associate Sounddecks with Scenes (Sounddeck_Scene)
 INSERT INTO ProjetInfo.Sounddeck_Scene (id_scene, id_sd)
@@ -93,20 +93,20 @@ VALUES
 INSERT INTO ProjetInfo.Scene_Son (id_scene, id_son, param1, param2, type)
 VALUES
 -- Forest Scene
-('scene1', 'son1', '1', '2', 'aleatoire'),
-('scene1', 'son2', '4', '20', 'aleatoire'),
-('scene1', 'son3', 'none', 'none', 'continu'),
-('scene1', 'son4', 'none', 'none', 'continu'),
-('scene1', 'son5', 'a', 'none', 'manuel'),
-('scene1', 'son6', 'b', 'none', 'manuel'),
+('scene9', 'son1', '1', '2', 'aleatoire'),
+('scene9', 'son2', '4', '20', 'aleatoire'),
+('scene9', 'son3', 'none', 'none', 'continu'),
+('scene9', 'son4', 'none', 'none', 'continu'),
+('scene9', 'son5', 'a', 'none', 'manuel'),
+('scene9', 'son6', 'b', 'none', 'manuel'),
 
 -- Dungeon Scene
-('scene2', 'son7', '20', '69', 'aleatoire'),
-('scene2', 'son8', '4', '7', 'aleatoire'),
-('scene2', 'son9', 'none', 'none', 'continu'),
-('scene2', 'son10', 'none', 'none', 'continu'),
-('scene2', 'son11', 'c', 'none', 'manuel'),
-('scene2', 'son12', 'd', 'none', 'manuel');
+('scene10', 'son7', '20', '69', 'aleatoire'),
+('scene10', 'son8', '4', '7', 'aleatoire'),
+('scene10', 'son9', 'none', 'none', 'continu'),
+('scene10', 'son10', 'none', 'none', 'continu'),
+('scene10', 'son11', 'c', 'none', 'manuel'),
+('scene10', 'son12', 'd', 'none', 'manuel');
 
 -- Add similar associations for all other scenes...
 

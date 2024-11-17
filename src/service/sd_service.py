@@ -150,10 +150,11 @@ class SDService:
             Instance de la SD demandée
         """
         sd_kwargs = SDDAO().rechercher_par_id_sd(id_sd=id_sd, schema=schema)
-        Sons_Alea_scene = []
-        Sons_Cont_scene = []
-        Sons_Manu_scene = []
         for scene in sd_kwargs["scenes"]:
+            # Ces 3 init de listes étaient juste avant le for avant de régler le pb
+            Sons_Alea_scene = []
+            Sons_Cont_scene = []
+            Sons_Manu_scene = []
             for son_alea_kwargs in scene["sons_aleatoires"]:
                 Sons_Alea_scene.append(
                     Son_Aleatoire(
@@ -167,7 +168,6 @@ class SDService:
                         cooldown_max=son_alea_kwargs["param2"],
                     )
                 )
-        for scene in sd_kwargs["scenes"]:
             for son_cont_kwargs in scene["sons_continus"]:
                 Sons_Cont_scene.append(
                     Son_Continu(
@@ -179,7 +179,6 @@ class SDService:
                         tags=son_cont_kwargs["tags"],
                     )
                 )
-        for scene in sd_kwargs["scenes"]:
             for son_manu_kwargs in scene["sons_manuels"]:
                 Sons_Manu_scene.append(
                     Son_Manuel(
@@ -337,7 +336,7 @@ class SDService:
 
     def ajouter_sd_existante_to_user(self, schema: str):  # NOT TESTED YET
         try:
-            Session.utilisateur.ajouter_sd(sd=Session().sd_to_consult)
+            Session().utilisateur.ajouter_sd(sd=Session().sd_to_consult)
             SDDAO().ajouter_association_user_sd(
                 id_user=Session().utilisateur.id_user,
                 id_sd=Session().sd_to_consult.id_sd,
@@ -346,7 +345,7 @@ class SDService:
         except ValueError as e:
             raise ValueError(f"Erreur lors de la sauvegarde de la sound-deck: {e}")
 
-    def dupliquer_sd_existante_to_user(self, schema: str):  # NOT TESTED YET
+    def dupliquer_sd_existante_to_user(self, schema: str):
         from service.son_service import SonService  # Pour éviter circular imports
         from service.scene_service import SceneService  # Pour éviter circular imports
 
@@ -355,6 +354,7 @@ class SDService:
         # Pour chaque objet, on ajoute l'objet et on créé les associations son/tag.
 
         # On duplique la SD puis on l'ajoute
+
         sd_to_dupli = Session().sd_to_consult
         sd_duplicated = SD(
             id_sd=SDService.id_sd_generator(),
@@ -367,6 +367,7 @@ class SDService:
         SDDAO().ajouter_sd(sd=sd_duplicated, schema=schema)
         dict_of_associations_scene_son = {}
         for scene in sd_to_dupli.scenes:  # Pour chaque scène...
+            print("sons alea dans scène:", scene.sons_aleatoires)
             # On duplique la Scène puis on l'ajoute
             scene_duplicated = Scene(
                 nom=scene.nom,
@@ -378,8 +379,9 @@ class SDService:
                 date_creation=datetime.datetime.today().date(),
             )
             SceneDAO().ajouter_scene(scene=scene_duplicated, schema=schema)
-            dict_of_associations_scene_son[str(scene.id_scene)] = []
+            dict_of_associations_scene_son[scene_duplicated] = []
             for son_alea in scene.sons_aleatoires:  # ... on instancie le son dupliqué
+                print("id son alea a dupliquer:", son_alea.id_son)
                 # On duplique le son puis on l'ajoute
                 son_duplicated = Son_Aleatoire(
                     nom=son_alea.nom,
@@ -396,7 +398,7 @@ class SDService:
                     TagDAO().ajouter_association_son_tag(
                         id_son=son_duplicated.id_son, tag=tag, schema=schema
                     )
-                dict_of_associations_scene_son[str(scene.id_scene)].append(
+                dict_of_associations_scene_son[scene_duplicated].append(
                     son_duplicated
                 )  # ... et on garde une trace pour ajouter les associations scene/son juste après.
             for son_continu in scene.sons_continus:
@@ -413,7 +415,7 @@ class SDService:
                     TagDAO().ajouter_association_son_tag(
                         id_son=son_duplicated.id_son, tag=tag, schema=schema
                     )
-                dict_of_associations_scene_son[str(scene.id_scene)].append(son_duplicated)
+                dict_of_associations_scene_son[scene_duplicated].append(son_duplicated)
             for son_manuel in scene.sons_manuels:
                 son_duplicated = Son_Manuel(
                     nom=son_manuel.nom,
@@ -422,21 +424,21 @@ class SDService:
                     id_son=SonService.id_son_generator(),
                     id_freesound=son_manuel.id_freesound,
                     tags=son_manuel.tags,
-                    cooldown_min=son_manuel.cooldown_min,
-                    cooldown_max=son_manuel.cooldown_max,
+                    start_key=son_manuel.start_key,
                 )
                 SonDAO().ajouter_son(son=son_duplicated, schema=schema)
                 for tag in son_duplicated.tags:
                     TagDAO().ajouter_association_son_tag(
                         id_son=son_duplicated.id_son, tag=tag, schema=schema
                     )
-                dict_of_associations_scene_son[str(scene.id_scene)].append(son_duplicated)
+                dict_of_associations_scene_son[scene_duplicated].append(son_duplicated)
 
         # On ajoute toutes les associations (scene/son):
-        for scene, son in dict_of_associations_scene_son.items():
-            SonDAO().ajouter_association_scene_son(
-                id_scene=scene.id_scene, son=son.id_son, schema=schema
-            )
+        for scene, sons in dict_of_associations_scene_son.items():
+            for son in sons:
+                SonDAO().ajouter_association_scene_son(
+                    id_scene=scene.id_scene, son=son, schema=schema
+                )
 
         # Puis on ajoute les associations SD/Scenes
         for scene in dict_of_associations_scene_son.keys():
