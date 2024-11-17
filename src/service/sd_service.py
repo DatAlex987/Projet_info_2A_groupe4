@@ -3,6 +3,7 @@ import datetime
 import random
 import string
 from service.session import Session
+
 from business_object.sd import SD
 from business_object.scene import Scene
 from business_object.son import Son
@@ -345,16 +346,108 @@ class SDService:
         except ValueError as e:
             raise ValueError(f"Erreur lors de la sauvegarde de la sound-deck: {e}")
 
-    def dupliquer_sd_existante_to_user(self, schema: str):  # TO BE DONE
-        sd_to_dupli = Session().sd_to_consult
+    def dupliquer_sd_existante_to_user(self, schema: str):  # NOT TESTED YET
+        from service.son_service import SonService  # Pour éviter circular imports
+        from service.scene_service import SceneService  # Pour éviter circular imports
+
         # On change l'id du créateur pour permettre à l'utilisateur de faire des modifications
         # à l'avenir sur cette SD
-        sd_to_dupli.id_createur = Session().utilisateur.id_user
-        # Can'tg do anything for now : On doit régler ce pb d'id freesound. id_son
-        for scene in sd_to_dupli.scenes:
-            for son_alea in scene.sons_aleatoires:
-                pass
+        # Pour chaque objet, on ajoute l'objet et on créé les associations son/tag.
+
+        # On duplique la SD puis on l'ajoute
+        sd_to_dupli = Session().sd_to_consult
+        sd_duplicated = SD(
+            id_sd=SDService.id_sd_generator(),
+            nom=sd_to_dupli.nom,
+            description=sd_to_dupli.description,
+            scenes=[],  # Pas important pour l'ajout en BDD
+            date_creation=datetime.datetime.today().date(),  # Date d'aujourd'hui
+            id_createur=Session().utilisateur.id_user,  # Duplication, donc pour avoir les droits, il devient créateur.
+        )
+        SDDAO().ajouter_sd(sd=sd_duplicated, schema=schema)
+        dict_of_associations_scene_son = {}
+        for scene in sd_to_dupli.scenes:  # Pour chaque scène...
+            # On duplique la Scène puis on l'ajoute
+            scene_duplicated = Scene(
+                nom=scene.nom,
+                description=scene.description,
+                id_scene=SceneService().id_scene_generator(),
+                sons_aleatoires=[],  # Pas important pour l'ajout en BDD
+                sons_continus=[],  # Pas important pour l'ajout en BDD
+                sons_manuels=[],  # Pas important pour l'ajout en BDD
+                date_creation=datetime.datetime.today().date(),
+            )
+            SceneDAO().ajouter_scene(scene=scene_duplicated, schema=schema)
+            dict_of_associations_scene_son[str(scene.id_scene)] = []
+            for son_alea in scene.sons_aleatoires:  # ... on instancie le son dupliqué
+                # On duplique le son puis on l'ajoute
+                son_duplicated = Son_Aleatoire(
+                    nom=son_alea.nom,
+                    description=son_alea.description,
+                    duree=son_alea.duree,
+                    id_son=SonService.id_son_generator(),
+                    id_freesound=son_alea.id_freesound,
+                    tags=son_alea.tags,
+                    cooldown_min=son_alea.cooldown_min,
+                    cooldown_max=son_alea.cooldown_max,
+                )
+                SonDAO().ajouter_son(son=son_duplicated, schema=schema)  # ... on l'ajoute en BDD
+                for tag in son_duplicated.tags:  # ... on ajoute ses associations son/tags
+                    TagDAO().ajouter_association_son_tag(
+                        id_son=son_duplicated.id_son, tag=tag, schema=schema
+                    )
+                dict_of_associations_scene_son[str(scene.id_scene)].append(
+                    son_duplicated
+                )  # ... et on garde une trace pour ajouter les associations scene/son juste après.
             for son_continu in scene.sons_continus:
-                pass
+                son_duplicated = Son_Continu(
+                    nom=son_continu.nom,
+                    description=son_continu.description,
+                    duree=son_continu.duree,
+                    id_son=SonService.id_son_generator(),
+                    id_freesound=son_continu.id_freesound,
+                    tags=son_continu.tags,
+                )
+                SonDAO().ajouter_son(son=son_duplicated, schema=schema)
+                for tag in son_duplicated.tags:
+                    TagDAO().ajouter_association_son_tag(
+                        id_son=son_duplicated.id_son, tag=tag, schema=schema
+                    )
+                dict_of_associations_scene_son[str(scene.id_scene)].append(son_duplicated)
             for son_manuel in scene.sons_manuels:
-                pass
+                son_duplicated = Son_Manuel(
+                    nom=son_manuel.nom,
+                    description=son_manuel.description,
+                    duree=son_manuel.duree,
+                    id_son=SonService.id_son_generator(),
+                    id_freesound=son_manuel.id_freesound,
+                    tags=son_manuel.tags,
+                    cooldown_min=son_manuel.cooldown_min,
+                    cooldown_max=son_manuel.cooldown_max,
+                )
+                SonDAO().ajouter_son(son=son_duplicated, schema=schema)
+                for tag in son_duplicated.tags:
+                    TagDAO().ajouter_association_son_tag(
+                        id_son=son_duplicated.id_son, tag=tag, schema=schema
+                    )
+                dict_of_associations_scene_son[str(scene.id_scene)].append(son_duplicated)
+
+        # On ajoute toutes les associations (scene/son):
+        for scene, son in dict_of_associations_scene_son.items():
+            SonDAO().ajouter_association_scene_son(
+                id_scene=scene.id_scene, son=son.id_son, schema=schema
+            )
+
+        # Puis on ajoute les associations SD/Scenes
+        for scene in dict_of_associations_scene_son.keys():
+            SceneDAO().ajouter_association_sd_scene(
+                id_sd=sd_duplicated.id_sd, id_scene=scene.id_scene, schema=schema
+            )
+        # Puis on ajoute l'association User/SD:
+        SDDAO().ajouter_association_user_sd(
+            id_user=Session().utilisateur.id_user, id_sd=sd_duplicated.id_sd, schema=schema
+        )
+
+        # Enfin, on actualise la session:
+        new_sd = SDService().instancier_sd_par_id(id_sd=sd_duplicated.id_sd, schema=schema)
+        Session().utilisateur.ajouter_sd(sd=new_sd)

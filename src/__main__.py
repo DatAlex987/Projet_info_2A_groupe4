@@ -26,6 +26,8 @@ while view:
     view.display_info()
     view = view.make_choice()
 
+# Insérer la suppression des objets orphelins ici
+
 with open("resources/exit.txt", mode="r", encoding="utf-8") as exit_message:
     print(exit_message.read())
 
