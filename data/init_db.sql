@@ -19,7 +19,7 @@ DROP TABLE IF EXISTS ProjetInfo.Sounddeck CASCADE ;
 CREATE TABLE ProjetInfo.Sounddeck(
     id_sd VARCHAR(30) PRIMARY KEY,
     nom TEXT,
-    description VARCHAR(280),
+    description TEXT,
     date_creation DATE,
     id_createur VARCHAR(30),
     FOREIGN KEY (id_createur) REFERENCES ProjetInfo.Utilisateur(id_user) ON DELETE CASCADE
@@ -30,7 +30,7 @@ DROP TABLE IF EXISTS ProjetInfo.Scene CASCADE ;
 CREATE TABLE ProjetInfo.Scene (
     id_scene VARCHAR(30) PRIMARY KEY,
     nom TEXT,
-    description VARCHAR(280),
+    description TEXT,
     date_creation DATE
 );
 
@@ -39,7 +39,7 @@ CREATE TABLE ProjetInfo.Son (
     id_son VARCHAR(30) PRIMARY KEY,
     id_freesound VARCHAR(30),
     nom TEXT,
-    description VARCHAR(280),
+    description TEXT,
     duree TIME
 );
 
