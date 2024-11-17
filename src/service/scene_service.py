@@ -121,6 +121,23 @@ class SceneService:
         choix.append("Retour au menu de choix des sound-decks")
         return choix
 
+    def formatage_question_scenes_of_sd_menu_consult(self, id_sd: str):
+        sds_consult = Session().sds_to_consult
+        sd_selectionne = None
+        for sd in sds_consult:
+            if sd.id_sd == id_sd:
+                sd_selectionne = sd
+        choix = []
+        compteur = 1
+        for scene in sd_selectionne.scenes:
+            mise_en_page_ligne = (
+                f"{compteur}. {scene.id_scene} | {scene.nom} | {scene.date_creation}"
+            )
+            choix.append(mise_en_page_ligne)
+            compteur += 1
+        choix.append("Retour au menu de choix des sound-decks")
+        return choix
+
     def instancier_scene_par_id(self, id_scene: str, schema: str):
         """Instancie une Scène (et tous les sons qui la composent) à partir de son id
 

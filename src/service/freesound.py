@@ -137,7 +137,7 @@ class Freesound(metaclass=Singleton):
                 "license": sound.get("license", "Unknown"),
                 "username": sound.get("username", "Unknown"),
             }
-            for sound in response_json["results"]
+            for sound in response_json["results"][:limit]
         ]
 
         return results
