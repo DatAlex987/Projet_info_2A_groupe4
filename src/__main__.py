@@ -1,26 +1,22 @@
 # from utils.reset_database import ResetDatabase
 from view.accueilview import AccueilView
+from colorama import Fore, Style
 
 # from business_object.user import User
 # from dao.user_dao import UserDAO
 # import datetime
 
-"""user1 = User(
-    nom="San",
-    prenom="Theo",
-    date_naissance=datetime.date(2001, 5, 28),
-    id_user="eft52",
-    SD_possedes=[],
-    mdp="MdpTheo3007!",
-    pseudo="folsory",
-)
-UserDAO().ajouter_user(user1, "ProjetInfo")
-
-"""
 view = AccueilView()
 
-with open("resources/banner.txt", mode="r", encoding="utf-8") as title:
-    print(title.read())
+banner_start = (
+    f"{Fore.CYAN}{'~' * 100}\n"
+    f"{Fore.WHITE}{' ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ '.center(100)}\n"
+    f"{Fore.MAGENTA}{Style.BRIGHT}{'WELCOME TO THE DM SOUND S BUDDY'.center(100)}\n"
+    f"{Fore.BLUE}{'Enhance your Roleplay experience'.center(100)}\n"
+    f"{Fore.WHITE}{' ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ '.center(100)}\n"
+    f"{Fore.CYAN}{'~' * 100}{Style.RESET_ALL}\n"
+)
+print(banner_start)
 
 while view:
     view.display_info()
@@ -28,8 +24,14 @@ while view:
 
 # Insérer la suppression des objets orphelins ici
 
-with open("resources/exit.txt", mode="r", encoding="utf-8") as exit_message:
-    print(exit_message.read())
-
+banner_quit = (
+    f"{Fore.CYAN}{'~' * 100}\n"
+    f"{Fore.WHITE}{' ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ '.center(100)}\n"
+    f"{Fore.MAGENTA}{Style.BRIGHT}{'The sounds will miss you...'.center(100)}\n"
+    f"{Fore.BLUE}{'and so will we!'.center(100)}\n"
+    f"{Fore.WHITE}{' ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ '.center(100)}\n"
+    f"{Fore.CYAN}{'~' * 100}{Style.RESET_ALL}\n"
+)
+print(banner_quit)
 
 # pip install pygame

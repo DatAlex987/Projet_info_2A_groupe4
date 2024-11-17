@@ -13,7 +13,8 @@ class AbstractView(ABC):
             "selected": "00BFFF",
             "pointer": "ffffff",
             "instruction": "ffffff",
-            "answer": "008000",
+            "answer": "f8fc0f",
+            "input": "f8fc0f",
             "question": "FF7F50",
         }
 

@@ -457,7 +457,6 @@ class SDService:
         # Enfin, on actualise la session:
         new_sd = SDService().instancier_sd_par_id(id_sd=sd_duplicated.id_sd, schema=schema)
         Session().utilisateur.ajouter_sd(sd=new_sd)
-                pass
 
     def afficher_details_sd(self, sd):
         """Affiche les détails d'un son aléatoire."""

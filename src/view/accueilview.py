@@ -107,4 +107,4 @@ class AccueilView(AbstractView):
         return next_view
 
     def display_info(self):
-        print(Fore.BLUE + " MENU D'ACCUEIL ".center(80, "=") + Style.RESET_ALL)
+        print(Style.BRIGHT + Fore.BLUE + " MENU D'ACCUEIL ".center(80, "=") + Style.RESET_ALL)
