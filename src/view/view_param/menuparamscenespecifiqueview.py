@@ -39,7 +39,7 @@ class MenuParamSceneSpecifiqueView(AbstractView):
                 "type": "list",
                 "name": "Choix Scene Specifique",
                 "message": "Que souhaitez-vous faire (Sélectionnez un son pour le modifier) ? \n"
-                " ID Freesound  |    Type      |   Nom   |   Durée \n"
+                " ID du son  |    Type      |   Nom   |   Durée \n"
                 "------------------------------------------------------------",
                 "choices": SonService().formatage_question_sons_of_scene(
                     id_sd=Session().sd_to_param.id_sd, id_scene=Session().scene_to_param.id_scene
@@ -92,13 +92,11 @@ class MenuParamSceneSpecifiqueView(AbstractView):
             return MenuRechercheFreesoundView()
         else:
             # On extrait l'id du son sélectionné ainsi que son type
-            id_freesound_striped = (
-                choix["Choix Scene Specifique"].split("|")[0].split(". ")[1].strip()
-            )
+            id_son_striped = choix["Choix Scene Specifique"].split("|")[0].split(". ")[1].strip()
             type_son = re.search(r"\[(.*?)\]", choix["Choix Scene Specifique"]).group(1)
             # Puis on update la session
             Session().son_to_param = SonService().instancier_son_par_id_type(
-                id_freesound=id_freesound_striped, type_son=type_son, schema="ProjetInfo"
+                id_son=id_son_striped, type_son=type_son, schema="ProjetInfo"
             )
             next_view = MenuParamModifSonView()
         return next_view

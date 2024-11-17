@@ -25,7 +25,7 @@ class MenuConsulterSonsView(AbstractView):
                 "type": "list",
                 "name": "Choix Son",
                 "message": "Sélectionnez un son pour l'enclencher ou l'arrêter \n"
-                "  Type        |   Nom   | ID Freesound | Déclenchement | Etat \n"
+                "  Type        |   Nom   | ID Freesound | ID du son | Déclenchement | Etat \n"
                 "------------------------------------------------------------",
                 "choices": SonService().formatage_question_sons_of_scene_menu_jeu(
                     id_sd=Session().sd_to_consult.id_sd,
@@ -41,10 +41,10 @@ class MenuConsulterSonsView(AbstractView):
 
             next_view = ConsulterSceneView()
         else:
-            id_freesound_striped = choix["Choix Son"].split("|")[0].split(". ")[1].strip()
+            id_son_striped = choix["Choix Son"].split("|")[0].split(". ")[1].strip()
             type_son = re.search(r"\[(.*?)\]", choix["Choix Son"]).group(1)
             Session().son_to_consult = SDService().instancier_son_par_id_type(
-                id_freesound=id_freesound_striped, type_son=type_son, schema="ProjetInfo"
+                id_son=id_son_striped, type_son=type_son, schema="ProjetInfo"
             )
             # next_view = MenuJeuSonsView() : remplacer par juste modifier le déclencher
         return next_view

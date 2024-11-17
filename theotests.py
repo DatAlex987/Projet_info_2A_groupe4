@@ -16,20 +16,21 @@ from business_object.son import Son
 from business_object.son_aleatoire import Son_Aleatoire
 from business_object.son_manuel import Son_Manuel
 from business_object.son_continu import Son_Continu
-from view.service.session import Session
+from service.session import Session
 from service.freesound import Freesound
 from service.son_service import SonService
 import hashlib
 import pygame
 import os
+import re
 from datetime import timedelta
 
 # os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 
-# ResetDatabase().ResetALL()
+ResetDatabase().ResetALL()
 
 
-def arr():
+"""def arr():
     input("Appuyer sur Entrée pour arrêter le son")
     print("BB chat")
 
@@ -47,29 +48,7 @@ dico_filtres = {"query": "violon", "min_duration": 80, "max_duration": None}
 a = Freesound.rechercher_multi_filtres(dico_filtres=dico_filtres, limit=15)
 print(a)
 
-
-def is_sql_injection(input_str: str) -> bool:
-    """
-    Checks if the input string contains patterns commonly associated with SQL injection.
-
-    :param input_str: The input string to check.
-    :return: True if SQL injection is suspected, False otherwise.
-    """
-    # Common SQL injection patterns
-    patterns = [
-        r"(--|#)",  # Comment indicators
-        r"(\b(OR|AND)\b.+\=)",  # Logical operators with conditions
-        r"(\bUNION\b)",  # UNION keyword
-        r"(;|\bDROP\b|\bDELETE\b|\bINSERT\b|\bUPDATE\b|\bSELECT\b)",  # Dangerous SQL keywords
-        r"(\')",  # Single quotes for string manipulation
-        r"(\bEXEC\b|\bEXECUTE\b)",  # Execute keywords
-    ]
-
-    # Check if any pattern matches the input string
-    for pattern in patterns:
-        if re.search(pattern, input_str, re.IGNORECASE):
-            return True
-    return False
+"""
 
 
 """scene1 = Scene(

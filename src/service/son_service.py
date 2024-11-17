@@ -29,6 +29,21 @@ from rich.style import Style
 class SonService:
     """Méthodes de service des sons"""
 
+    @staticmethod  # Ne nécessite pas d'instance de SonService pour exister
+    def id_son_generator():
+        """Génère un identifiant pour un son.
+
+        Identifiant de la forme XYZRSTUV où X,Y,Z,R,S,T,U,V sont des caractères alphanumériques
+
+        Returns:
+        -------------------------
+        str
+            Identifiant (supposé unique) généré pour un son.
+        """
+        generation = "".join(random.choices(string.ascii_letters + string.digits, k=8))
+        unique_id = f"{generation}"
+        return unique_id
+
     def formatage_question_sons_of_scene(self, id_sd: str, id_scene: str):
         """Construit une liste des choix à afficher après sélection d'une Scène
 
@@ -54,17 +69,21 @@ class SonService:
         choix = []
         compteur = 1
         for son_alea in scene_selectionnee.sons_aleatoires:
-            mise_en_page_ligne = f"{compteur}. {son_alea.id_freesound}| [ALEATOIRE] |{son_alea.nom} | {son_alea.duree}"
+            mise_en_page_ligne = (
+                f"{compteur}. {son_alea.id_son}| [ALEATOIRE] |{son_alea.nom} | {son_alea.duree}"
+            )
             choix.append(mise_en_page_ligne)
             compteur += 1
         for son_cont in scene_selectionnee.sons_continus:
             mise_en_page_ligne = (
-                f"{compteur}. {son_cont.id_freesound}| [CONTINU] |{son_cont.nom} | {son_cont.duree}"
+                f"{compteur}. {son_cont.id_son}| [CONTINU] |{son_cont.nom} | {son_cont.duree}"
             )
             choix.append(mise_en_page_ligne)
             compteur += 1
         for son_manuel in scene_selectionnee.sons_manuels:
-            mise_en_page_ligne = f"{compteur}. {son_manuel.id_freesound}| [MANUEL] |{son_manuel.nom} | {son_manuel.duree}"
+            mise_en_page_ligne = (
+                f"{compteur}. {son_manuel.id_son}| [MANUEL] |{son_manuel.nom} | {son_manuel.duree}"
+            )
             choix.append(mise_en_page_ligne)
             compteur += 1
         choix.append("Ajouter un son via Freesound")
@@ -98,19 +117,15 @@ class SonService:
         choix = []
         compteur = 1
         for son_alea in scene_selectionnee.sons_aleatoires:
-            mise_en_page_ligne = (
-                f"{compteur}. [ALEATOIRE] |{son_alea.nom}|{son_alea.id_freesound}|' '| 'Etat'"
-            )
+            mise_en_page_ligne = f"{compteur}. [ALEATOIRE] |{son_alea.nom}|{son_alea.id_freesound}|{son_alea.id_son}|' '| 'Etat'"
             choix.append(mise_en_page_ligne)
             compteur += 1
         for son_cont in scene_selectionnee.sons_continus:
-            mise_en_page_ligne = (
-                f"{compteur}. [CONTINU] |{son_cont.nom}|{son_cont.id_freesound}|' '| 'Etat'"
-            )
+            mise_en_page_ligne = f"{compteur}. [CONTINU] |{son_cont.nom}|{son_cont.id_freesound}|{son_cont.id_son}|' '| 'Etat'"
             choix.append(mise_en_page_ligne)
             compteur += 1
         for son_manuel in scene_selectionnee.sons_manuels:
-            mise_en_page_ligne = f"{compteur}. [MANUEL] |{son_manuel.nom}|{son_manuel.id_freesound}|{son_manuel.start_key}| 'Etat'"
+            mise_en_page_ligne = f"{compteur}. [MANUEL] |{son_manuel.nom}|{son_manuel.id_freesound}|{son_manuel.id_son}|{son_manuel.start_key}| 'Etat'"
             choix.append(mise_en_page_ligne)
             compteur += 1
         choix.append("Retour au menu de choix des scènes")
@@ -123,6 +138,7 @@ class SonService:
                 description=son_kwargs["description"],
                 duree=datetime.timedelta(seconds=son_kwargs["duration"]),
                 id_freesound=str(son_kwargs["id"]),
+                id_son=SonService.id_son_generator(),
                 tags=son_kwargs["tags"],
                 cooldown_min=int(son_kwargs["param1"]),
                 cooldown_max=int(son_kwargs["param2"]),
@@ -133,6 +149,7 @@ class SonService:
                 description=son_kwargs["description"],
                 duree=datetime.timedelta(seconds=son_kwargs["duration"]),
                 id_freesound=str(son_kwargs["id"]),
+                id_son=SonService.id_son_generator(),
                 tags=son_kwargs["tags"],
                 start_key=son_kwargs["param1"],
             )
@@ -142,6 +159,7 @@ class SonService:
                 description=son_kwargs["description"],
                 duree=datetime.timedelta(seconds=son_kwargs["duration"]),
                 id_freesound=str(son_kwargs["id"]),
+                id_son=SonService.id_son_generator(),
                 tags=son_kwargs["tags"],
             )
 
@@ -161,20 +179,20 @@ class SonService:
             # Puis pour chaque tag du son, on le lie au son
             for tag in son_to_add.tags:
                 TagDAO().ajouter_association_son_tag(
-                    id_freesound=son_to_add.id_freesound, tag=tag, schema=schema
+                    id_son=son_to_add.id_son, tag=tag, schema=schema
                 )
 
-            # Enfin, on le télécharge:
-            Freesound().telecharger_son(id_son=son_to_add.id_freesound)
+            # Enfin, on le télécharge avec son id_freesound:
+            Freesound().telecharger_son(id_freesound=son_to_add.id_freesound)
         except ValueError as e:
             raise ValueError(f"{e}")
 
-    def instancier_son_par_id_type(self, id_freesound: str, type_son: str, schema: str):
+    def instancier_son_par_id_type(self, id_son: str, type_son: str, schema: str):
         """Instancie un son (et tous ses tags) à partir de son id et de son type
 
         Params
         -------------
-        id_freesound : str
+        id_son : str
             id du son sélectionné par l'utilisateur
         type_son : str
             Type du son à instancier
@@ -187,14 +205,14 @@ class SonService:
         """
         if type_son == "ALEATOIRE":
             # On commence par recherche le son en BDD
-            son_kwargs = SonDAO().rechercher_par_id_son(id_freesound=id_freesound, schema=schema)
+            son_kwargs = SonDAO().rechercher_par_id_son(id_son=id_son, schema=schema)
             # Puis on recherche ses paramètres dans la table d'association scene_son
             additional_son_kwargs = {}
             sons_of_scene = SonDAO().rechercher_sons_par_scene(
                 id_scene=Session().scene_to_param.id_scene, schema=schema
             )
             for son in sons_of_scene["sons_aleatoires"]:
-                if son["id_freesound"] == id_freesound:
+                if son["id_son"] == id_son:
                     additional_son_kwargs["param1"] = son["param1"]
                     additional_son_kwargs["param2"] = son["param2"]
             # Enfin, on peut l'instancier avec tous nos éléments
@@ -207,14 +225,15 @@ class SonService:
                     seconds=son_kwargs["duree"].second,
                 ),
                 id_freesound=son_kwargs["id_freesound"],
-                tags=SonDAO().get_tags_of_son(id_freesound=id_freesound, schema=schema),
+                id_son=son_kwargs["id_son"],
+                tags=SonDAO().get_tags_of_son(id_son=id_son, schema=schema),
                 cooldown_min=additional_son_kwargs["param1"],
                 cooldown_max=additional_son_kwargs["param2"],
             )
             return instance_son
         if type_son == "CONTINU":
             # On commence par recherche le son en BDD
-            son_kwargs = SonDAO().rechercher_par_id_son(id_freesound=id_freesound, schema=schema)
+            son_kwargs = SonDAO().rechercher_par_id_son(id_son=id_son, schema=schema)
 
             # Enfin, on peut l'instancier avec tous nos éléments
             instance_son = Son_Continu(
@@ -226,19 +245,20 @@ class SonService:
                     seconds=son_kwargs["duree"].second,
                 ),
                 id_freesound=son_kwargs["id_freesound"],
-                tags=SonDAO().get_tags_of_son(id_freesound=id_freesound, schema=schema),
+                id_son=son_kwargs["id_son"],
+                tags=SonDAO().get_tags_of_son(id_son=id_son, schema=schema),
             )
             return instance_son
         if type_son == "MANUEL":
             # On commence par recherche le son en BDD
-            son_kwargs = SonDAO().rechercher_par_id_son(id_freesound=id_freesound, schema=schema)
+            son_kwargs = SonDAO().rechercher_par_id_son(id_son=id_son, schema=schema)
             # Puis on recherche ses paramètres dans la table d'association scene_son
             additional_son_kwargs = {}
             sons_of_scene = SonDAO().rechercher_sons_par_scene(
                 id_scene=Session().scene_to_param.id_scene, schema=schema
             )
             for son in sons_of_scene["sons_manuels"]:
-                if son["id_freesound"] == id_freesound:
+                if son["id_son"] == id_son:
                     additional_son_kwargs["param1"] = son["param1"]
             # Enfin, on peut l'instancier avec tous nos éléments
             instance_son = Son_Manuel(
@@ -250,7 +270,8 @@ class SonService:
                     seconds=son_kwargs["duree"].second,
                 ),
                 id_freesound=son_kwargs["id_freesound"],
-                tags=SonDAO().get_tags_of_son(id_freesound=id_freesound, schema=schema),
+                id_son=son_kwargs["id_son"],
+                tags=SonDAO().get_tags_of_son(id_son=id_son, schema=schema),
                 start_key=additional_son_kwargs["param1"],
             )
             return instance_son
@@ -264,15 +285,15 @@ class SonService:
             for scene in sd.scenes:
                 if isinstance(son, Son_Aleatoire):
                     for son_alea in scene.sons_aleatoires:
-                        if son_alea.id_freesound == son.id_freesound:
+                        if son_alea.id_son == son.id_son:
                             son_alea.modifier_nom(new_nom=new_nom)
                 if isinstance(son, Son_Continu):
                     for son_continu in scene.sons_continus:
-                        if son_continu.id_freesound == son.id_freesound:
+                        if son_continu.id_son == son.id_son:
                             son_continu.modifier_nom(new_nom=new_nom)
                 if isinstance(son, Son_Manuel):
                     for son_manuel in scene.sons_manuels:
-                        if son_manuel.id_freesound == son.id_freesound:
+                        if son_manuel.id_son == son.id_son:
                             son_manuel.modifier_nom(new_nom=new_nom)
         # On update la BDD
         SonDAO().modifier_son(son=son, schema=schema)
@@ -286,15 +307,15 @@ class SonService:
             for scene in sd.scenes:
                 if isinstance(son, Son_Aleatoire):
                     for son_alea in scene.sons_aleatoires:
-                        if son_alea.id == son.id_freesound:
+                        if son_alea.id_son == son.id_son:
                             son_alea.modifier_description(new_description=new_desc)
                 if isinstance(son, Son_Continu):
                     for son_continu in scene.sons_continus:
-                        if son_continu.id == son.id_freesound:
+                        if son_continu.id_son == son.id_son:
                             son_continu.modifier_description(new_description=new_desc)
                 if isinstance(son, Son_Manuel):
                     for son_manuel in scene.sons_manuels:
-                        if son_manuel.id == son.id_freesound:
+                        if son_manuel.id_son == son.id_son:
                             son_manuel.modifier_description(new_description=new_desc)
         # On update la BDD
         SonDAO().modifier_son(son=son, schema=schema)
@@ -304,7 +325,7 @@ class SonService:
         for sd in Session().utilisateur.SD_possedes:
             for scene in sd.scenes:
                 for son in scene.sons_aleatoires:
-                    if son.id == son_alea.id_freesound:
+                    if son.id_son == son_alea.id_son:
                         son.modifier_cooldown_min(new_cooldown_min=new_cdmin)
 
         SonDAO().modifier_param_son(son_alea, schema=schema)
@@ -314,7 +335,7 @@ class SonService:
         for sd in Session().utilisateur.SD_possedes:
             for scene in sd.scenes:
                 for son in scene.sons_aleatoires:
-                    if son.id == son_alea.id_freesound:
+                    if son.id_son == son_alea.id_son:
                         son.modifier_cooldown_max(new_cooldown_max=new_cdmax)
         SonDAO().modifier_param_son(son_alea, schema=schema)
 
@@ -324,7 +345,7 @@ class SonService:
         for sd in Session().utilisateur.SD_possedes:
             for scene in sd.scenes:
                 for son in scene.sons_manuels:
-                    if son.id == son_manuel.id_freesound:
+                    if son.id_son == son_manuel.id_son:
                         son.modifier_start_key(new_start_key=new_start_key)
         SonDAO().modifier_param_son(son_manuel, schema=schema)
 
@@ -340,6 +361,7 @@ class SonService:
         table.add_column("Champ", style=Style(color="honeydew2"), width=20)
         table.add_column("Détails", style=Style(color="honeydew2"))
 
+        table.add_row("ID du son", str(son_continu.id_son))
         table.add_row("ID Freesound", str(son_continu.id_freesound))
         table.add_row("Nom", son_continu.nom)
         table.add_row("Tags", ", ".join(son_continu.tags[:5]))
@@ -362,6 +384,7 @@ class SonService:
         table.add_column("Champ", style=Style(color="honeydew2"), width=20)
         table.add_column("Détails", style=Style(color="honeydew2"))
 
+        table.add_row("ID du son", str(son_manuel.id_son))
         table.add_row("ID Freesound", str(son_manuel.id_freesound))
         table.add_row("Nom", son_manuel.nom)
         table.add_row("Tags", ", ".join(son_manuel.tags[:5]))
@@ -385,6 +408,7 @@ class SonService:
         table.add_column("Champ", style=Style(color="honeydew2"), width=20)
         table.add_column("Détails", style=Style(color="honeydew2"))
 
+        table.add_row("ID du son", str(son_aleatoire.id_son))
         table.add_row("ID Freesound", str(son_aleatoire.id_freesound))
         table.add_row("Nom", son_aleatoire.nom)
         table.add_row("Tags", ", ".join(son_aleatoire.tags[:5]))

@@ -243,10 +243,10 @@ class Freesound(metaclass=Singleton):
         # Limiter le nombre d'IDs renvoyés à la valeur de `limit`
         return ids[:limit]
 
-    def telecharger_son(self, id_son):
+    def telecharger_son(self, id_freesound):
         # Modifier la méthode pour prendre en compte les autres formats.
         # Renommer les sons téléchargés au format précisé dans jouer_son (son.py)
-        sound_data = Freesound.rechercher_par_id(id_son)
+        sound_data = Freesound.rechercher_par_id(id_freesound)
         mp3_url = sound_data["previews"]["preview-hq-mp3"]  # Lien du fichier MP3 haute qualité
 
         # Télécharger le fichier MP3
@@ -255,7 +255,7 @@ class Freesound(metaclass=Singleton):
         if mp3_response.status_code == 200:
             # Chemin complet vers le fichier dans le dossier Fichiers_audio
             dossier_sauvegarde: str = os.getenv("DOSSIER_SAUVEGARDE")
-            chemin_fichier_mp3 = os.path.join(dossier_sauvegarde, f"{id_son}.mp3")
+            chemin_fichier_mp3 = os.path.join(dossier_sauvegarde, f"{id_freesound}.mp3")
             with open(chemin_fichier_mp3, "wb") as f:
                 f.write(mp3_response.content)
             print(f"Le fichier a été téléchargé sous le nom {chemin_fichier_mp3}")

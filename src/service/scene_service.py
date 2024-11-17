@@ -146,6 +146,7 @@ class SceneService:
                     description=son_alea_kwargs["description"],
                     duree=son_alea_kwargs["duree"],
                     id_freesound=son_alea_kwargs["id_freesound"],
+                    id_son=son_alea_kwargs["id_son"],
                     tags=son_alea_kwargs["tags"],
                     cooldown_min=son_alea_kwargs["param1"],
                     cooldown_max=son_alea_kwargs["param2"],
@@ -158,6 +159,7 @@ class SceneService:
                     description=son_cont_kwargs["description"],
                     duree=son_cont_kwargs["duree"],
                     id_freesound=son_cont_kwargs["id_freesound"],
+                    id_son=son_cont_kwargs["id_son"],
                     tags=son_cont_kwargs["tags"],
                 )
             )
@@ -168,6 +170,7 @@ class SceneService:
                     description=son_manu_kwargs["description"],
                     duree=son_manu_kwargs["duree"],
                     id_freesound=son_manu_kwargs["id_freesound"],
+                    id_son=son_manu_kwargs["id_son"],
                     tags=son_manu_kwargs["tags"],
                     start_key=son_manu_kwargs["param1"],
                 )
@@ -208,27 +211,27 @@ class SceneService:
             SceneDAO().supprimer_toutes_associations_scene(id_scene=scene.id_scene, schema=schema)
             for son in scene.sons_aleatoires:
                 SonDAO().supprimer_toutes_associations_son(
-                    id_freesound=son.id_freesound, type_son="aleatoire", schema=schema
+                    id_son=son.id_son, type_son="aleatoire", schema=schema
                 )
                 for tag in son.tags:
                     TagDAO().supprimer_association_son_tag(
-                        id_freesound=son.id_freesound, tag=tag, schema=schema
+                        id_son=son.id_son, tag=tag, schema=schema
                     )
             for son in scene.sons_continus:
                 SonDAO().supprimer_toutes_associations_son(
-                    id_freesound=son.id_freesound, type_son="continu", schema=schema
+                    id_son=son.id_son, type_son="continu", schema=schema
                 )
                 for tag in son.tags:
                     TagDAO().supprimer_association_son_tag(
-                        id_freesound=son.id_freesound, tag=tag, schema=schema
+                        id_son=son.id_son, tag=tag, schema=schema
                     )
             for son in scene.sons_manuels:
                 SonDAO().supprimer_toutes_associations_son(
-                    id_freesound=son.id_freesound, type_son="manuel", schema=schema
+                    id_son=son.id_son, type_son="manuel", schema=schema
                 )
                 for tag in son.tags:
                     TagDAO().supprimer_association_son_tag(
-                        id_freesound=son.id_freesound, tag=tag, schema=schema
+                        id_son=son.id_son, tag=tag, schema=schema
                     )
             # On termine par actualiser la session
             Session().utilisateur.supprimer_scene_a_sd(

@@ -65,6 +65,7 @@ def son_vador_kwargs():
         "description": "Luke, I am your father",
         "duree": datetime.timedelta(seconds=45),
         "id_freesound": "039450",
+        "id_son": "XkOfuYc8",
         "tags": ["starwars", "Vador", "JW"],
     }
 
@@ -76,6 +77,7 @@ def son_aleatoire1_kwargs():
         "description": "Son de fond de forêt calme",
         "duree": datetime.timedelta(seconds=60),
         "id_freesound": "787956",
+        "id_son": "XkOoDuc8",
         "tags": ["nature", "calm", "forest"],
         "cooldown_min": 5,
         "cooldown_max": 10,
@@ -89,6 +91,7 @@ def son_aleatoire2_kwargs():
         "description": "Son de fantome dans un manoir",
         "duree": datetime.timedelta(seconds=30),
         "id_freesound": "445936",
+        "id_son": "pmUjYtf7",
         "tags": ["manoir", "fantome", "scary"],
         "cooldown_min": 3,
         "cooldown_max": 15,
@@ -102,6 +105,7 @@ def son_continu1_kwargs():
         "description": "Son de fond de forêt calme",
         "duree": datetime.timedelta(seconds=46),
         "id_freesound": "forest_1234",
+        "id_son": "p8Mu4HyE",
         "tags": ["nature", "calm", "forest"],
     }
 
@@ -113,6 +117,7 @@ def son_continu2_kwargs():
         "description": "Musique douce au piano",
         "duree": datetime.timedelta(minutes=15),
         "id_freesound": "125489",
+        "id_son": "e6uKHU85",
         "tags": ["piano", "calm", "soft"],
     }
 
@@ -124,6 +129,7 @@ def son_manuel1_kwargs():
         "description": "Cloche qui sonne",
         "duree": datetime.timedelta(seconds=52),
         "id_freesound": "bell_5678",
+        "id_son": "p7E5d9Z5",
         "tags": ["bell", "chime"],
         "start_key": "c",
     }
@@ -136,6 +142,7 @@ def son_manuel2_kwargs():
         "description": "Bruits de pas qui s'approchent",
         "duree": datetime.timedelta(seconds=59),
         "id_freesound": "458726",
+        "id_son": "8cDmPouX",
         "tags": ["step", "approaching"],
         "start_key": "p",
     }
