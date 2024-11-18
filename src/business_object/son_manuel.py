@@ -1,6 +1,5 @@
 from business_object.son import Son
 import pygame
-import threading
 
 
 class Son_Manuel(Son):
@@ -30,6 +29,14 @@ class Son_Manuel(Son):
         self.start_key = new_key
 
     def Arret_Son(self):
+        self.charge.stop()
+        self.charge = None
+
+    def jouer_Son(self):
+        pass
+
+    """
+    def Arret_Son(self):
         if self.charge:
             i = input(
                 f"Appuyer sur m pour arreter le son manuel ou {self.start_key} pour le déclencher "
@@ -41,7 +48,6 @@ class Son_Manuel(Son):
                 self.charge.play()
 
     def jouer_son(self):
-        """lance le son après déclenchement"""
         file_path = self.localise_son()
         # Initialiser Pygame est necessaire :pygame.mixer.init avant
         try:
@@ -53,3 +59,4 @@ class Son_Manuel(Son):
                 thread_A.start()
         except pygame.error as e:
             print(f"Erreur lors de la lecture du fichier : {e}")
+    """

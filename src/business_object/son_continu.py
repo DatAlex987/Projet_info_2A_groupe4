@@ -1,6 +1,5 @@
 from business_object.son import Son
 import pygame
-import threading
 
 
 class Son_Continu(Son):
@@ -17,6 +16,14 @@ class Son_Continu(Son):
     def __init__(self, nom, description, duree, id_son, id_freesound, tags):
         super().__init__(nom, description, duree, id_son, id_freesound, tags)
 
+    def Arret_Son(self):
+        pass
+
+    def jouer_Son(self):
+        if self.charge is not None:
+            self.charge.play(loops=-1)
+
+    """
     def Arret_Son(self):
         input("Appuyer sur Entrée pour arrêter le son")
         pygame.mixer.music.stop()
@@ -35,3 +42,4 @@ class Son_Continu(Son):
             thread.start()
         except pygame.error as e:
             print(f"Erreur lors de la lecture du fichier : {e}")
+    """

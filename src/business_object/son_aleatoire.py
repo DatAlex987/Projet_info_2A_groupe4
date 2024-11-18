@@ -2,7 +2,6 @@ from business_object.son import Son
 import pygame
 import random
 import time
-import threading
 
 
 class Son_Aleatoire(Son):
@@ -52,13 +51,20 @@ class Son_Aleatoire(Son):
         self.cooldown_max = new_cooldown_max
 
     def Arret_Son(self):
+        self.charge.stop()
+        self.charge = None
+
+    def jouer_Son(self):
+        pass
+
+    """
+    def Arret_Son(self):
         if self.charge:
             input("Appuyer sur Entrée pour arreter le son aleatoire")
             self.charge.stop()
             self.charge = None
 
     def jouer_son(self):
-        """Joue le son aléatoire comme attendu"""
         file_path = self.localise_son()
         # Initialiser Pygame est necessaire :pygame.mixer.init avant
         try:
@@ -81,3 +87,4 @@ class Son_Aleatoire(Son):
 
         except pygame.error as e:
             print(f"Erreur lors de la lecture du fichier : {e}")
+    """

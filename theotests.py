@@ -47,7 +47,7 @@ position_y = (hauteur_ecran - hauteur) // 2 - k
 os.environ["SDL_VIDEO_WINDOW_POS"] = f"{position_x},{position_y}"
 fenetre = pygame.display.set_mode((largeur, hauteur))
 # Définir le titre de la fenêtre
-pygame.display.set_caption("Ma Fenêtre Pygame")
+pygame.display.set_caption("DM Sound buddy window")
 
 # Définir les couleurs (R, G, B)
 BLANC = (255, 255, 255)

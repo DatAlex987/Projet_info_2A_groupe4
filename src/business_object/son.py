@@ -1,7 +1,8 @@
 import datetime
 import os
+import pygame
+import threading
 from dotenv import load_dotenv
-
 from abc import ABC, abstractmethod
 
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
@@ -74,41 +75,27 @@ class Son(ABC):
             print(f"fichier {file_path} trouvé")
         return file_path
 
+    def jouer_son_preview(self):
+        file_path = self.localise_son()
+        try:
+            # faire le pygame.mixer.init() avant
+            pygame.mixer.music.load(file_path)
+            print("load")
+            pygame.mixer.music.play()
+            print("jeu")
+            # Run the input listener in a separate thread
+            thread = threading.Thread(target=self.Arret_Son)
+            # thread.daemon = True  # Ensure it exits when the main program does
+            thread.start()
+        except pygame.error as e:
+            print(f"Erreur lors de la lecture du fichier : {e}")
+
     @abstractmethod
     def Arret_Son(self) -> None:
-        """
-        if self.charge:
-            self.charge.stop()
-            self.charge = None
-        else:
-            print(f"le son {self.id_son} (Freesound : {self.id_freesound}) ne joue pas : pygame_error")
-        """
         pass
 
     @abstractmethod
     def jouer_son(self) -> None:
-        """Méthode globale pour charger puis jouer un son avec Pygame
-        Utilise pygame.mixer.Sound : appliquer la méthode pour des formats legers
-        tels que wav ou ogg.
-
-        load_dotenv()
-        directory = os.getenv("DOSSIER_SAUVEGARDE")
-        # Ajouter quelques lignes pour faire une recherche préliminaire dans le dossier des
-        # téléchargements pour vérifier le format du son (mp3, wav, ogg, etc.). Stocker ce
-        # format puis le plug dans la fonction ci-dessous :
-        file_path = os.path.join(directory, f"son_{self.id_freesound}.mp3")
-        if not os.path.exists(file_path):
-            print(f"Erreur : Le fichier {file_path} n'existe pas.")
-        else:
-
-            # Initialiser Pygame est necessaire :pygame.mixer.init()
-
-            try:
-                self.charge = pygame.mixer.Sound(file_path)
-                self.charge.play()
-            except pygame.error as e:
-                print(f"Erreur lors de la lecture du fichier : {e}")
-        """
         pass
 
     def modifier_nom(self, new_nom: str):
