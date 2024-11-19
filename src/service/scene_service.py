@@ -1,11 +1,12 @@
 from business_object.scene import Scene
-from business_object.son import Son
 from business_object.son_continu import Son_Continu
 from business_object.son_aleatoire import Son_Aleatoire
 from business_object.son_manuel import Son_Manuel
 from service.session import Session
 from service.sd_service import SDService
-import re
+from utils.Bouton import Bouton
+from os import environ
+import pygame
 import datetime
 import random
 import string
@@ -304,6 +305,88 @@ class SceneService:
         table.add_row("Date de création", str(scene.date_creation))
 
         console.print(table)
+
+    def jouer_scene(self, scene: Scene):
+        """methode de jeu avec fenêtre interactive"""
+        # Initialisation de Pygame
+
+        largeur = 1490
+        hauteur = 400
+        # Obtenir la taille de l'écran
+        info_ecran = pygame.display.Info()
+        largeur_ecran = info_ecran.current_w
+        hauteur_ecran = info_ecran.current_h
+        k = 97
+        g = 89
+        # Calculer la position pour centrer la fenêtre
+        position_x = (largeur_ecran - largeur) // 2 + g
+        position_y = (hauteur_ecran - hauteur) // 2 - k
+
+        boutons = []
+        x_position = 50
+        x_position_2 = 50
+        # Création des boutons pour les sons continus
+        for son in scene.sons_continus:
+            boutons.append((Bouton(x_position, 50, 100, 40, "Jouer/Arreter"), son))
+            x_position += 60
+        # Création des boutons pour les sons aléatoires
+        for son in scene.sons_aleatoires:
+            boutons.append(
+                (Bouton(x_position_2, 74, 100, 40, "Jouer/Arreter"), son),
+            )
+
+        # Définir la position de la fenêtre
+        environ["SDL_VIDEO_WINDOW_POS"] = f"{position_x},{position_y}"
+        fenetre = pygame.display.set_mode((largeur, hauteur))
+        # Définir le titre de la fenêtre
+        pygame.display.set_caption("DM Sound buddy window")
+
+        # Définir les couleurs (R, G, B)
+        NOIR = (0, 0, 0)
+
+        # Dessiner un fond de couleur unie
+        fenetre.fill(NOIR)
+        # Boucle principale pour la scène
+        for sm in scene.sons_manuels:
+            fp = sm.localise_son()
+            sm.charge = pygame.mixer.Sound(fp)
+        for sc in scene.sons_continus:
+            fp = sc.localise_son()
+            # sc.charge = pygame.mixer.Sound(fp)
+            pygame.mixer.music.load(fp)
+        for sa in scene.sons_aleatoires:
+            fp = sa.localise_son()
+            sa.charge = pygame.mixer.Sound(fp)
+        running = True
+        while running:
+            events = pygame.event.get()
+            for event in events:
+                if event.type == pygame.QUIT:
+                    running = False
+                if event.type == pygame.KEYDOWN:
+                    for sm in scene.sons_manuels:
+                        if event.key == pygame.K_p:
+                            sm.jouer_Son()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    position_souris = pygame.mouse.get_pos()
+                    for bouton, son in boutons:
+                        if bouton.est_clique(position_souris):
+                            if bouton.est_arret is True:
+                                son.Arret_Son()
+                            if bouton.est_arret is False:
+                                son.jouer_Son()
+            # Mise à jour des sons aléatoires
+            for son in scene.sons_aleatoires:
+                son.jouer_Son()
+            for son in scene.sons_continus:
+                son.jouer_Son()
+
+            for bouton, _ in boutons:
+                bouton.dessiner(fenetre)
+            pygame.display.flip()
+
+        pygame.mixer.stop()
+        pygame.quit()
 
 
 """

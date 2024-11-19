@@ -17,11 +17,14 @@ class Son_Continu(Son):
         super().__init__(nom, description, duree, id_son, id_freesound, tags)
 
     def Arret_Son(self):
-        pass
+        # self.charge.stop()
+        # self.charge = None
+        pygame.mixer.music.stop
 
     def jouer_Son(self):
-        if self.charge is not None:
-            self.charge.play(loops=-1)
+        # if self.charge is not None:
+        #   self.charge.play(loops=-1)
+        pygame.mixer.music.play()
 
     """
     def Arret_Son(self):

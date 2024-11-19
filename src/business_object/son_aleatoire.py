@@ -1,5 +1,4 @@
 from business_object.son import Son
-import pygame
 import random
 import time
 
@@ -55,7 +54,17 @@ class Son_Aleatoire(Son):
         self.charge = None
 
     def jouer_Son(self):
-        pass
+        dernier_temps = time.time()
+        longueur = self.charge.get_lenght()
+        c = 0
+        while self.charge is not None:
+            temps_actuel = time.time()
+            t = random.randint(self.cooldown_min, self.cooldown_max)
+            if temps_actuel - dernier_temps > t + (longueur) * c:
+                self.charge.play()
+                dernier_temps = temps_actuel
+                if c == 0:
+                    c += 1
 
     """
     def Arret_Son(self):

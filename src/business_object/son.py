@@ -44,7 +44,7 @@ class Son(ABC):
         self.id_freesound = id_freesound
         self.id_son = id_son
         self.tags = tags
-
+        self.charge = None
         if not isinstance(nom, str):
             raise TypeError("Le nom doit etre une instance de str.")
         if not isinstance(description, str):
@@ -95,7 +95,7 @@ class Son(ABC):
         pass
 
     @abstractmethod
-    def jouer_son(self) -> None:
+    def jouer_Son(self) -> None:
         pass
 
     def modifier_nom(self, new_nom: str):

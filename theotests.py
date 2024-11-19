@@ -20,88 +20,61 @@ from service.session import Session
 from service.freesound import Freesound
 from service.son_service import SonService
 import hashlib
+from src.service.scene_service import SceneService
 import os
 import re
 from datetime import timedelta
 import pygame
 import sys
 
-os.environ["SDL_VIDEO_WINDOW_POS"] = "100,50"
-# Initialisation de Pygame
+
+Son_c = Son_Continu(
+    nom="Musique douce",
+    description="Musique douce au piano",
+    duree=datetime.timedelta(minutes=15),
+    id_freesound="747222",
+    id_son="e6uKHU85",
+    tags=["piano", "calm", "soft"],
+)
+
+
+def son_aleatoire2_kwargs():
+    return {
+        "nom": "Manoir hanté",
+        "description": "Son de fantome dans un manoir",
+        "duree": datetime.timedelta(seconds=30),
+        "id_freesound": "445936",
+        "id_son": "pmUjYtf7",
+        "tags": ["manoir", "fantome", "scary"],
+        "cooldown_min": 3,
+        "cooldown_max": 15,
+    }
+
+
+Son_m = Son_Manuel(
+    nom="Bruits de pas",
+    description="Bruits de pas qui s'approchent",
+    duree=datetime.timedelta(seconds=59),
+    id_freesound="662970",
+    id_son="8cDmPouX",
+    tags=["step", "approaching"],
+    start_key="p",
+)
+
+
+sc = Scene(
+    nom="Forêt Mystique",
+    description="Une scène calme dans une forêt mystérieuse",
+    id_scene="234567",
+    sons_aleatoires=[],
+    sons_manuels=[Son_m],
+    sons_continus=[Son_c],
+    date_creation=datetime.date(2023, 10, 9),
+)
+
+
 pygame.init()
-
-# Définir la taille de la fenêtre
-largeur = 1490
-hauteur = 400
-# Obtenir la taille de l'écran
-info_ecran = pygame.display.Info()
-largeur_ecran = info_ecran.current_w
-hauteur_ecran = info_ecran.current_h
-k = 97
-g = 89
-# Calculer la position pour centrer la fenêtre
-position_x = (largeur_ecran - largeur) // 2 + g
-position_y = (hauteur_ecran - hauteur) // 2 - k
-
-# Définir la position de la fenêtre
-os.environ["SDL_VIDEO_WINDOW_POS"] = f"{position_x},{position_y}"
-fenetre = pygame.display.set_mode((largeur, hauteur))
-# Définir le titre de la fenêtre
-pygame.display.set_caption("DM Sound buddy window")
-
-# Définir les couleurs (R, G, B)
-BLANC = (255, 255, 255)
-NOIR = (0, 0, 0)
-ROUGE = (255, 0, 0)
-
-# Charger une image (optionnel)
-# Assurez-vous que le fichier "image.png" existe dans le même répertoire
-# image = pygame.image.load("image.png")
-
-# Charger un fichier audio (optionnel)
-# musique = "musique.mp3"
-# pygame.mixer.music.load(musique)
-# pygame.mixer.music.play(loops=-1)  # Jouer en boucle
-
-# Boucle principale du jeu
-clock = pygame.time.Clock()  # Pour contrôler la fréquence d'images
-running = True
-while running:
-    # Gérer les événements
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
-                running = False
-            elif event.key == pygame.K_SPACE:
-                print("Espace pressé !")
-
-    # Dessiner un fond de couleur unie
-    fenetre.fill(BLANC)
-
-    # Dessiner un rectangle (x, y, largeur, hauteur)
-    pygame.draw.rect(fenetre, ROUGE, (300, 200, 200, 100))
-
-    # Afficher du texte (optionnel)
-    font = pygame.font.SysFont("Arial", 36)
-    texte = font.render("Bonjour, Pygame !", True, NOIR)
-    fenetre.blit(texte, (250, 50))
-
-    # Afficher une image (optionnel)
-    # fenetre.blit(image, (100, 100))
-
-    # Mettre à jour l'affichage
-    pygame.display.flip()
-
-    # Limiter la boucle à 60 FPS
-    clock.tick(60)
-
-# Quitter Pygame proprement
-pygame.quit()
-sys.exit()
-
-
+SceneService().jouer_scene(scene=sc)
 # os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 
 # ResetDatabase().ResetALL()

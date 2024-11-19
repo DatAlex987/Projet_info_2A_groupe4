@@ -1,5 +1,4 @@
 from business_object.son import Son
-import pygame
 
 
 class Son_Manuel(Son):
@@ -33,7 +32,8 @@ class Son_Manuel(Son):
         self.charge = None
 
     def jouer_Son(self):
-        pass
+        if self.charge is not None:
+            self.charge.play(loops=-1)
 
     """
     def Arret_Son(self):
