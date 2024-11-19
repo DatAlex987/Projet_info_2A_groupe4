@@ -20,11 +20,61 @@ from service.session import Session
 from service.freesound import Freesound
 from service.son_service import SonService
 import hashlib
-import pygame
+from src.service.scene_service import SceneService
 import os
 import re
 from datetime import timedelta
+import pygame
+import sys
 
+
+Son_c = Son_Continu(
+    nom="Musique douce",
+    description="Musique douce au piano",
+    duree=datetime.timedelta(minutes=15),
+    id_freesound="747222",
+    id_son="e6uKHU85",
+    tags=["piano", "calm", "soft"],
+)
+
+
+def son_aleatoire2_kwargs():
+    return {
+        "nom": "Manoir hanté",
+        "description": "Son de fantome dans un manoir",
+        "duree": datetime.timedelta(seconds=30),
+        "id_freesound": "445936",
+        "id_son": "pmUjYtf7",
+        "tags": ["manoir", "fantome", "scary"],
+        "cooldown_min": 3,
+        "cooldown_max": 15,
+    }
+
+
+Son_m = Son_Manuel(
+    nom="Bruits de pas",
+    description="Bruits de pas qui s'approchent",
+    duree=datetime.timedelta(seconds=59),
+    id_freesound="662970",
+    id_son="8cDmPouX",
+    tags=["step", "approaching"],
+    start_key="p",
+)
+
+
+sc = Scene(
+    nom="Forêt Mystique",
+    description="Une scène calme dans une forêt mystérieuse",
+    id_scene="234567",
+    sons_aleatoires=[],
+    sons_manuels=[Son_m],
+    sons_continus=[Son_c],
+    date_creation=datetime.date(2023, 10, 9),
+)
+
+
+pygame.init()
+SceneService().jouer_scene(scene=sc)
 # os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 
 # ResetDatabase().ResetALL()
