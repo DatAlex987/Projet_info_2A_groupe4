@@ -2,6 +2,7 @@ import re
 import datetime
 import random
 import string
+import pygame
 
 ####
 from dao.scene_dao import SceneDAO
@@ -28,6 +29,9 @@ from rich.style import Style
 
 class SonService:
     """Méthodes de service des sons"""
+
+    def __init__(self):
+        self.sounds = []
 
     @staticmethod  # Ne nécessite pas d'instance de SonService pour exister
     def id_son_generator():

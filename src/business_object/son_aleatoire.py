@@ -81,3 +81,19 @@ class Son_Aleatoire(Son):
 
         except pygame.error as e:
             print(f"Erreur lors de la lecture du fichier : {e}")
+
+    def start_random_play(self):  # TEST THEO
+        """Start random playback."""
+
+        def play_randomly():
+            while self.charge is not None:
+                self.charge.play()
+                cooldown = random.randint(self.cooldown_min, self.cooldown_max)
+                time.sleep(cooldown)
+
+        if self.charge is None:
+            self.play_sound()
+            self.charge = threading.Thread(target=play_randomly, daemon=True)
+            self.charge.start()
+        else:
+            self.stop_sound()

@@ -1,5 +1,6 @@
 import datetime
 import os
+import pygame
 from dotenv import load_dotenv
 
 from abc import ABC, abstractmethod

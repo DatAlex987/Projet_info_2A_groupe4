@@ -43,6 +43,7 @@ class MenuJeuSonsView(AbstractView):
             Session().scene_to_play = SDService().instancier_scene_par_id(
                 id_scene=id_scene_select, schema="ProjetInfo"
             )
+
             # next_view = MenuJeuSonsView() : remplacer par juste modifier le déclencher
         return next_view
 
