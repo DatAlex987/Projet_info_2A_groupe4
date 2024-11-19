@@ -19,11 +19,13 @@ class Son_Continu(Son):
     def Arret_Son(self):
         # self.charge.stop()
         # self.charge = None
-        pygame.mixer.music.stop
+        pygame.mixer.music.unload()
 
     def jouer_Son(self):
         # if self.charge is not None:
         #   self.charge.play(loops=-1)
+        fp = self.localise_son()
+        pygame.mixer.music.load(fp)
         pygame.mixer.music.play()
 
     """

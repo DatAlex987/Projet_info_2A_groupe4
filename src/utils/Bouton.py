@@ -4,7 +4,7 @@ import pygame
 class Bouton:
     def __init__(self, x, y, largeur, hauteur, texte):
         self.rect = pygame.Rect(x, y, largeur, hauteur)
-        self.couleur = (100, 200, 100)
+        self.couleur = (200, 100, 100)
         self.texte = texte
         self.police = pygame.font.SysFont(None, 24)
         self.est_arret = None
@@ -18,6 +18,8 @@ class Bouton:
         b = self.rect.collidepoint(position_souris)
         if self.est_arret is False and b:
             self.est_arret = True
+            self.couleur = (200, 100, 100)
         elif (self.est_arret is True or self.est_arret is None) and b:
             self.est_arret = False
+            self.couleur = (100, 200, 100)
         return b

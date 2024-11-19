@@ -328,11 +328,11 @@ class SceneService:
         # Création des boutons pour les sons continus
         for son in scene.sons_continus:
             boutons.append((Bouton(x_position, 50, 100, 40, "Jouer/Arreter"), son))
-            x_position += 60
+            x_position += 150
         # Création des boutons pour les sons aléatoires
         for son in scene.sons_aleatoires:
             boutons.append(
-                (Bouton(x_position_2, 74, 100, 40, "Jouer/Arreter"), son),
+                (Bouton(x_position_2, 100, 100, 40, "Jouer/Arreter"), son),
             )
 
         # Définir la position de la fenêtre
@@ -341,12 +341,12 @@ class SceneService:
         # Définir le titre de la fenêtre
         pygame.display.set_caption("DM Sound buddy window")
 
-        # Définir les couleurs (R, G, B)
         NOIR = (0, 0, 0)
 
-        # Dessiner un fond de couleur unie
+        # Dessiner un fond de couleur noire
         fenetre.fill(NOIR)
-        # Boucle principale pour la scène
+
+        # chargement des sons
         for sm in scene.sons_manuels:
             fp = sm.localise_son()
             sm.charge = pygame.mixer.Sound(fp)
@@ -357,6 +357,14 @@ class SceneService:
         for sa in scene.sons_aleatoires:
             fp = sa.localise_son()
             sa.charge = pygame.mixer.Sound(fp)
+
+            # lecture des sons alea et continus
+        # for son in scene.sons_aleatoires:
+        #    son.jouer_Son()
+        # for son in scene.sons_continus:
+        #    son.jouer_Son()
+
+        # Boucle principale pour la scène
         running = True
         while running:
             events = pygame.event.get()
@@ -365,7 +373,7 @@ class SceneService:
                     running = False
                 if event.type == pygame.KEYDOWN:
                     for sm in scene.sons_manuels:
-                        if event.key == pygame.K_p:
+                        if event.key == sm.convert_to_kpg(sm.start_key):
                             sm.jouer_Son()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     position_souris = pygame.mouse.get_pos()
@@ -375,18 +383,14 @@ class SceneService:
                                 son.Arret_Son()
                             if bouton.est_arret is False:
                                 son.jouer_Son()
-            # Mise à jour des sons aléatoires
-            for son in scene.sons_aleatoires:
-                son.jouer_Son()
-            for son in scene.sons_continus:
-                son.jouer_Son()
+                            if bouton.est_arret is None:
+                                son.jouer_Son()
 
-            for bouton, _ in boutons:
+            for bouton, r in boutons:
                 bouton.dessiner(fenetre)
             pygame.display.flip()
 
         pygame.mixer.stop()
-        pygame.quit()
 
 
 """

@@ -3,12 +3,11 @@ import os
 import pygame
 import threading
 from dotenv import load_dotenv
-from abc import ABC, abstractmethod
 
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 
 
-class Son(ABC):
+class Son:
     """
     Classe représentant tous les sons qui ont été téléchargés afin d'être ajoutés à des scènes
 
@@ -89,14 +88,6 @@ class Son(ABC):
             thread.start()
         except pygame.error as e:
             print(f"Erreur lors de la lecture du fichier : {e}")
-
-    @abstractmethod
-    def Arret_Son(self) -> None:
-        pass
-
-    @abstractmethod
-    def jouer_Son(self) -> None:
-        pass
 
     def modifier_nom(self, new_nom: str):
         self.nom = new_nom

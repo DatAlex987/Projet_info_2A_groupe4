@@ -37,6 +37,27 @@ Son_c = Son_Continu(
     tags=["piano", "calm", "soft"],
 )
 
+son_a = Son_Aleatoire(
+    nom="Musique douce",
+    description="Musique douce au piano",
+    duree=datetime.timedelta(minutes=15),
+    id_freesound="265180",
+    id_son="e6uKHU85",
+    tags=["piano", "calm", "soft"],
+    cooldown_min=6,
+    cooldown_max=12,
+)
+
+
+Son_c2 = Son_Continu(
+    nom="Musique douce",
+    description="Musique douce au piano",
+    duree=datetime.timedelta(minutes=15),
+    id_freesound="227558",
+    id_son="e6uKHU85",
+    tags=["piano", "calm", "soft"],
+)
+
 
 def son_aleatoire2_kwargs():
     return {
@@ -66,9 +87,9 @@ sc = Scene(
     nom="Forêt Mystique",
     description="Une scène calme dans une forêt mystérieuse",
     id_scene="234567",
-    sons_aleatoires=[],
+    sons_aleatoires=[son_a],
     sons_manuels=[Son_m],
-    sons_continus=[Son_c],
+    sons_continus=[Son_c, Son_c2],
     date_creation=datetime.date(2023, 10, 9),
 )
 
