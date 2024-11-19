@@ -50,21 +50,22 @@ class Son_Aleatoire(Son):
         self.cooldown_max = new_cooldown_max
 
     def Arret_Son(self):
+        self.en_lecture = False
         self.charge.stop()
         self.charge = None
 
     def jouer_Son(self):
         dernier_temps = time.time()
-        longueur = self.charge.get_lenght()
+        longueur = self.charge.get_length()
         c = 0
-        while self.charge is not None:
+        while self.en_lecture is True:
             temps_actuel = time.time()
             t = random.randint(self.cooldown_min, self.cooldown_max)
             if temps_actuel - dernier_temps > t + (longueur) * c:
                 self.charge.play()
                 dernier_temps = temps_actuel
                 if c == 0:
-                    c += 1
+                    c = 1
 
     """
     def Arret_Son(self):

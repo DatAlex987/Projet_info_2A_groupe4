@@ -35,6 +35,7 @@ class Son_Manuel(Son):
     def jouer_Son(self):
         if self.charge is not None:
             self.charge.play()
+            self.charge.set_volume(0.6)
 
     def convert_to_kpg(self, char):
         """

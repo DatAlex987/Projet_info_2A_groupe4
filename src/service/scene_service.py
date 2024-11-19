@@ -322,19 +322,29 @@ class SceneService:
         position_x = (largeur_ecran - largeur) // 2 + g
         position_y = (hauteur_ecran - hauteur) // 2 - k
 
+        dictb = {"continus": [], "alea": []}
         boutons = []
         x_position = 50
         x_position_2 = 50
         # Création des boutons pour les sons continus
+
         for son in scene.sons_continus:
-            boutons.append((Bouton(x_position, 50, 100, 40, "Jouer/Arreter"), son))
+            dictb["continus"].append(
+                (Bouton(x_position, 50, 100, 40, "Jouer/Arreter", "continu"), son)
+            )
             x_position += 150
+            fp = son.localise_son()
+            # sc.charge = pygame.mixer.Sound(fp)
+            pygame.mixer.music.load(fp)
         # Création des boutons pour les sons aléatoires
         for son in scene.sons_aleatoires:
-            boutons.append(
-                (Bouton(x_position_2, 100, 100, 40, "Jouer/Arreter"), son),
+            dictb["alea"].append(
+                (Bouton(x_position_2, 100, 100, 40, "Jouer/Arreter", "aleatoire"), son)
             )
+            fp = son.localise_son()
+            son.charge = pygame.mixer.Sound(fp)
 
+        boutons = dictb["continus"] + dictb["alea"]
         # Définir la position de la fenêtre
         environ["SDL_VIDEO_WINDOW_POS"] = f"{position_x},{position_y}"
         fenetre = pygame.display.set_mode((largeur, hauteur))
@@ -350,13 +360,6 @@ class SceneService:
         for sm in scene.sons_manuels:
             fp = sm.localise_son()
             sm.charge = pygame.mixer.Sound(fp)
-        for sc in scene.sons_continus:
-            fp = sc.localise_son()
-            # sc.charge = pygame.mixer.Sound(fp)
-            pygame.mixer.music.load(fp)
-        for sa in scene.sons_aleatoires:
-            fp = sa.localise_son()
-            sa.charge = pygame.mixer.Sound(fp)
 
             # lecture des sons alea et continus
         # for son in scene.sons_aleatoires:
@@ -379,13 +382,13 @@ class SceneService:
                     position_souris = pygame.mouse.get_pos()
                     for bouton, son in boutons:
                         if bouton.est_clique(position_souris):
-                            if bouton.est_arret is True:
+                            if bouton.type_son == "continu":
+                                for b, s in dictb["continus"]:
+                                    b.couleur == (200, 100, 100)
+                            if bouton.couleur == (200, 100, 100):
                                 son.Arret_Son()
-                            if bouton.est_arret is False:
+                            if bouton.couleur == (100, 200, 100):
                                 son.jouer_Son()
-                            if bouton.est_arret is None:
-                                son.jouer_Son()
-
             for bouton, r in boutons:
                 bouton.dessiner(fenetre)
             pygame.display.flip()
