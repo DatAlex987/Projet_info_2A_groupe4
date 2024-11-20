@@ -323,14 +323,15 @@ class SceneService:
         position_y = (hauteur_ecran - hauteur) // 2 - k
 
         dictb = {"continus": [], "alea": []}
-        boutons = []
+        bouton_continu_actif = [] # suivi du son actif continu
+        bouton_continu_actif.append(Bouton(0, 0, 0, 0, "_", "continu"))
         x_position = 50
         x_position_2 = 50
         # Création des boutons pour les sons continus
 
         for son in scene.sons_continus:
             dictb["continus"].append(
-                (Bouton(x_position, 50, 100, 40, "Jouer/Arreter", "continu"), son)
+                (Bouton(x_position, 100, 100, 40, "Jouer/Arreter", "continu"), son)
             )
             x_position += 150
             fp = son.localise_son()
@@ -339,12 +340,12 @@ class SceneService:
         # Création des boutons pour les sons aléatoires
         for son in scene.sons_aleatoires:
             dictb["alea"].append(
-                (Bouton(x_position_2, 100, 100, 40, "Jouer/Arreter", "aleatoire"), son)
+                (Bouton(x_position_2, 200, 100, 40, "Jouer/Arreter", "aleatoire"), son)
             )
             fp = son.localise_son()
             son.charge = pygame.mixer.Sound(fp)
+            x_position_2 += 150
 
-        boutons = dictb["continus"] + dictb["alea"]
         # Définir la position de la fenêtre
         environ["SDL_VIDEO_WINDOW_POS"] = f"{position_x},{position_y}"
         fenetre = pygame.display.set_mode((largeur, hauteur))
@@ -352,10 +353,17 @@ class SceneService:
         pygame.display.set_caption("DM Sound buddy window")
 
         NOIR = (0, 0, 0)
-
+        BLANC = (255, 255, 255)
         # Dessiner un fond de couleur noire
         fenetre.fill(NOIR)
-
+        font = pygame.font.Font(None, 74)  # Taille de la police : 74 
+        texte_1_surface = font.render("Tableau de contrôle", True, BLANC)
+        texte_2_surface = font.render("Sons continus", True, BLANC)
+        texte_3_surface = font.render("Sons aleatoires", True, BLANC)
+        # Obtenir la taille et la position du texte
+        texte_1_rect = texte_1_surface.get_rect(center=(largeur // 2, 50))
+        texte_2_rect = texte_2_surface.get_rect(topleft=(50, 50))
+        texte_3_rect = texte_3_surface.get_rect(topleft = (50, 150))
         # chargement des sons
         for sm in scene.sons_manuels:
             fp = sm.localise_son()
@@ -366,7 +374,6 @@ class SceneService:
         #    son.jouer_Son()
         # for son in scene.sons_continus:
         #    son.jouer_Son()
-
         # Boucle principale pour la scène
         running = True
         while running:
@@ -380,17 +387,30 @@ class SceneService:
                             sm.jouer_Son()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     position_souris = pygame.mouse.get_pos()
-                    for bouton, son in boutons:
+                    for bouton, son in dictb["continus"]:
                         if bouton.est_clique(position_souris):
-                            if bouton.type_son == "continu":
-                                for b, s in dictb["continus"]:
-                                    b.couleur == (200, 100, 100)
-                            if bouton.couleur == (200, 100, 100):
-                                son.Arret_Son()
-                            if bouton.couleur == (100, 200, 100):
-                                son.jouer_Son()
-            for bouton, r in boutons:
+                                if bouton.couleur == (200, 100, 100):
+                                        son.Arret_Son()
+                                if bouton.couleur == (100, 200, 100):
+                                        son.jouer_Son()
+                                        bouton_continu_actif[0].couleur = (200, 100, 100)
+                                        bouton_continu_actif.clear()
+                                        bouton_continu_actif.append(bouton)
+                    for bouton, son in dictb["alea"]:
+                        if bouton.est_clique(position_souris):
+                                if bouton.couleur == (200, 100, 100):
+                                        son.Arret_Son()
+                                if bouton.couleur == (100, 200, 100):
+                                        son.jouer_Son()
+    
+            for bouton, r in dictb["continus"]:
                 bouton.dessiner(fenetre)
+            for bouton, r in dictb["alea"]:
+                bouton.dessiner(fenetre)
+            
+            fenetre.blit(texte_1_surface, texte_1_rect)
+            fenetre.blit(texte_2_surface, texte_2_rect)
+            fenetre.blit(texte_3_surface, texte_3_rect)
             pygame.display.flip()
 
         pygame.mixer.stop()
