@@ -3,12 +3,11 @@ import os
 import pygame
 import threading
 from dotenv import load_dotenv
-from abc import ABC, abstractmethod
 
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 
 
-class Son:  # THEO: remove ABC
+class Son:
     """
     Classe représentant tous les sons qui ont été téléchargés afin d'être ajoutés à des scènes
 
@@ -44,7 +43,8 @@ class Son:  # THEO: remove ABC
         self.id_freesound = id_freesound
         self.id_son = id_son
         self.tags = tags
-        self.charge = None
+        self.en_lecture = False
+
         if not isinstance(nom, str):
             raise TypeError("Le nom doit etre une instance de str.")
         if not isinstance(description, str):
@@ -95,14 +95,3 @@ class Son:  # THEO: remove ABC
 
     def modifier_description(self, new_desc: str):
         self.description = new_desc
-
-
-"""
-@abstractmethod
-    def Arret_Son(self) -> None:
-        pass
-
-    @abstractmethod
-    def jouer_Son(self) -> None:
-        pass
-"""

@@ -1,6 +1,9 @@
 from business_object.son import Son
 import pygame
+<<<<<<< HEAD
 import threading
+=======
+>>>>>>> 9f491eb676a209b5d458bbb46088134d24434e81
 
 
 class Son_Manuel(Son):
@@ -54,7 +57,28 @@ class Son_Manuel(Son):
 
     def jouer_Son(self):
         if self.charge is not None:
-            self.charge.play(loops=-1)
+            self.charge.play()
+            self.charge.set_volume(0.6)
+
+    def convert_to_kpg(self, char):
+        """
+        Convertit un caractère en clé Pygame associée.
+
+        :param char: Une chaîne de caractères (exemple : "f").
+        :return: La constante Pygame associée (exemple : pygame.K_f).
+        :raises ValueError: Si le caractère n'est pas valide ou n'a pas de clé associée.
+        """
+
+        # Vérification que la chaîne est une lettre ou un chiffre
+        if len(char) != 1:
+            raise ValueError("Veuillez entrer un seul caractère.")
+
+        # Convertir la lettre en constante Pygame
+        key = getattr(pygame, f"K_{char}", None)
+        if key is None:
+            raise ValueError(f"Aucune clé Pygame trouvée pour '{char}'.")
+
+        return key
 
     """
     def Arret_Son(self):
