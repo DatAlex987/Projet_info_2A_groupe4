@@ -323,7 +323,7 @@ class SceneService:
         position_y = (hauteur_ecran - hauteur) // 2 - k
 
         dictb = {"continus": [], "alea": []}
-        bouton_continu_actif = [] # suivi du son actif continu
+        bouton_continu_actif = []  # suivi du son actif continu
         bouton_continu_actif.append(Bouton(0, 0, 0, 0, "_", "continu"))
         x_position = 50
         x_position_2 = 50
@@ -338,12 +338,14 @@ class SceneService:
             # sc.charge = pygame.mixer.Sound(fp)
             pygame.mixer.music.load(fp)
         # Création des boutons pour les sons aléatoires
-        for son in scene.sons_aleatoires:
+        longueur_sons_aleatoires = len(scene.sons_aleatoires)
+        for k, son in enumerate(scene.sons_aleatoires):
             dictb["alea"].append(
                 (Bouton(x_position_2, 200, 100, 40, "Jouer/Arreter", "aleatoire"), son)
             )
             fp = son.localise_son()
             son.charge = pygame.mixer.Sound(fp)
+            son.event_son = pygame.USEREVENT + (k + 1)
             x_position_2 += 150
 
         # Définir la position de la fenêtre
@@ -356,14 +358,14 @@ class SceneService:
         BLANC = (255, 255, 255)
         # Dessiner un fond de couleur noire
         fenetre.fill(NOIR)
-        font = pygame.font.Font(None, 74)  # Taille de la police : 74 
+        font = pygame.font.Font(None, 74)  # Taille de la police : 74
         texte_1_surface = font.render("Tableau de contrôle", True, BLANC)
         texte_2_surface = font.render("Sons continus", True, BLANC)
         texte_3_surface = font.render("Sons aleatoires", True, BLANC)
         # Obtenir la taille et la position du texte
         texte_1_rect = texte_1_surface.get_rect(center=(largeur // 2, 50))
         texte_2_rect = texte_2_surface.get_rect(topleft=(50, 50))
-        texte_3_rect = texte_3_surface.get_rect(topleft = (50, 150))
+        texte_3_rect = texte_3_surface.get_rect(topleft=(50, 150))
         # chargement des sons
         for sm in scene.sons_manuels:
             fp = sm.localise_son()
@@ -389,25 +391,34 @@ class SceneService:
                     position_souris = pygame.mouse.get_pos()
                     for bouton, son in dictb["continus"]:
                         if bouton.est_clique(position_souris):
-                                if bouton.couleur == (200, 100, 100):
-                                        son.Arret_Son()
-                                if bouton.couleur == (100, 200, 100):
-                                        son.jouer_Son()
-                                        bouton_continu_actif[0].couleur = (200, 100, 100)
-                                        bouton_continu_actif.clear()
-                                        bouton_continu_actif.append(bouton)
+                            if bouton.couleur == (200, 100, 100):
+                                son.Arret_Son()
+                            if bouton.couleur == (100, 200, 100):
+                                son.jouer_Son()
+                                bouton_continu_actif[0].couleur = (200, 100, 100)
+                                bouton_continu_actif.clear()
+                                bouton_continu_actif.append(bouton)
                     for bouton, son in dictb["alea"]:
                         if bouton.est_clique(position_souris):
-                                if bouton.couleur == (200, 100, 100):
-                                        son.Arret_Son()
-                                if bouton.couleur == (100, 200, 100):
-                                        son.jouer_Son()
-    
+                            if bouton.couleur == (200, 100, 100):
+                                son.Arret_Son()
+                            if bouton.couleur == (100, 200, 100):
+                                son.jouer_Son()
+                elif (
+                    pygame.USEREVENT + 1
+                    <= event.type
+                    <= pygame.USEREVENT + longueur_sons_aleatoires
+                ):
+                    j = event.type - pygame.USEREVENT  # Calculer le numéro du son
+                    for son in scene.sons_aleatoires:
+                        if son.event_son - pygame.USEREVENT == j:
+                            son.charge.play()
+
             for bouton, r in dictb["continus"]:
                 bouton.dessiner(fenetre)
             for bouton, r in dictb["alea"]:
                 bouton.dessiner(fenetre)
-            
+
             fenetre.blit(texte_1_surface, texte_1_rect)
             fenetre.blit(texte_2_surface, texte_2_rect)
             fenetre.blit(texte_3_surface, texte_3_rect)
