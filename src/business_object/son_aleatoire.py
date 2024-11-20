@@ -52,12 +52,12 @@ class Son_Aleatoire(Son):
     def Arret_Son(self):
         self.en_lecture = False
         self.charge.stop()
-        self.charge = None
 
     def jouer_Son(self):
         dernier_temps = time.time()
         longueur = self.charge.get_length()
         c = 0
+        self.en_lecture = True
         while self.en_lecture is True:
             temps_actuel = time.time()
             t = random.randint(self.cooldown_min, self.cooldown_max)
