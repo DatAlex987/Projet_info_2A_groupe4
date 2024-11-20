@@ -354,8 +354,14 @@ class SceneService:
         NOIR = (0, 0, 0)
 
         # Dessiner un fond de couleur noire
-        fenetre.fill(NOIR)
-
+        fenetre.fill(NOIR)   
+        text_1_surface = font.render("Tableau de contrôle", True, white)
+        text_2_surface = font.render("Sons continus", True, white)
+        text_3_surface = font.render("Sons aleatoires", True, white)
+        # Obtenir la taille et la position du texte
+        text_1_rect = text_1_surface.get_rect(center=(screen_width // 2, 50))
+        texte_2_rect = text_2_surface.get_rect(topleft=50, 50)
+        texte_2_rect = text_2_surface.get_rect(topleft = 50, 250)
         # chargement des sons
         for sm in scene.sons_manuels:
             fp = sm.localise_son()
@@ -391,6 +397,9 @@ class SceneService:
                                 son.jouer_Son()
             for bouton, r in boutons:
                 bouton.dessiner(fenetre)
+            fenetre.blit(text_1_surface, text_rect)
+            fenetre.blit(text_2_suface, text_1_rect)
+            fenetre.blit(text_3_surface, texte_2_rect)
             pygame.display.flip()
 
         pygame.mixer.stop()
