@@ -111,4 +111,4 @@ class Son_Aleatoire(Son):
             self.charge = threading.Thread(target=play_randomly, daemon=True)
             self.charge.start()
         else:
-            self.stop_sound()
+            self.stop_sound()"""

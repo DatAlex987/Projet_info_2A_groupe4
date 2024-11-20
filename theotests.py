@@ -28,7 +28,7 @@ import pygame
 import sys
 
 
-Son_c = Son_Continu(
+"""Son_c = Son_Continu(
     nom="Musique douce",
     description="Musique douce au piano",
     duree=datetime.timedelta(minutes=15),
@@ -74,7 +74,7 @@ sc = Scene(
 
 
 pygame.init()
-SceneService().jouer_scene(scene=sc)
+SceneService().jouer_scene(scene=sc)"""
 # os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 
 # ResetDatabase().ResetALL()
@@ -98,6 +98,45 @@ print(a)
 
 """
 
+import pygame, os, sys
+import time
+
+pygame.mixer.init()  # Lancer le mixer pygame
+son1 = Son_Manuel(
+    nom="Musique douce",
+    description="Musique douce au piano",
+    duree=datetime.timedelta(minutes=20),
+    id_freesound="182395",
+    id_son="e6uKHU85",
+    tags=["piano", "calm", "soft"],
+    start_key="1",
+)
+son2 = Son_Continu(
+    nom="Musique douce",
+    description="Musique douce au piano",
+    duree=datetime.timedelta(minutes=20),
+    id_freesound="747222",
+    id_son="e6uKHU85",
+    tags=["piano", "calm", "soft"],
+)
+son3 = Son_Continu(
+    nom="Musique douce",
+    description="Musique douce au piano",
+    duree=datetime.timedelta(minutes=20),
+    id_freesound="662970",
+    id_son="e6uKHU85",
+    tags=["piano", "calm", "soft"],
+)
+scene1 = Scene(
+    nom="Scene1",
+    description="Description de la Scene1",
+    id_scene="ZCokXpxM",
+    sons_aleatoires=[],
+    sons_continus=[son2, son3],
+    sons_manuels=[son1],
+    date_creation=datetime.date.today(),
+)
+scene1.PlayScene()
 
 """scene1 = Scene(
     nom="Scene1",

@@ -1,4 +1,6 @@
 from business_object.son import Son
+import pygame
+import threading
 
 
 class Son_Manuel(Son):
@@ -18,8 +20,27 @@ class Son_Manuel(Son):
 
     def __init__(self, nom, description, duree, id_son, id_freesound, tags, start_key):
         super().__init__(nom, description, duree, id_son, id_freesound, tags)
-        self.start_key: str = start_key
-        self.charge = None
+        self.start_key: str = start_key  # La touche pour lancer le son
+        self.charge = None  # Instance attribute for sound
+        # THEO FROM HERE
+        self.sound_playing = False  # To track if the sound is playing
+        self.key_thread = None  # To store the thread for key listening
+
+        # Key mapping for numeric keypad
+        key_mapping = {
+            "0": pygame.K_KP_0,
+            "1": pygame.K_KP_1,
+            "2": pygame.K_KP_2,
+            "3": pygame.K_KP_3,
+            "4": pygame.K_KP_4,
+            "5": pygame.K_KP_5,
+            "6": pygame.K_KP_6,
+            "7": pygame.K_KP_7,
+            "8": pygame.K_KP_8,
+            "9": pygame.K_KP_9,
+        }
+        self.pygame_keycode = key_mapping.get(start_key)
+
         if not isinstance(start_key, str):
             raise TypeError("la touche doit être de type String")
 

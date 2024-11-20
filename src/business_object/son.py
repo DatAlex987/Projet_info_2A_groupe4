@@ -8,7 +8,7 @@ from abc import ABC, abstractmethod
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 
 
-class Son(ABC):
+class Son:  # THEO: remove ABC
     """
     Classe représentant tous les sons qui ont été téléchargés afin d'être ajoutés à des scènes
 
@@ -90,16 +90,19 @@ class Son(ABC):
         except pygame.error as e:
             print(f"Erreur lors de la lecture du fichier : {e}")
 
-    @abstractmethod
+    def modifier_nom(self, new_nom: str):
+        self.nom = new_nom
+
+    def modifier_description(self, new_desc: str):
+        self.description = new_desc
+
+
+"""
+@abstractmethod
     def Arret_Son(self) -> None:
         pass
 
     @abstractmethod
     def jouer_Son(self) -> None:
         pass
-
-    def modifier_nom(self, new_nom: str):
-        self.nom = new_nom
-
-    def modifier_description(self, new_desc: str):
-        self.description = new_desc
+"""
