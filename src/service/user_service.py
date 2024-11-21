@@ -40,7 +40,7 @@ class UserService:
         str
         Identifiant (supposé unique) généré pour un utilisateur.
         """
-        all_users = UserDAO().consulter_users()
+        all_users = UserDAO().consulter_users(schema="ProjetInfo")
         all_ids = [user["id_user"] for user in all_users]
         generation = "".join(random.choices(string.ascii_letters + string.digits, k=6))
         unique_id = f"{generation}"

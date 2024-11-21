@@ -34,7 +34,7 @@ class SceneService:
         str
             Identifiant (supposé unique) généré pour une Scène.
         """
-        all_scenes = SceneDAO().consulter_scenes()
+        all_scenes = SceneDAO().consulter_scenes(schema="ProjetInfo")
         all_ids = [scene["id_scene"] for scene in all_scenes]
         generation = "".join(random.choices(string.ascii_letters + string.digits, k=7))
         unique_id = f"{generation}"
