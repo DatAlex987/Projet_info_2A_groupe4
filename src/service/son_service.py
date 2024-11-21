@@ -45,7 +45,7 @@ class SonService:
         str
             Identifiant (supposé unique) généré pour un son.
         """
-        all_sons = SonDAO().consulter_sons()
+        all_sons = SonDAO().consulter_sons(schema="ProjetInfo")
         all_ids = [son["id_son"] for son in all_sons]
         generation = "".join(random.choices(string.ascii_letters + string.digits, k=8))
         unique_id = f"{generation}"
