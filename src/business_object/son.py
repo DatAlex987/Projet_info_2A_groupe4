@@ -78,6 +78,7 @@ class Son:
 
     def jouer_son_preview(self):
         file_path = self.localise_son()
+        pygame.init()
         try:
             # faire le pygame.mixer.init() avant
             pygame.mixer.music.load(file_path)
@@ -93,6 +94,8 @@ class Son:
             thread.start()
         except pygame.error as e:
             print(f"Erreur lors de la lecture du fichier : {e}")
+        finally:
+            pygame.quit()
 
     def modifier_nom(self, new_nom: str):
         self.nom = new_nom

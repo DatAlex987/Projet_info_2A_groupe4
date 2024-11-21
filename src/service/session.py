@@ -33,7 +33,6 @@ class Session(metaclass=Singleton):
         self.sd_to_consult = None
         self.scene_to_consult = None
         self.son_to_consult = None
-        self.pg = pygame.init()
 
     def connexion(self, utilisateur):
         """Enregistement des données en session"""
@@ -42,7 +41,6 @@ class Session(metaclass=Singleton):
 
     def deconnexion(self):
         """Suppression des données de la session"""
-        self.mixer = pygame.quit
         self.utilisateur = None
         self.debut_connexion = None
         # Appels DAO pour supprimer les objets non reliés en BDD.

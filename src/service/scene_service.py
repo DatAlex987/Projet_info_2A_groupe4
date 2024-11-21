@@ -314,6 +314,7 @@ class SceneService:
     def jouer_scene(self, scene: Scene):
         """methode de jeu avec fenêtre interactive"""
         # Initialisation de Pygame
+        pygame.init()
 
         largeur = 1490
         hauteur = 400
@@ -451,6 +452,7 @@ class SceneService:
             pygame.display.flip()
 
         pygame.mixer.stop()
+        pygame.quit()
 
 
 """
