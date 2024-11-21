@@ -28,7 +28,7 @@ import pygame
 import sys
 
 
-"""Son_c = Son_Continu(
+Son_c = Son_Continu(
     nom="Musique douce",
     description="Musique douce au piano",
     duree=datetime.timedelta(minutes=15),
@@ -38,7 +38,7 @@ import sys
 )
 
 son_a = Son_Aleatoire(
-    nom="Musique douce",
+    nom="Ribbit",
     description="Musique douce au piano",
     duree=datetime.timedelta(minutes=15),
     id_freesound="265180",
@@ -50,7 +50,7 @@ son_a = Son_Aleatoire(
 
 
 Son_c2 = Son_Continu(
-    nom="Musique douce",
+    nom="VADOR",
     description="Musique douce au piano",
     duree=datetime.timedelta(minutes=15),
     id_freesound="227558",
@@ -95,7 +95,7 @@ sc = Scene(
 
 
 pygame.init()
-SceneService().jouer_scene(scene=sc)"""
+SceneService().jouer_scene(scene=sc)
 # os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 
 # ResetDatabase().ResetALL()
@@ -118,7 +118,7 @@ a = Freesound.rechercher_multi_filtres(dico_filtres=dico_filtres, limit=15)
 print(a)
 
 """
-
+"""
 import pygame, os, sys
 import time
 
@@ -161,7 +161,7 @@ scene1 = Scene(
 # SceneService().jouer_scene(scene=scene1)
 
 Freesound().supprimer_son(id_freesound="593074")
-
+"""
 """scene1 = Scene(
     nom="Scene1",
     description="Description de la Scene1",

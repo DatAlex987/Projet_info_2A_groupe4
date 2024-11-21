@@ -327,18 +327,37 @@ class SceneService:
         position_x = (largeur_ecran - largeur) // 2 + g
         position_y = (hauteur_ecran - hauteur) // 2 - k
 
-        dictb = {"continus": [], "alea": []}
+        dictb = {"continus": [], "alea": [], "manuels": []}
         bouton_continu_actif = []  # suivi du son actif continu
         bouton_continu_actif.append(Bouton(0, 0, 0, 0, "_", "continu"))
         x_position = 50
         x_position_2 = 50
+        x_position_3 = 50
         # Création des boutons pour les sons continus
+        for son in scene.sons_manuels:
+            dictb["manuels"].append(
+                (
+                    Bouton(
+                        x_position,
+                        300,
+                        150,
+                        40,
+                        f"{son.nom}, {son.start_key.upper()}",
+                        "manuel",
+                        couleur=(173, 216, 230),
+                    ),
+                    son,
+                )
+            )
+            x_position_3 += 170
+            fp = son.localise_son()
+            son.charge = pygame.mixer.Sound(fp)
 
         for son in scene.sons_continus:
             dictb["continus"].append(
-                (Bouton(x_position, 100, 100, 40, "Jouer/Arreter", "continu"), son)
+                (Bouton(x_position, 100, 150, 40, f"{son.nom}", "continu"), son)
             )
-            x_position += 150
+            x_position += 170
             fp = son.localise_son()
             # sc.charge = pygame.mixer.Sound(fp)
             pygame.mixer.music.load(fp)
@@ -346,12 +365,12 @@ class SceneService:
         longueur_sons_aleatoires = len(scene.sons_aleatoires)
         for k, son in enumerate(scene.sons_aleatoires):
             dictb["alea"].append(
-                (Bouton(x_position_2, 200, 100, 40, "Jouer/Arreter", "aleatoire"), son)
+                (Bouton(x_position_2, 200, 150, 40, f"{son.nom}", "aleatoire"), son)
             )
             fp = son.localise_son()
             son.charge = pygame.mixer.Sound(fp)
             son.event_son = pygame.USEREVENT + (k + 1)
-            x_position_2 += 150
+            x_position_2 += 170
 
         # Définir la position de la fenêtre
         environ["SDL_VIDEO_WINDOW_POS"] = f"{position_x},{position_y}"
@@ -360,23 +379,22 @@ class SceneService:
         pygame.display.set_caption("DM Sound buddy window")
 
         NOIR = (0, 0, 0)
-        BLANC = (255, 255, 255)
+        BEIGE = (245, 222, 179)
         # Dessiner un fond de couleur noire
-        fenetre.fill(NOIR)
+        fenetre.fill(BEIGE)
         font = pygame.font.Font(None, 74)  # Taille de la police : 74
-        texte_1_surface = font.render("Tableau de contrôle", True, BLANC)
-        texte_2_surface = font.render("Sons continus", True, BLANC)
-        texte_3_surface = font.render("Sons aleatoires", True, BLANC)
+        texte_1_surface = font.render("Tableau de contrôle", True, NOIR)
+        texte_2_surface = font.render("Sons continus", True, NOIR)
+        texte_3_surface = font.render("Sons aleatoires", True, NOIR)
+        texte_3_surface = font.render("Sons aleatoires", True, NOIR)
+        texte_4_surface = font.render("Sons manuels", True, NOIR)
         # Obtenir la taille et la position du texte
         texte_1_rect = texte_1_surface.get_rect(center=(largeur // 2, 50))
         texte_2_rect = texte_2_surface.get_rect(topleft=(50, 50))
         texte_3_rect = texte_3_surface.get_rect(topleft=(50, 150))
-        # chargement des sons
-        for sm in scene.sons_manuels:
-            fp = sm.localise_son()
-            sm.charge = pygame.mixer.Sound(fp)
+        texte_4_rect = texte_4_surface.get_rect(topleft=(50, 250))
 
-            # lecture des sons alea et continus
+        # lecture des sons alea et continus
         # for son in scene.sons_aleatoires:
         #    son.jouer_Son()
         # for son in scene.sons_continus:
@@ -389,9 +407,9 @@ class SceneService:
                 if event.type == pygame.QUIT:
                     running = False
                 if event.type == pygame.KEYDOWN:
-                    for sm in scene.sons_manuels:
-                        if event.key == sm.convert_to_kpg(sm.start_key):
-                            sm.jouer_Son()
+                    for bouton, son in dictb["manuels"]:
+                        if event.key == son.convert_to_kpg(son.start_key):
+                            son.jouer_Son()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     position_souris = pygame.mouse.get_pos()
                     for bouton, son in dictb["continus"]:
@@ -423,10 +441,13 @@ class SceneService:
                 bouton.dessiner(fenetre)
             for bouton, r in dictb["alea"]:
                 bouton.dessiner(fenetre)
+            for bouton, r in dictb["manuels"]:
+                bouton.dessiner(fenetre)
 
             fenetre.blit(texte_1_surface, texte_1_rect)
             fenetre.blit(texte_2_surface, texte_2_rect)
             fenetre.blit(texte_3_surface, texte_3_rect)
+            fenetre.blit(texte_4_surface, texte_4_rect)
             pygame.display.flip()
 
         pygame.mixer.stop()
