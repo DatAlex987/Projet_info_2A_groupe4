@@ -1,6 +1,8 @@
 from business_object.son import Son
 import random
 import time
+import threading
+import pygame
 
 
 class Son_Aleatoire(Son):
@@ -23,6 +25,8 @@ class Son_Aleatoire(Son):
         self.cooldown_min = cooldown_min
         self.cooldown_max = cooldown_max
         self.charge = None
+        self.thread = None
+        self.event_son = pygame.USEREVENT + 1
 
         if not isinstance(cooldown_min, int) or not isinstance(cooldown_max, int):
             raise TypeError("Les cooldowns doivent être des entiers.")
@@ -50,22 +54,28 @@ class Son_Aleatoire(Son):
         self.cooldown_max = new_cooldown_max
 
     def Arret_Son(self):
-        self.en_lecture = False
+        """Arrête la lecture du son."""
+        self.en_jeu = False
+        if self.thread and self.thread.is_alive():
+            self.thread.join()  # Attendre que le thread se termine
         self.charge.stop()
 
     def jouer_Son(self):
-        dernier_temps = time.time()
-        longueur = self.charge.get_length()
-        c = 0
-        self.en_lecture = True
-        while self.en_lecture is True:
-            temps_actuel = time.time()
-            t = random.randint(self.cooldown_min, self.cooldown_max)
-            if temps_actuel - dernier_temps > t + (longueur) * c:
-                self.charge.play()
-                dernier_temps = temps_actuel
-                if c == 0:
-                    c = 1
+        """Lance la boucle dans un thread séparé."""
+        if not self.thread or not self.thread.is_alive():
+            self.en_jeu = True
+            self.thread = threading.Thread(target=self.boucle_son)
+            self.thread.start()
+
+    def boucle_son(self):
+        """Méthode gérant les délais et le déclenchement des événements."""
+        while self.en_jeu:
+            delai = random.randint(self.cooldown_min, self.cooldown_max)
+            time.sleep(delai)
+            pygame.event.post(pygame.event.Event(self.event_son))  # Déclencher la lecture du son
+            time.sleep(self.charge.get_length())  # Attendre la durée du son
+            if not self.en_jeu:
+                break
 
     """
     def Arret_Son(self):

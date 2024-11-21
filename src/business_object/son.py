@@ -43,7 +43,7 @@ class Son:
         self.id_freesound = id_freesound
         self.id_son = id_son
         self.tags = tags
-        self.en_lecture = False
+        self.en_jeu = False
 
         if not isinstance(nom, str):
             raise TypeError("Le nom doit etre une instance de str.")
