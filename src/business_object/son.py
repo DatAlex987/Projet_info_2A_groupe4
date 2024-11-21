@@ -2,6 +2,7 @@ import datetime
 import os
 import pygame
 import threading
+import time
 from dotenv import load_dotenv
 
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
@@ -84,7 +85,10 @@ class Son:
             pygame.mixer.music.play()
             print("jeu")
             # Run the input listener in a separate thread
-            thread = threading.Thread(target=self.Arret_Son)
+            thread = threading.Thread(
+                target=lambda: (time.sleep(10), pygame.mixer.music.stop())
+            )  # Théo : pour ne le jouer que 10 sec
+            # thread = threading.Thread(target=self.Arret_Son)
             # thread.daemon = True  # Ensure it exits when the main program does
             thread.start()
         except pygame.error as e:

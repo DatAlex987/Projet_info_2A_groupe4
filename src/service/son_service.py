@@ -3,6 +3,7 @@ import datetime
 import random
 import string
 import pygame
+import time
 
 ####
 from dao.scene_dao import SceneDAO
@@ -44,8 +45,13 @@ class SonService:
         str
             Identifiant (supposé unique) généré pour un son.
         """
+        all_sons = SonDAO().consulter_sons()
+        all_ids = [son["id_son"] for son in all_sons]
         generation = "".join(random.choices(string.ascii_letters + string.digits, k=8))
         unique_id = f"{generation}"
+        while unique_id in all_ids:  # On vérifie que l'id n'existe pas déjà
+            generation = "".join(random.choices(string.ascii_letters + string.digits, k=8))
+            unique_id = f"{generation}"
         return unique_id
 
     def formatage_question_sons_of_scene(self, id_sd: str, id_scene: str):
@@ -364,22 +370,22 @@ class SonService:
         SonDAO().modifier_son(son=son, schema=schema)
 
     def modifier_cdmin_son(self, son_alea: Son_Aleatoire, new_cdmin: int, schema: str):
-        son_alea.modifier_cooldown_min(new_cooldown_min=new_cdmin)
+        son_alea.modifier_cooldown_min(new_cooldown_min=int(new_cdmin))
         for sd in Session().utilisateur.SD_possedes:
             for scene in sd.scenes:
                 for son in scene.sons_aleatoires:
                     if son.id_son == son_alea.id_son:
-                        son.modifier_cooldown_min(new_cooldown_min=new_cdmin)
+                        son.modifier_cooldown_min(new_cooldown_min=int(new_cdmin))
 
         SonDAO().modifier_param_son(son_alea, schema=schema)
 
     def modifier_cdmax_son(self, son_alea: Son_Aleatoire, new_cdmax: int, schema: str):
-        son_alea.modifier_cooldown_max(new_cooldown_max=new_cdmax)
+        son_alea.modifier_cooldown_max(new_cooldown_max=int(new_cdmax))
         for sd in Session().utilisateur.SD_possedes:
             for scene in sd.scenes:
                 for son in scene.sons_aleatoires:
                     if son.id_son == son_alea.id_son:
-                        son.modifier_cooldown_max(new_cooldown_max=new_cdmax)
+                        son.modifier_cooldown_max(new_cooldown_max=int(new_cdmax))
         SonDAO().modifier_param_son(son_alea, schema=schema)
 
     def modifier_start_key_son(self, son_manuel: Son_Manuel, new_start_key: str, schema: str):
@@ -463,3 +469,21 @@ class SonService:
         table.add_row("Cooldown Max", f"{son_aleatoire.cooldown_max} sec")
 
         console.print(table)
+
+    def previsualiser_son(self, son: Son):
+        son_kwargs = Session().son_to_search
+        son = Son(
+            nom=son_kwargs["name"],
+            description=son_kwargs["description"],
+            duree=datetime.timedelta(seconds=son_kwargs["duration"]),
+            id_son="",  # Pas d'id_son car pas encore dans la BDD
+            id_freesound=str(son_kwargs["id"]),
+            tags=son_kwargs["tags"],
+        )
+
+        Freesound().telecharger_son(id_freesound=son.id_freesound)
+        son.jouer_son_preview()
+        print("Ecoute en cours... (10secondes)")
+        time.sleep(12)
+        pygame.mixer.music.stop()  # Pour arrêter le MP3 (sinon impossible de le supprimer)
+        Freesound().supprimer_son(id_freesound=son.id_freesound)

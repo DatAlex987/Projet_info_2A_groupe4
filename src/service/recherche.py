@@ -66,14 +66,14 @@ class Recherche(metaclass=Singleton):
             except Exception as e:
                 print(f"Erreur lors de la recherche : {e}")
 
-    def afficher_details_son(self, son):
+    def afficher_details_son(self, son: dict):
         """Affiche les détails d'un son"""
         try:
             son_id = str(son["id"])
             son_details = Freesound.rechercher_par_id(
                 id=son_id
             )  # Nouvelle requête pour obtenir les détails du son
-            Session().son_to_dl = son_details
+            Session().son_to_search = son_details
         except Exception as e:
             print(f"Erreur lors de la récupération des détails du son : {e}")
             return

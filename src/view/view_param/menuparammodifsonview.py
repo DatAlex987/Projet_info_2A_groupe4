@@ -84,6 +84,7 @@ class MenuParamModifSonView(AbstractView):
                 "type": "input",
                 "name": "modif cdmin",
                 "message": "Entrez le nouveau cooldown minimal pour ce son:",
+                "validate": lambda val: int(val) < Session().son_to_param.cooldown_max,
             }
         ]
         self.question_modif_cdmax = [
@@ -91,6 +92,7 @@ class MenuParamModifSonView(AbstractView):
                 "type": "input",
                 "name": "modif cdmax",
                 "message": "Entrez le nouveau cooldown maximal pour ce son:",
+                "validate": lambda val: int(val) > Session().son_to_param.cooldown_min,
             }
         ]
 
@@ -112,14 +114,14 @@ class MenuParamModifSonView(AbstractView):
             elif choix_modif["choix modif"] == "Modifier le cooldown minimal":
                 new_cdmin = prompt(self.question_modif_cdmin)
                 SonService().modifier_cdmin_son(
-                    son=Session().son_to_param,
+                    son_alea=Session().son_to_param,
                     new_cdmin=new_cdmin["modif cdmin"],
                     schema="ProjetInfo",
                 )
             elif choix_modif["choix modif"] == "Modifier le cooldown maximal":
                 new_cdmax = prompt(self.question_modif_cdmax)
                 SonService().modifier_cdmax_son(
-                    son=Session().son_to_param,
+                    son_alea=Session().son_to_param,
                     new_cdmax=new_cdmax["modif cdmax"],
                     schema="ProjetInfo",
                 )
@@ -156,7 +158,7 @@ class MenuParamModifSonView(AbstractView):
             elif choix_modif["choix modif"] == "Modifier la touche de déclenchement":
                 new_key = prompt(self.question_modif_key)
                 SonService().modifier_start_key_son(
-                    son=Session().son_to_param,
+                    son_manuel=Session().son_to_param,
                     new_start_key=new_key["modif key"],
                     schema="ProjetInfo",
                 )

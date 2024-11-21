@@ -1,9 +1,6 @@
 from business_object.son import Son
 import pygame
-<<<<<<< HEAD
 import threading
-=======
->>>>>>> 9f491eb676a209b5d458bbb46088134d24434e81
 
 
 class Son_Manuel(Son):

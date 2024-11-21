@@ -5,12 +5,13 @@ from InquirerPy import prompt
 from view.abstractview import AbstractView
 from view.view_param.menuparamajoutson import MenuParamAjoutSonView
 
-# from view.session import Session
+from service.session import Session
 
 # from service.sd_service import SDService
 # from service.scene_service import SceneService
 # from service.freesound import Freesound
 from service.recherche import Recherche
+from service.son_service import SonService
 
 # from view.accueilview import AccueilView
 
@@ -115,13 +116,22 @@ class MenuRechercheFreesoundView(AbstractView):
                             break
                         else:
                             Recherche().afficher_details_son(son=choix_resultat["choix_resultat"])
-                            choix_son = prompt(self.question_son)
-                            if choix_son["question son"] == "Écouter le son":
-                                print("Vers l'écoute du son'")  # NOT DONE YET
-                            elif choix_son["question son"] == "Sauvegarder dans la scène":
-                                return MenuParamAjoutSonView()
-                            elif choix_son["question son"] == "Retour aux résultats de recherche":
-                                pass
+
+                            while True:  # Lorsqu'on écoute le son, on revient sur la fiche du son
+                                choix_son = prompt(self.question_son)
+                                if choix_son["question son"] == "Écouter le son":
+                                    # on le télécharge
+                                    # on l'écoute
+                                    # on le supprime
+                                    SonService().previsualiser_son(
+                                        son=Session().son_to_search
+                                    )  # NOT WORKING YET
+                                elif choix_son["question son"] == "Sauvegarder dans la scène":
+                                    return MenuParamAjoutSonView()
+                                elif (
+                                    choix_son["question son"] == "Retour aux résultats de recherche"
+                                ):
+                                    pass
             elif choix == "Quitter le menu recherche":
                 break
         from view.view_param.menuparamscenespecifiqueview import MenuParamSceneSpecifiqueView

@@ -42,7 +42,8 @@ class MenuJeuSceneView(AbstractView):
             Session().scene_to_play = SceneService().instancier_scene_par_id(
                 id_scene=id_scene_select, schema="ProjetInfo"
             )
-            next_view = MenuJeuSonsView()
+            SceneService().jouer_scene(scene=Session().scene_to_play)
+            next_view = MenuJeuSceneView()
         return next_view
 
     def display_info(self):

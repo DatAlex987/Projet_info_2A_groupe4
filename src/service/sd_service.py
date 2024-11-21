@@ -60,8 +60,13 @@ class SDService:
         str
             Identifiant (supposé unique) généré pour une SD.
         """
+        all_sds = SDDAO().consulter_sds()
+        all_ids = [sd["id_sd"] for sd in all_sds]
         generation = "".join(random.choices(string.ascii_letters + string.digits, k=7))
         unique_id = f"{generation}"
+        while unique_id in all_ids:  # On vérifie que l'id n'existe pas déjà
+            generation = "".join(random.choices(string.ascii_letters + string.digits, k=7))
+            unique_id = f"{generation}"
         return unique_id
 
     def creer_sd(self, nom: str, description: str, schema: str):

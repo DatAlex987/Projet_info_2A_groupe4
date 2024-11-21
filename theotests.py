@@ -122,6 +122,7 @@ print(a)
 import pygame, os, sys
 import time
 
+pygame.init()
 pygame.mixer.init()  # Lancer le mixer pygame
 son1 = Son_Manuel(
     nom="Musique douce",
@@ -157,7 +158,9 @@ scene1 = Scene(
     sons_manuels=[son1],
     date_creation=datetime.date.today(),
 )
-scene1.PlayScene()
+# SceneService().jouer_scene(scene=scene1)
+
+Freesound().supprimer_son(id_freesound="593074")
 
 """scene1 = Scene(
     nom="Scene1",

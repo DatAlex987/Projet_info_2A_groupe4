@@ -40,8 +40,13 @@ class UserService:
         str
         Identifiant (supposé unique) généré pour un utilisateur.
         """
+        all_users = UserDAO().consulter_users()
+        all_ids = [user["id_user"] for user in all_users]
         generation = "".join(random.choices(string.ascii_letters + string.digits, k=6))
         unique_id = f"{generation}"
+        while unique_id in all_ids:  # On vérifie que l'id n'existe pas déjà
+            generation = "".join(random.choices(string.ascii_letters + string.digits, k=6))
+            unique_id = f"{generation}"
         return unique_id
 
     def input_checking_injection(

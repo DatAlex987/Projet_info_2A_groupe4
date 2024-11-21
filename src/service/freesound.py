@@ -254,21 +254,43 @@ class Freesound(metaclass=Singleton):
 
         # Vérifier si le fichier existe déjà
         if os.path.exists(chemin_fichier_mp3):
-            print(f"Le fichier {chemin_fichier_mp3} existe déjà. Téléchargement non nécessaire.")
+            # print(f"Le fichier {chemin_fichier_mp3} existe déjà. Téléchargement non nécessaire.")
             return chemin_fichier_mp3
 
         # Télécharger le fichier MP3
-        print(f"Téléchargement du son à partir de {mp3_url}")
+        # print(f"Téléchargement du son à partir de {mp3_url}")
         mp3_response = requests.get(mp3_url)
         if mp3_response.status_code == 200:
             # Enregistrer le fichier dans le dossier spécifié
             with open(chemin_fichier_mp3, "wb") as f:
                 f.write(mp3_response.content)
-            print(f"Le fichier a été téléchargé sous le nom {chemin_fichier_mp3}")
+            # print(f"Le fichier a été téléchargé sous le nom {chemin_fichier_mp3}")
             return chemin_fichier_mp3
         else:
             print(f"Erreur lors du téléchargement du fichier : {mp3_response.status_code}")
             return None
+
+    def supprimer_son(self, id_freesound):  # NOT TESTED YET
+        print("Entrée dans la fonction supprimer_son")
+        # Chemin complet vers le fichier dans le dossier Fichiers_audio
+        dossier_sauvegarde = os.getenv("DOSSIER_SAUVEGARDE")
+        print("dossier_sauvegarde")
+        chemin_fichier_mp3 = os.path.join(dossier_sauvegarde, f"{id_freesound}.mp3")
+
+        # Vérifier si le fichier existe
+        if os.path.exists(chemin_fichier_mp3):
+            print("Entrée dans le if de cette fonction")
+            try:
+                # Supprimer le fichier
+                os.remove(chemin_fichier_mp3)
+                print(f"Le fichier {chemin_fichier_mp3} a été supprimé.")
+                return True
+            except Exception as e:
+                print(f"Erreur lors de la suppression du fichier : {e}")
+                return False
+        else:
+            print(f"Le fichier {chemin_fichier_mp3} n'existe pas.")
+            return False
 
 
 """def rechercher_multi_filtres(dico_filtres: dict, limit: int):  # NOT DONE YET
