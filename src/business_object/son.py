@@ -72,30 +72,31 @@ class Son:
         file_path = os.path.join(directory, f"{matching_files[0]}")
         if not os.path.exists(file_path):
             print(f"Erreur : Le fichier {file_path} n'existe pas.")
-        else:
-            print(f"fichier {file_path} trouvé")
         return file_path
+
+    def Arret_Son_Preview(self):
+        input("Appuyer sur Entrée pour arrêter le son")
+        self.en_jeu = False
+        pygame.mixer.music.stop()
+        pygame.quit()
 
     def jouer_son_preview(self):
         file_path = self.localise_son()
         pygame.init()
+        pygame.mixer.init()
         try:
             # faire le pygame.mixer.init() avant
             pygame.mixer.music.load(file_path)
-            print("load")
-            pygame.mixer.music.play()
-            print("jeu")
+            pygame.mixer.music.play(loops=-1)
+            self.en_jeu = True
             # Run the input listener in a separate thread
-            thread = threading.Thread(
-                target=lambda: (time.sleep(10), pygame.mixer.music.stop())
-            )  # Théo : pour ne le jouer que 10 sec
-            # thread = threading.Thread(target=self.Arret_Son)
-            # thread.daemon = True  # Ensure it exits when the main program does
+            thread = threading.Thread(target=self.Arret_Son_Preview)
+            thread.daemon = True  # Ensure it exits when the main program does
             thread.start()
+            while self.en_jeu:
+                pass
         except pygame.error as e:
             print(f"Erreur lors de la lecture du fichier : {e}")
-        finally:
-            pygame.quit()
 
     def modifier_nom(self, new_nom: str):
         self.nom = new_nom

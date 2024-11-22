@@ -4,6 +4,9 @@ import datetime
 import re
 from business_object.sd import SD
 from business_object.scene import Scene
+from business_object.son_aleatoire import Son_Aleatoire
+from business_object.son_manuel import Son_Manuel
+from business_object.son_continu import Son_Continu
 
 
 class User(Personne):
@@ -118,3 +121,15 @@ class User(Personne):
                 for scene in sd.scenes:
                     if scene.id_scene == id_scene:
                         sd.scenes.remove(scene)
+
+    def ajouter_son_a_scene(self, id_sd: str, id_scene: str, son):
+        for sd in self.SD_possedes:
+            if sd.id_sd == id_sd:
+                for scene in sd.scenes:
+                    if scene.id_scene == id_scene:
+                        if isinstance(son, Son_Aleatoire):
+                            scene.ajouter_son_aleatoire(nouveau_son_aleatoire=son)
+                        elif isinstance(son, Son_Manuel):
+                            scene.ajouter_son_manuel(nouveau_son_manuel=son)
+                        elif isinstance(son, Son_Continu):
+                            scene.ajouter_son_continu(nouveau_son_continu=son)
