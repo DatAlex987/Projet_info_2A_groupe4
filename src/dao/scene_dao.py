@@ -401,11 +401,13 @@ class SceneDAO:
         for id_sd in sds_possedants:
             self.supprimer_association_sd_scene(id_sd=id_sd, id_scene=id_scene, schema=schema)
 
-        # Get all sons associated with the given scene
+        # Get all sons aleatoires associated with the given scene
         sons_inclus = [
             son_id
             for son_id in self.get_sons_aleatoires_of_scene(id_scene=id_scene, schema=schema)
-            if SonDAO().check_if_son_in_scene(id_son=son_id, id_scene=id_scene, schema=schema)
+            if SonDAO().check_if_son_in_scene(
+                id_son=son_id, id_scene=id_scene, type_son="aleatoire", schema=schema
+            )
         ]
 
         # Delete all associations in scene_son for the given scene
@@ -414,10 +416,13 @@ class SceneDAO:
                 id_son=id_son, id_scene=id_scene, type_son="aleatoire", schema=schema
             )
 
+        # Get all sons continus associated with the given scene
         sons_inclus = [
             son_id
             for son_id in self.get_sons_continus_of_scene(id_scene=id_scene, schema=schema)
-            if SonDAO().check_if_son_in_scene(id_son=son_id, id_scene=id_scene, schema=schema)
+            if SonDAO().check_if_son_in_scene(
+                id_son=son_id, id_scene=id_scene, type_son="continu", schema=schema
+            )
         ]
 
         # Delete all associations in scene_son for the given scene
@@ -426,10 +431,13 @@ class SceneDAO:
                 id_son=id_son, id_scene=id_scene, type_son="continu", schema=schema
             )
 
+        # Get all sons manuels associated with the given scene
         sons_inclus = [
             son_id
             for son_id in self.get_sons_manuels_of_scene(id_scene=id_scene, schema=schema)
-            if SonDAO().check_if_son_in_scene(id_son=son_id, id_scene=id_scene, schema=schema)
+            if SonDAO().check_if_son_in_scene(
+                id_son=son_id, id_scene=id_scene, type_son="manuel", schema=schema
+            )
         ]
         # Delete all associations in scene_son for the given scene
         for id_son in sons_inclus:
@@ -439,26 +447,25 @@ class SceneDAO:
 
     # nettoyage
 
-    def delete_scene_if_no_sds(self, id_scene: str, schema: str):
+    def delete_scene_if_no_sds(self, schema: str):
         """
         Supprime une scène si elle n'est reliée à aucune Sounddeck.
         """
+        all_scenes = self.consulter_scenes(schema=schema)
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
-                # Vérifie si des Sounddecks sont liés à la scène
-                cursor.execute(
-                    f"SELECT COUNT(*) AS sd_count FROM {schema}.Sounddeck_Scene WHERE id_scene = %(id_scene)s;",
-                    {"id_scene": id_scene},
-                )
-                sd_count = cursor.fetchone()["sd_count"]
-
-                # Si aucune Sounddeck n'est liée, supprimer la scène
-                if sd_count == 0:
+                for scene in all_scenes:
+                    # Vérifie si des Sounddecks sont liés à la scène
                     cursor.execute(
-                        f"DELETE FROM {schema}.Scene WHERE id_scene = %(id_scene)s;",
-                        {"id_scene": id_scene},
+                        f"SELECT COUNT(*) AS sd_count FROM {schema}.Sounddeck_Scene WHERE id_scene = %(id_scene)s;",
+                        {"id_scene": scene["id_scene"]},
                     )
-                    connection.commit()
-                    return True  # Indique que la suppression a été effectuée
-                else:
-                    return False  # La scène n'a pas été supprimée car elle est encore liée à des Sounddecks
+                    sd_count = cursor.fetchone()["sd_count"]
+
+                    # Si aucune Sounddeck n'est liée, supprimer la scène
+                    if sd_count == 0:
+                        cursor.execute(
+                            f"DELETE FROM {schema}.Scene WHERE id_scene = %(id_scene)s;",
+                            {"id_scene": scene["id_scene"]},
+                        )
+                        connection.commit()

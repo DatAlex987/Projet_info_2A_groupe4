@@ -46,7 +46,7 @@ class ConsulterSDsView(AbstractView):
             )
             from view.view_consulter_user.consulter_choix_sd import ConsulterChoixSD
 
-            next_view = ConsulterChoixSD()  # Il faut la créer
+            next_view = ConsulterChoixSD()
         return next_view
 
     def display_info(self):

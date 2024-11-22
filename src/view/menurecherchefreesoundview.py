@@ -120,12 +120,7 @@ class MenuRechercheFreesoundView(AbstractView):
                             while True:  # Lorsqu'on écoute le son, on revient sur la fiche du son
                                 choix_son = prompt(self.question_son)
                                 if choix_son["question son"] == "Écouter le son":
-                                    # on le télécharge
-                                    # on l'écoute
-                                    # on le supprime
-                                    SonService().previsualiser_son(
-                                        son=Session().son_to_search
-                                    )  # NOT WORKING YET
+                                    SonService().previsualiser_son(son=Session().son_to_search)
                                 elif choix_son["question son"] == "Sauvegarder dans la scène":
                                     return MenuParamAjoutSonView()
                                 elif (

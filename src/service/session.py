@@ -41,18 +41,16 @@ class Session(metaclass=Singleton):
 
     def deconnexion(self):
         """Suppression des données de la session"""
+        # Imports ici pour éviter les circular imports
+        from dao.tag_dao import TagDAO
+        from dao.son_dao import SonDAO
+        from dao.scene_dao import SceneDAO
+        from dao.sd_dao import SDDAO
+
+        SDDAO().delete_sd_if_no_users(schema="ProjetInfo")
+        SceneDAO().delete_scene_if_no_sds(schema="ProjetInfo")
+        SonDAO().delete_son_if_no_scenes(schema="ProjetInfo")
+        TagDAO().delete_tag_if_no_sons(schema="ProjetInfo")
+
         self.utilisateur = None
         self.debut_connexion = None
-        # Appels DAO pour supprimer les objets non reliés en BDD.
-
-    # a la suite : supprimer sd, scene, son, tag
-
-
-"""    def afficher(self):
-        if self.utilisateur is None:
-            print("Il n'y pas de session active")
-        else:
-            print(
-                f"Nom: {self.utilisateur.nom} \n Prenom: {self.utilisateur.prenom}"
-                + f"\n Id: {self.utilisateur.id_user} \n Debut_connexion: {self.debut_connexion}"
-            )"""

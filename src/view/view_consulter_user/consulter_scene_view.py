@@ -32,15 +32,13 @@ class ConsulterSceneView(AbstractView):
                 "message": "Quelle scène souhaitez-vous lancer ? \n"
                 " ID         |   Nom   | Date de création \n"
                 "------------------------------------------------------------",
-                "choices": SceneService().formatage_question_scenes_of_sd_menu_consult(
-                    id_sd=Session().sd_to_consult.id_sd
-                ),
+                "choices": SceneService().formatage_question_scenes_of_sd_menu_consult(),
             }
         ]
 
     def make_choice(self):
         choix = prompt(self.question_choix_scene)
-        if choix["Choix Scene"] == "Retour au menu précédent":
+        if choix["Choix Scene"] == "Retour au menu de choix des sound-decks":
             from view.view_consulter_user.consulter_sds_view import ConsulterSDsView
 
             next_view = ConsulterSDsView()

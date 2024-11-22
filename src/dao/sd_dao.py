@@ -444,26 +444,25 @@ class SDDAO(metaclass=Singleton):
 
     # nettoyage
 
-    def delete_sd_if_no_users(self, id_sd: str, schema: str):
+    def delete_sd_if_no_users(self, schema: str):
         """
         Supprime une Sounddeck si elle n'est reliée à aucun utilisateur.
         """
+        all_sds = self.consulter_sds(schema=schema)
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
-                # Vérifie si des utilisateurs sont liés à la Sounddeck
-                cursor.execute(
-                    f"SELECT COUNT(*) AS user_count FROM {schema}.User_Sounddeck WHERE id_sd = %(id_sd)s;",
-                    {"id_sd": id_sd},
-                )
-                user_count = cursor.fetchone()["user_count"]
-
-                # Si aucun utilisateur n'est relié, supprimer la Sounddeck
-                if user_count == 0:
+                for sd in all_sds:
+                    # Vérifie si des utilisateurs sont liés à la Sounddeck
                     cursor.execute(
-                        f"DELETE FROM {schema}.Sounddeck WHERE id_sd = %(id_sd)s;",
-                        {"id_sd": id_sd},
+                        f"SELECT COUNT(*) AS user_count FROM {schema}.User_Sounddeck WHERE id_sd = %(id_sd)s;",
+                        {"id_sd": sd["id_sd"]},
                     )
-                    connection.commit()
-                    return True  # Indique que la suppression a été effectuée
-                else:
-                    return False  # La Sounddeck n'a pas été supprimée car elle est encore liée à des utilisateurs
+                    user_count = cursor.fetchone()["user_count"]
+
+                    # Si aucun utilisateur n'est relié, supprimer la Sounddeck
+                    if user_count == 0:
+                        cursor.execute(
+                            f"DELETE FROM {schema}.Sounddeck WHERE id_sd = %(id_sd)s;",
+                            {"id_sd": sd["id_sd"]},
+                        )
+                        connection.commit()

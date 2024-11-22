@@ -43,7 +43,7 @@ class SceneService:
             unique_id = f"{generation}"
         return unique_id
 
-    def formatage_question_scenes_of_sd(self, id_sd: str):
+    def formatage_question_scenes_of_sd(self):
         """Construit une liste des choix à afficher après sélection d'une SD
 
         Params
@@ -56,14 +56,9 @@ class SceneService:
         list
             Liste des choix proposés à l'utilisateur
         """
-        sds_user = Session().utilisateur.SD_possedes
-        sd_selectionne = None
-        for sd in sds_user:
-            if sd.id_sd == id_sd:
-                sd_selectionne = sd
         choix = []
         compteur = 1
-        for scene in sd_selectionne.scenes:
+        for scene in Session().sd_to_param.scenes:
             mise_en_page_ligne = (
                 f"{compteur}. {scene.id_scene} | {scene.nom} | {scene.date_creation}"
             )
@@ -115,15 +110,10 @@ class SceneService:
         except ValueError as e:
             raise ValueError(f"{e}")
 
-    def formatage_question_scenes_of_sd_menu_jeu(self, id_sd: str):
-        sds_user = Session().utilisateur.SD_possedes
-        sd_selectionne = None
-        for sd in sds_user:
-            if sd.id_sd == id_sd:
-                sd_selectionne = sd
+    def formatage_question_scenes_of_sd_menu_jeu(self):
         choix = []
         compteur = 1
-        for scene in sd_selectionne.scenes:
+        for scene in Session().sd_to_play.scenes:
             mise_en_page_ligne = (
                 f"{compteur}. {scene.id_scene} | {scene.nom} | {scene.date_creation}"
             )
@@ -132,15 +122,10 @@ class SceneService:
         choix.append("Retour au menu de choix des sound-decks")
         return choix
 
-    def formatage_question_scenes_of_sd_menu_consult(self, id_sd: str):
-        sds_consult = Session().sds_to_consult
-        sd_selectionne = None
-        for sd in sds_consult:
-            if sd.id_sd == id_sd:
-                sd_selectionne = sd
+    def formatage_question_scenes_of_sd_menu_consult(self):
         choix = []
         compteur = 1
-        for scene in sd_selectionne.scenes:
+        for scene in Session().sd_to_consult.scenes:
             mise_en_page_ligne = (
                 f"{compteur}. {scene.id_scene} | {scene.nom} | {scene.date_creation}"
             )

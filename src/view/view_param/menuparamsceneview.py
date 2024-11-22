@@ -48,9 +48,7 @@ class MenuParamSceneView(AbstractView):
                 "message": "Que souhaitez-vous faire ? \n"
                 " ID         |   Nom   | Date de création \n"
                 "------------------------------------------------------------",
-                "choices": SceneService().formatage_question_scenes_of_sd(
-                    id_sd=Session().sd_to_param.id_sd
-                ),
+                "choices": SceneService().formatage_question_scenes_of_sd(),
             }
         ]
 

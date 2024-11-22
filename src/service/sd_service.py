@@ -159,6 +159,7 @@ class SDService:
             Instance de la SD demandée
         """
         sd_kwargs = SDDAO().rechercher_par_id_sd(id_sd=id_sd, schema=schema)
+        Scenes_of_sd = []
         for scene in sd_kwargs["scenes"]:
             # Ces 3 init de listes étaient juste avant le for avant de régler le pb
             Sons_Alea_scene = []
@@ -200,17 +201,15 @@ class SDService:
                         start_key=son_manu_kwargs["param1"],
                     )
                 )
-        Scenes_of_sd = []
-        for scene_kwargs in sd_kwargs["scenes"]:
             Scenes_of_sd.append(
                 Scene(
-                    nom=scene_kwargs["nom"],
-                    description=scene_kwargs["description"],
-                    id_scene=scene_kwargs["id_scene"],
+                    nom=scene["nom"],
+                    description=scene["description"],
+                    id_scene=scene["id_scene"],
                     sons_aleatoires=Sons_Alea_scene,
                     sons_manuels=Sons_Manu_scene,
                     sons_continus=Sons_Cont_scene,
-                    date_creation=scene_kwargs["date_creation"],
+                    date_creation=scene["date_creation"],
                 )
             )
         sd = SD(
@@ -376,7 +375,6 @@ class SDService:
         SDDAO().ajouter_sd(sd=sd_duplicated, schema=schema)
         dict_of_associations_scene_son = {}
         for scene in sd_to_dupli.scenes:  # Pour chaque scène...
-            print("sons alea dans scène:", scene.sons_aleatoires)
             # On duplique la Scène puis on l'ajoute
             scene_duplicated = Scene(
                 nom=scene.nom,
@@ -390,7 +388,6 @@ class SDService:
             SceneDAO().ajouter_scene(scene=scene_duplicated, schema=schema)
             dict_of_associations_scene_son[scene_duplicated] = []
             for son_alea in scene.sons_aleatoires:  # ... on instancie le son dupliqué
-                print("id son alea a dupliquer:", son_alea.id_son)
                 # On duplique le son puis on l'ajoute
                 son_duplicated = Son_Aleatoire(
                     nom=son_alea.nom,

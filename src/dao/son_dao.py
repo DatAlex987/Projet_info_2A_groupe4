@@ -499,31 +499,30 @@ class SonDAO:
             )
 
     # nettoyage
-    def delete_son_if_no_scenes(self, id_son: str, schema: str):
+    def delete_son_if_no_scenes(self, schema: str):
         """
         Supprime un son s'il n'est associé à aucune scène.
         """
+        all_sons = self.consulter_sons(schema=schema)
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
-                # Vérifie si des scènes sont liées au son
-                query = f"""SELECT COUNT(*) AS scene_count
-                            FROM {schema}.Scene_Son
-                            WHERE id_son = %(id_son)s;"""
-                cursor.execute(
-                    query,
-                    {"id_son": id_son},
-                )
-                scene_count = cursor.fetchone()["scene_count"]
-
-                # Si aucune scène n'est liée, supprimer le son
-                if scene_count == 0:
-                    delete_query = f"""DELETE FROM {schema}.Son
-                                    WHERE id_son = %(id_son)s;"""
+                for son in all_sons:
+                    # Vérifie si des scènes sont liées au son
+                    query = f"""SELECT COUNT(*) AS scene_count
+                                FROM {schema}.Scene_Son
+                                WHERE id_son = %(id_son)s;"""
                     cursor.execute(
-                        delete_query,
-                        {"id_son": id_son},
+                        query,
+                        {"id_son": son["id_son"]},
                     )
-                    connection.commit()
-                    return True  # Indique que la suppression a été effectuée
-                else:
-                    return False  # Le son n'a pas été supprimé car il est encore lié à des scènes
+                    scene_count = cursor.fetchone()["scene_count"]
+
+                    # Si aucune scène n'est liée, supprimer le son
+                    if scene_count == 0:
+                        delete_query = f"""DELETE FROM {schema}.Son
+                                        WHERE id_son = %(id_son)s;"""
+                        cursor.execute(
+                            delete_query,
+                            {"id_son": son["id_son"]},
+                        )
+                        connection.commit()

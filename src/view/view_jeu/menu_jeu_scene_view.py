@@ -25,9 +25,7 @@ class MenuJeuSceneView(AbstractView):
                 "message": "Quelle scène souhaitez-vous lancer ? \n"
                 " ID         |   Nom   | Date de création \n"
                 "------------------------------------------------------------",
-                "choices": SceneService().formatage_question_scenes_of_sd_menu_jeu(
-                    id_sd=Session().sd_to_play.id_sd
-                ),
+                "choices": SceneService().formatage_question_scenes_of_sd_menu_jeu(),
             }
         ]
 

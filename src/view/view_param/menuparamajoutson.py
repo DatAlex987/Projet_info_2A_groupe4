@@ -56,7 +56,16 @@ class MenuParamAjoutSonView(AbstractView):
         Session().son_to_search["description"] = son_desc["desc"]
         choix_type = prompt(self.question_type_son)
         if choix_type["type son"] == "Son aléatoire":  # Vérif linput
-            choix_param = prompt(self.question_param_alea)
+            while True:
+                choix_param = prompt(self.question_param_alea)
+                if choix_param["param alea min"] < choix_param["param alea max"]:
+                    break
+                else:
+                    print(
+                        Fore.RED
+                        + "Le cooldown minimal ne peut pas être supérieur au cooldown maximal"
+                        + Style.RESET_ALL
+                    )
             param1 = choix_param["param alea min"]
             param2 = choix_param["param alea max"]
         elif choix_type["type son"] == "Son manuel":
@@ -73,9 +82,13 @@ class MenuParamAjoutSonView(AbstractView):
         if SonService().ajouter_nouveau_son(
             son_kwargs=Session().son_to_search, schema="ProjetInfo"
         ):
-            print("Ajout du son avec succès. Retour au menu de votre scène.")
+            print(
+                Fore.GREEN
+                + "Ajout du son avec succès. Retour au menu de votre scène."
+                + Style.RESET_ALL
+            )
         else:
-            print("L'ajout du son n'a pas pu aboutir.")
+            print(Fore.RED + "L'ajout du son n'a pas pu aboutir." + Style.RESET_ALL)
         from view.view_param.menuparamscenespecifiqueview import MenuParamSceneSpecifiqueView
 
         return MenuParamSceneSpecifiqueView()

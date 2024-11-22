@@ -11,6 +11,7 @@ from service.son_service import SonService
 
 ####
 from view.abstractview import AbstractView
+from view.view_consulter_user.consulter_info_son_select_view import MenuConsulterInfoSonSelectView
 from service.session import Session
 
 
@@ -25,28 +26,28 @@ class MenuConsulterSonsView(AbstractView):
                 "type": "list",
                 "name": "Choix Son",
                 "message": "Sélectionnez un son pour l'enclencher ou l'arrêter \n"
-                "  Type        |   Nom   | ID Freesound | ID du son | Déclenchement | Etat \n"
+                "  Type        |   Nom                     | ID du son | Durée \n"
                 "------------------------------------------------------------",
-                "choices": SonService().formatage_question_sons_of_scene_menu_consult(
-                    id_sd=Session().sd_to_consult.id_sd,
-                    id_scene=Session().scene_to_consult.id_scene,
-                ),
+                "choices": SonService().formatage_question_sons_of_scene_menu_consult()
+                # id_sd=Session().sd_to_consult.id_sd,
+                # id_scene=Session().scene_to_consult.id_scene,
+                ,
             }
         ]
 
-    def make_choice(self):  # voir avec alex : jouer son
+    def make_choice(self):
         choix = prompt(self.question_choix_son)
         if choix["Choix Son"] == "Retour au menu de choix des scènes":
             from view.view_consulter_user.consulter_scene_view import ConsulterSceneView
 
             next_view = ConsulterSceneView()
         else:
-            id_son_striped = choix["Choix Son"].split("|")[0].split(". ")[1].strip()
+            id_son_striped = choix["Choix Son"].split("|")[2].strip()
             type_son = re.search(r"\[(.*?)\]", choix["Choix Son"]).group(1)
-            Session().son_to_consult = SDService().instancier_son_par_id_type(
-                id_son=id_son_striped, type_son=type_son, schema="ProjetInfo"
+            Session().son_to_consult = SonService().instancier_son_par_id_type(
+                id_son=id_son_striped, type_son=type_son, menu="consult", schema="ProjetInfo"
             )
-            # next_view = MenuJeuSonsView() : remplacer par juste modifier le déclencher
+            next_view = MenuConsulterInfoSonSelectView()
         return next_view
 
     def display_info(self):
