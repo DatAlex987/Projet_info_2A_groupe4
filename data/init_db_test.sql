@@ -1,6 +1,3 @@
------------------------------------------------------
--- User
------------------------------------------------------
 DROP SCHEMA IF EXISTS SchemaTest CASCADE;
 CREATE SCHEMA SchemaTest;
 

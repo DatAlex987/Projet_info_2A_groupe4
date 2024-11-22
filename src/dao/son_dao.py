@@ -80,7 +80,7 @@ class SonDAO:
                 )
         return son
 
-    def modifier_param_son(self, son, schema: str):  # NON TESTED YET
+    def modifier_param_son(self, son, schema: str):
         dict_f_string = {
             "param1": None,
             "param2": None,
@@ -335,7 +335,7 @@ class SonDAO:
                         {"id_scene": id_scene, "id_son": id_son, "type": type_son},
                     )
                     nb_lignes_supp = cursor.rowcount
-            return nb_lignes_supp  # Permet notamment de savoir si aucune ligne n'a été trouvée
+            return nb_lignes_supp  # Permet en particulier de savoir si aucune ligne n'a été trouvée
         except Exception as e:
             print(f"Erreur lors de la suppression de l'association : {e}")
             return None
@@ -382,7 +382,7 @@ class SonDAO:
                     return res["count"] > 0
 
         except Exception as e:
-            print(f"Erreur lors de la vérification : {id_scene},{id_freesound},{type_son} : {e}")
+            print(f"Erreur lors de la vérification : {id_scene},{id_son},{type_son} : {e}")
             return False
 
     def get_scenes_of_son_aleatoire(self, id_son: str, schema: str):
@@ -450,7 +450,7 @@ class SonDAO:
         return [row["nom_tag"] for row in res]
 
     def supprimer_toutes_associations_son(self, id_son: str, type_son: str, schema: str):
-        # Get all scenes having the given son as type_son
+        # On récupère toutes les scènes qui possède le son spécifié
         if type_son == "aleatoire":
             scenes_possedants = [
                 scene_id
@@ -480,25 +480,21 @@ class SonDAO:
                     id_scene=scene_id, id_son=id_son, type_son="manuel", schema=schema
                 )
             ]
-        # Delete all associations in scene_son for the given son
+        # Puis on supprime leurs associations
         for id_scene in scenes_possedants:
             self.supprimer_association_scene_son(
-                id_scene=id_scene, id_freesound=id_freesound, type_son=type_son, schema=schema
+                id_scene=id_scene, id_son=id_son, type_son=type_son, schema=schema
             )
 
-        # Get all tags associated with the given son
+        # idem avec les tags
         tags_inclus = [
             nom_tag
-            for nom_tag in self.get_tags_of_son(id_freesound=id_freesound, schema=schema)
-            if TagDAO().check_if_son_has_tag(id_freesound=id_freesound, tag=nom_tag, schema=schema)
+            for nom_tag in self.get_tags_of_son(id_son=id_son, schema=schema)
+            if TagDAO().check_if_son_has_tag(id_son=id_son, tag=nom_tag, schema=schema)
         ]
-        # Delete all associations in son_tag for the given son
         for tag in tags_inclus:
-            TagDAO().supprimer_association_son_tag(
-                id_freesound=id_freesound, tag=tag, schema=schema
-            )
+            TagDAO().supprimer_association_son_tag(id_son=id_son, tag=tag, schema=schema)
 
-    # nettoyage
     def delete_son_if_no_scenes(self, schema: str):
         """
         Supprime un son s'il n'est associé à aucune scène.
@@ -507,7 +503,7 @@ class SonDAO:
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
                 for son in all_sons:
-                    # Vérifie si des scènes sont liées au son
+                    # On vérifie si des scènes sont liées au son
                     query = f"""SELECT COUNT(*) AS scene_count
                                 FROM {schema}.Scene_Son
                                 WHERE id_son = %(id_son)s;"""
@@ -517,7 +513,7 @@ class SonDAO:
                     )
                     scene_count = cursor.fetchone()["scene_count"]
 
-                    # Si aucune scène n'est liée, supprimer le son
+                    # Si aucune scène n'est liée on supprime le son
                     if scene_count == 0:
                         delete_query = f"""DELETE FROM {schema}.Son
                                         WHERE id_son = %(id_son)s;"""

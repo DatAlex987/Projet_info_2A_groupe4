@@ -33,7 +33,7 @@ class ConsulterCreateurView(AbstractView):
         )
         # Rechercher tous les users qui ont un pseudo proche
         # La liste des Users ayant un nom proche sera stocké en Session
-        # Puis envoyer vers une view pour sélectionner le créateur que l'on veut consulter.
+        # Puis, envoyer vers une view pour sélectionner le créateur que l'on veut consulter.
         return ConsulterUsersProchesView()
 
     def display_info(self):

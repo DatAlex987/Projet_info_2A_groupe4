@@ -58,29 +58,3 @@ class Son_Manuel(Son):
             raise ValueError(f"Aucune clé Pygame trouvée pour '{char}'.")
 
         return key
-
-    """
-    def Arret_Son(self):
-        if self.charge:
-            i = input(
-                f"Appuyer sur m pour arreter le son manuel ou {self.start_key} pour le déclencher "
-            )
-            if i == "m":
-                self.charge.stop()
-                self.charge = None
-            if i == f"{self.start_key}":
-                self.charge.play()
-
-    def jouer_son(self):
-        file_path = self.localise_son()
-        # Initialiser Pygame est necessaire :pygame.mixer.init avant
-        try:
-            self.charge = pygame.mixer.Sound(file_path)
-            print("chargé")
-            while self.charge:
-                thread_A = threading.Thread(target=self.Arret_Son)
-                thread_A.daemon = True
-                thread_A.start()
-        except pygame.error as e:
-            print(f"Erreur lors de la lecture du fichier : {e}")
-    """

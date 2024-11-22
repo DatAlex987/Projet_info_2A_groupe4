@@ -56,7 +56,7 @@ class User(Personne):
         pseudo : str
             Pseudonyme de l'utilisateur pour se connecter à l'application
         """
-        # Vérifications de type dans l'ordre spécifié par les tests
+        # Vérifications de type
         if not isinstance(nom, str):
             raise TypeError("Le nom doit être une instance de str.")
         if not isinstance(prenom, str):

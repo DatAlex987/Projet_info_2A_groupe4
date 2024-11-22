@@ -167,7 +167,7 @@ class TagDAO:
                         },
                     )
                     nb_lignes_supp = cursor.rowcount
-            return nb_lignes_supp  # Permet notamment de savoir si aucune ligne n'a été trouvée
+            return nb_lignes_supp  # Permet en particulier de savoir si aucune ligne n'a été trouvée
         except Exception as e:
             print(f"Erreur lors de la suppression de l'association : {e}")
             return None
@@ -205,13 +205,11 @@ class TagDAO:
                         },
                     )
 
-                    # Fetch the result
                     res = cursor.fetchone()
-                    # Check if the count is greater than zero
                     return res["count"] > 0
 
         except Exception as e:
-            print(f"Erreur lors de la vérification : {id_freesound},{tag} : {e}")
+            print(f"Erreur lors de la vérification : {id_son},{tag} : {e}")
             return False
 
     def get_sons_of_tag(self, nom_tag: str, schema: str):
@@ -227,8 +225,6 @@ class TagDAO:
                 res = cursor.fetchall()
         return [row["id_son"] for row in res]
 
-    # nettoyage
-
     def delete_tag_if_no_sons(self, schema: str):
         """
         Supprime un tag s'il n'est associé à aucun son.
@@ -238,7 +234,7 @@ class TagDAO:
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
                 for nom_tag in all_tags:
-                    # Vérifie si le tag est associé à des sons
+                    # On vérifie si le tag est associé à des sons
                     query = f"""SELECT COUNT(*) AS son_count
                                 FROM {schema}.Son_Tag
                                 WHERE nom_tag = %(nom_tag)s;"""
@@ -248,7 +244,7 @@ class TagDAO:
                     )
                     son_count = cursor.fetchone()["son_count"]
 
-                    # Si aucun son n'est lié, supprimer le tag
+                    # Si aucun son n'est lié on supprime le tag
                     if son_count == 0:
                         delete_query = f"""DELETE FROM {schema}.Tag
                                         WHERE nom_tag = %(nom_tag)s;"""
@@ -257,6 +253,3 @@ class TagDAO:
                             {"nom_tag": nom_tag},
                         )
                         connection.commit()
-
-
-# Ajouter une fonction qui ajoute tous les tags d'une liste si ils n'y sont pas déjà

@@ -202,9 +202,6 @@ class SceneService:
     def supprimer_scene(
         self, scene: Scene, schema: str
     ):  # On a besoin de l'objet en entier pour supprimer en "cascade"
-        # La suppression d'une Scène supprime l'objet + toutes les associations dans les tables +
-        # les associations en cascade. Mais pas les objets en cascade (car ils peuvent tjrs
-        # exister dans d'autres Scène)
         """Supprime une Scène dans la BDD ainsi que toutes les associations qui en découlent
 
         Params
@@ -310,7 +307,7 @@ class SceneService:
         hauteur_ecran = info_ecran.current_h
         k = 97
         g = 89
-        # Calculer la position pour centrer la fenêtre
+        # Calcul de la position pour centrer la fenêtre
         position_x = (largeur_ecran - largeur) // 2 + g
         position_y = (hauteur_ecran - hauteur) // 2 - k
 
@@ -346,7 +343,6 @@ class SceneService:
             )
             x_position += 170
             fp = son.localise_son()
-            # sc.charge = pygame.mixer.Sound(fp)
             pygame.mixer.music.load(fp)
         # Création des boutons pour les sons aléatoires
         longueur_sons_aleatoires = len(scene.sons_aleatoires)
@@ -381,12 +377,6 @@ class SceneService:
         texte_3_rect = texte_3_surface.get_rect(topleft=(50, 150))
         texte_4_rect = texte_4_surface.get_rect(topleft=(50, 250))
 
-        # lecture des sons alea et continus
-        # for son in scene.sons_aleatoires:
-        #    son.jouer_Son()
-        # for son in scene.sons_continus:
-        #    son.jouer_Son()
-        # Boucle principale pour la scène
         running = True
         while running:
             events = pygame.event.get()
@@ -439,49 +429,3 @@ class SceneService:
 
         pygame.mixer.stop()
         pygame.quit()
-
-
-"""
-    @log
-    def creer(**kwargs):
-        "Création d'une scène à partir de ses attributs"
-        new_scene = Scene(**kwargs)
-        return new_scene if SceneDAO().ajouter_scene(new_scene) else None
-
-    @log
-    def supprimer(self, scene) -> bool:
-        "Supprimme une scene"
-        return SceneDAO().supprimer(scene)
-
-    @log
-    def modifier_nom(self, scene, new_name):
-        pass
-
-    @log
-    def modifier_description(self, scene, new_desc):
-        pass
-
-    @log
-    def ajouter_son_aleatoire(self, scene, new_son_aleatoire):
-        pass
-
-    @log
-    def ajouter_son_manuel(self, scene, new_son_manuel):
-        pass
-
-    @log
-    def ajouter_son_continu(self, scene, new_son_continu):
-        pass
-
-    @log
-    def modifier_son_aleatoire(self, scene, new_son_aleatoire):
-        pass
-
-    @log
-    def modifier_son_manuel(self, scene, new_son_manuel):
-        pass
-
-    @log
-    def modifier_son_continu(self, scene, new_son_continu):
-        pass
-"""

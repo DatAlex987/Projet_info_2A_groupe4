@@ -91,10 +91,7 @@ class MenuParamSceneView(AbstractView):
             else:
                 next_view = MenuParamSceneView()
             return next_view
-            # Contraint de faire l'import ici pour éviter un circular import
-            # from view.menuparamsdview import MenuParamSDView
 
-            # next_view = MenuParamSDView()
         if choix["Choix Scene"] == "Ajouter une scène":
             scene_creee_avec_succes = False
             while not scene_creee_avec_succes:

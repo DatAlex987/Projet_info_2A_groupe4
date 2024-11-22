@@ -108,9 +108,6 @@ class SDService:
     def supprimer_sd(
         self, sd: SD, schema: str
     ):  # On a besoin de l'objet en entier pour supprimer en "cascade"
-        # La suppression d'une SD supprime l'objet + toutes les associations dans les tables +
-        # les associations en cascade. Mais pas les objets en cascade (car ils peuvent tjrs
-        # exister dans d'autres SD)
         """Supprime une SD dans la BDD ainsi que toutes les associations qui en découlent
 
         Params
@@ -161,7 +158,6 @@ class SDService:
         sd_kwargs = SDDAO().rechercher_par_id_sd(id_sd=id_sd, schema=schema)
         Scenes_of_sd = []
         for scene in sd_kwargs["scenes"]:
-            # Ces 3 init de listes étaient juste avant le for avant de régler le pb
             Sons_Alea_scene = []
             Sons_Cont_scene = []
             Sons_Manu_scene = []
@@ -273,8 +269,6 @@ class SDService:
         # On update la BDD
         SDDAO().modifier_sd(sd=sounddeck, schema=schema)
 
-    # TEST PAS ENCORE FONCTIONNEL NE PAS ENLEVER CEST POUR LES TABLEAUX :
-
     def afficher_tableau_sds_user(self):
         """
         Affiche un tableau Rich contenant les Sounddecks de l'utilisateur.
@@ -342,7 +336,7 @@ class SDService:
             choix.append("Retour au menu de recherche de consultation")
             return choix
 
-    def ajouter_sd_existante_to_user(self, schema: str):  # NOT TESTED YET
+    def ajouter_sd_existante_to_user(self, schema: str):
         try:
             Session().utilisateur.ajouter_sd(sd=Session().sd_to_consult)
             SDDAO().ajouter_association_user_sd(

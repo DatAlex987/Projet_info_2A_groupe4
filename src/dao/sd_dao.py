@@ -206,9 +206,7 @@ class SDDAO(metaclass=Singleton):
                 "description": res["description"],
                 "date_creation": res["date_creation"],
                 "id_createur": res["id_createur"],
-                "scenes": SceneDAO().rechercher_scenes_par_sd(
-                    str(res["id_sd"]), schema=schema
-                ),  # A AJOUTER PLUS TARD
+                "scenes": SceneDAO().rechercher_scenes_par_sd(str(res["id_sd"]), schema=schema),
             }
         except Exception as e:
             print(f"Erreur lors de la recherche du sound-deck avec ID {id_sd} : {e}")
@@ -261,7 +259,7 @@ class SDDAO(metaclass=Singleton):
                         "nom": row["nom"],
                         "scenes": SceneDAO().rechercher_scenes_par_sd(
                             str(row["id_sd"]), schema=schema
-                        ),  # A AJOUTER PLUS TARD
+                        ),
                         "description": row["description"],
                         "date_creation": row["date_creation"],
                         "id_createur": row["id_createur"],
@@ -343,7 +341,7 @@ class SDDAO(metaclass=Singleton):
                         },
                     )
                     nb_lignes_supp = cursor.rowcount
-            return nb_lignes_supp  # Permet notamment de savoir si aucune ligne n'a été trouvée
+            return nb_lignes_supp  # Permet en particulier de savoir si aucune ligne n'a été trouvée
         except Exception as e:
             print(f"Erreur lors de la suppression de l'association : {e}")
             return None
@@ -381,9 +379,7 @@ class SDDAO(metaclass=Singleton):
                         },
                     )
 
-                    # Fetch the result
                     res = cursor.fetchone()
-                    # Check if the count is greater than zero
                     return res["count"] > 0
 
         except Exception as e:
@@ -420,29 +416,27 @@ class SDDAO(metaclass=Singleton):
         return [row["id_scene"] for row in res]
 
     def supprimer_toutes_associations_sd(self, id_sd: str, schema):
-        # Get all users associated with the given Sounddeck
+        # On récupère tous les Users ayant la SD spécifiée
         users_possedants = [
             user_id
             for user_id in self.get_users_of_sd(id_sd=id_sd, schema=schema)
             if self.check_if_sd_in_user(id_sd=id_sd, id_user=user_id, schema=schema)
         ]
 
-        # Delete all associations in user_sd for the given Sounddeck
+        # Puis on supprimer toutes les associations User_SD
         for id_user in users_possedants:
             self.supprimer_association_user_sd(id_sd=id_sd, id_user=id_user, schema=schema)
 
-        # Get all scenes associated with the given Sounddeck
+        # Même travail avec les scènes associées à la SD spécifiée
         scenes_incluses = [
             scene_id
             for scene_id in self.get_scenes_of_sd(id_sd=id_sd, schema=schema)
             if SceneDAO().check_if_scene_in_sd(id_sd=id_sd, id_scene=scene_id, schema=schema)
         ]
 
-        # Delete all associations in sd_scene for the given Sounddeck
+        # idem
         for id_scene in scenes_incluses:
             SceneDAO().supprimer_association_sd_scene(id_sd=id_sd, id_scene=id_scene, schema=schema)
-
-    # nettoyage
 
     def delete_sd_if_no_users(self, schema: str):
         """
@@ -452,14 +446,14 @@ class SDDAO(metaclass=Singleton):
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
                 for sd in all_sds:
-                    # Vérifie si des utilisateurs sont liés à la Sounddeck
+                    # On vérifie si des utilisateurs sont liés à la Sounddeck
                     cursor.execute(
                         f"SELECT COUNT(*) AS user_count FROM {schema}.User_Sounddeck WHERE id_sd = %(id_sd)s;",
                         {"id_sd": sd["id_sd"]},
                     )
                     user_count = cursor.fetchone()["user_count"]
 
-                    # Si aucun utilisateur n'est relié, supprimer la Sounddeck
+                    # Si aucun utilisateur n'est relié on supprime la Sounddeck
                     if user_count == 0:
                         cursor.execute(
                             f"DELETE FROM {schema}.Sounddeck WHERE id_sd = %(id_sd)s;",

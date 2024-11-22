@@ -15,17 +15,17 @@ class Session(metaclass=Singleton):
         """Création de la session"""
         self.utilisateur: User = None
         self.debut_connexion = None
-        self.sd_to_param = None  # Permet de stocker les choix de naviguation de l'utilisateur
-        self.scene_to_param = None  # Permet de stocker les choix de naviguation de l'utilisateur
-        self.son_to_param = None  # Permet de stocker les choix de naviguation de l'utilisateur
-        self.son_to_search = None  # Permet de stocker les choix de naviguation de l'utilisateur
+        self.sd_to_param = None  # Permet de stocker les choix de naviguation de l'utilisateur (idem pour les autres)
+        self.scene_to_param = None
+        self.son_to_param = None
+        self.son_to_search = None
         self.son_to_preview = None
-        self.sd_to_play = None  # Permet de stocker les choix de naviguation de l'utilisateur
-        self.scene_to_play = None  # Permet de stocker les choix de naviguation de l'utilisateur
-        self.son_to_play = None  # Permet de stocker les choix de naviguation de l'utilisateur
+        self.sd_to_play = None
+        self.scene_to_play = None
+        self.son_to_play = None
         # Permet de n'avoir qu'une seule view pour afficher les SDs intéressantes. Cet attribut
         # sera utilisé dans une fonction de formatage de réponses de SDService pour afficher
-        # les SD du user voulu OU les Sd avec un nom similaire à celui recherché (on fait du 2 en 1)
+        # les SDs du user voulues OU les SDs avec un nom similaire à celui recherché (on fait du 2 en 1)
         self.type_recherche_consult = None
         self.users_to_consult = None
         self.sds_to_consult = None

@@ -85,7 +85,7 @@ class Son:
         pygame.init()
         pygame.mixer.init()
         try:
-            # faire le pygame.mixer.init() avant
+            # pygame.mixer.init() before
             pygame.mixer.music.load(file_path)
             pygame.mixer.music.play(loops=-1)
             self.en_jeu = True

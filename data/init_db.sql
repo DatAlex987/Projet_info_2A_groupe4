@@ -1,6 +1,3 @@
------------------------------------------------------
--- User
------------------------------------------------------
 DROP SCHEMA IF EXISTS ProjetInfo CASCADE;
 CREATE SCHEMA ProjetInfo;
 

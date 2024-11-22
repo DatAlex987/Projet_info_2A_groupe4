@@ -28,10 +28,7 @@ class MenuConsulterSonsView(AbstractView):
                 "message": "Sélectionnez un son pour l'enclencher ou l'arrêter \n"
                 "  Type        |   Nom                     | ID du son | Durée \n"
                 "------------------------------------------------------------",
-                "choices": SonService().formatage_question_sons_of_scene_menu_consult()
-                # id_sd=Session().sd_to_consult.id_sd,
-                # id_scene=Session().scene_to_consult.id_scene,
-                ,
+                "choices": SonService().formatage_question_sons_of_scene_menu_consult(),
             }
         ]
 

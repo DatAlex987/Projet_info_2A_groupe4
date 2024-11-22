@@ -61,7 +61,7 @@ class Recherche(metaclass=Singleton):
                     dico_filtres=self.dict_critere, limit=self.limit
                 )
                 if self.results:
-                    self.page = 0  # Set the initial page to 0
+                    self.page = 0  # Au départ, on est sur la page 0
                     return self.results
             except Exception as e:
                 print(f"Erreur lors de la recherche : {e}")
@@ -95,7 +95,7 @@ class Recherche(metaclass=Singleton):
             style="white",
         )
 
-        # Définition de l'alignement centré et de la couleur bleue pour les titres des colonnes
+        # Définition de l'alignement et de la couleur pour les titres des colonnes
         table.add_column("Champ", style=Style(color="honeydew2"), width=20)
         table.add_column("Détails", style=Style(color="honeydew2"))
 

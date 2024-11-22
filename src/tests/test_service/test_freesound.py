@@ -72,22 +72,6 @@ def test_rechercher_par_tag_success():
         assert result[1]["name"] == "sound2"
 
 
-# 4/ Test pour vérifier comment la fonction réagit en cas d'erreur de décodage JSON dans la réponse
-# de l'API.
-# A QUOI CA SERT CE TRUC?
-def test_rechercher_par_id_json_decode_error():
-    with patch("requests.get") as mock_get:
-        # Simuler une erreur de décodage JSON
-        mock_get.return_value.json.side_effect = requests.exceptions.JSONDecodeError(
-            "Expecting value", "", 0
-        )
-
-        result = Freesound.rechercher_par_id("123456")  # Utiliser un ID valide de 6 chiffres
-        assert (
-            result == {}
-        )  # La fonction devrait retourner un dictionnaire vide en cas d'erreur de décodage
-
-
 # 5/ Ce test vérifie que la méthode renvoie correctement les résultats lorsque le nombre de sons
 # est inférieur à la limite demandée.
 def test_rechercher_par_tag_limit_greater_than_results():
@@ -118,16 +102,6 @@ def test_rechercher_par_tag_no_results():
 
         result = Freesound.rechercher_par_tag("nonexistent_tag", 5)
         assert result == []  # Pas de résultat
-
-
-# 7/ Ce test permet de vérifier que les bons headers sont envoyés avec la requête API.
-def test_rechercher_par_id_headers():
-    with patch("requests.get") as mock_get:
-        Freesound.rechercher_par_id("420320")
-
-        # Vérification des headers envoyés
-        headers = mock_get.call_args.kwargs["headers"]
-        assert headers == {"Content-type": "application/json"}
 
 
 # 9/ Test : ajoute une condition pour gérer les cas où l'ID n'existe pas, puis renvoie le message

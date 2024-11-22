@@ -142,18 +142,9 @@ class SonService:
         list
             Liste des choix proposés à l'utilisateur
         """
-        # sds_consult = Session().sds_to_consult
-        # scene_selectionnee = None
-        # for sd in sds_consult:
-        #    if sd.id_sd == id_sd:
-        #        for scene in sd.scenes:
-        #            if scene.id_scene == id_scene:
-        #                scene_selectionnee = scene
         choix = []
         compteur = 1
-        for (
-            son_alea
-        ) in Session().scene_to_consult.sons_aleatoires:  # scene_selectionnee.sons_aleatoires:
+        for son_alea in Session().scene_to_consult.sons_aleatoires:
             mise_en_page_ligne = (
                 f"{compteur}. [ALEATOIRE] | {son_alea.nom} | {son_alea.id_son} | {son_alea.duree}"
             )
@@ -504,18 +495,11 @@ class SonService:
             id_freesound=str(son_kwargs["id"]),
             tags=son_kwargs["tags"],
         )
-
         Freesound().telecharger_son(id_freesound=son.id_freesound)
         son.jouer_son_preview()
-        # print("Ecoute en cours... (10secondes)")
-        # time.sleep(12)
-        # pygame.mixer.music.stop()  # Pour arrêter le MP3 (sinon impossible de le supprimer)
         Freesound().supprimer_son(id_freesound=son.id_freesound)
 
     def previsualiser_son_consult(self, son):
         Freesound().telecharger_son(id_freesound=son.id_freesound)
         son.jouer_son_preview()
-        # print("Ecoute en cours... (10secondes)")
-        # time.sleep(12)
-        # pygame.mixer.music.stop()  # Pour arrêter le MP3 (sinon impossible de le supprimer)
         Freesound().supprimer_son(id_freesound=son.id_freesound)

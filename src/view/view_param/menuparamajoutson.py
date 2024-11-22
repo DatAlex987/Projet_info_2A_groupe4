@@ -51,11 +51,11 @@ class MenuParamAjoutSonView(AbstractView):
             },
         ]
 
-    def make_choice(self):  # NON TESTE YET
+    def make_choice(self):
         son_desc = prompt(self.question_description)
         Session().son_to_search["description"] = son_desc["desc"]
         choix_type = prompt(self.question_type_son)
-        if choix_type["type son"] == "Son aléatoire":  # Vérif linput
+        if choix_type["type son"] == "Son aléatoire":
             while True:
                 choix_param = prompt(self.question_param_alea)
                 if choix_param["param alea min"] < choix_param["param alea max"]:

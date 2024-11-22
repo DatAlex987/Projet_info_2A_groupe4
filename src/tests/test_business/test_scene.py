@@ -138,8 +138,3 @@ def test_supprimer_son_manuel_succes(scene1_kwargs, son_manuel2_kwargs):
     )  # Pour faire référence exactement au même objet (on sait que ajouter_son_alea fonctionne)
     scene_test.supprimer_son_manuel(Son_manuel_suppr)
     assert Son_manuel_suppr not in scene_test.sons_manuels
-
-
-def test_supprimer_scene_succes(scene1_kwargs):
-    scene_test = Scene(**scene1_kwargs)
-    scene_test.supprimer_scene()

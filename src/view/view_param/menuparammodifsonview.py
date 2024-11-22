@@ -96,7 +96,7 @@ class MenuParamModifSonView(AbstractView):
             }
         ]
 
-    def make_choice(self):  # NON TESTE YET
+    def make_choice(self):
         if isinstance(Session().son_to_param, Son_Aleatoire):
             choix_modif = prompt(self.question_modif_alea)
             if choix_modif["choix modif"] == "Voir la fiche du son":

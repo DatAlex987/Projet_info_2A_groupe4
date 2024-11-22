@@ -22,7 +22,6 @@ while view:
     view.display_info()
     view = view.make_choice()
 
-# Insérer la suppression des objets orphelins ici
 
 banner_quit = (
     f"{Fore.CYAN}{'~' * 100}\n"
@@ -33,5 +32,3 @@ banner_quit = (
     f"{Fore.CYAN}{'~' * 100}{Style.RESET_ALL}\n"
 )
 print(banner_quit)
-
-# pip install pygame

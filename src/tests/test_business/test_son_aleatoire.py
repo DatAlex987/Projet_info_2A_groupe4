@@ -35,7 +35,3 @@ def test_initialisation_cooldown_type_int(son_aleatoire1_kwargs):
     son = Son_Aleatoire(**son_aleatoire1_kwargs)
     assert isinstance(son.cooldown_min, int)
     assert isinstance(son.cooldown_max, int)
-
-
-# def test_jouer_son_aléatoire():
-# pass
