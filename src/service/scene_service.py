@@ -315,6 +315,7 @@ class SceneService:
         """methode de jeu avec fenêtre interactive"""
         # Initialisation de Pygame
         pygame.init()
+        pygame.mixer.init()
 
         largeur = 1490
         hauteur = 400
@@ -339,11 +340,11 @@ class SceneService:
             dictb["manuels"].append(
                 (
                     Bouton(
-                        x_position,
+                        x_position_3,
                         300,
                         150,
                         40,
-                        f"{son.nom}, {son.start_key.upper()}",
+                        f"{son.nom[:12]}... , {son.start_key.upper()}",
                         "manuel",
                         couleur=(173, 216, 230),
                     ),
@@ -356,7 +357,7 @@ class SceneService:
 
         for son in scene.sons_continus:
             dictb["continus"].append(
-                (Bouton(x_position, 100, 150, 40, f"{son.nom}", "continu"), son)
+                (Bouton(x_position, 100, 150, 40, f"{son.nom[:13]}...", "continu"), son)
             )
             x_position += 170
             fp = son.localise_son()
@@ -366,7 +367,7 @@ class SceneService:
         longueur_sons_aleatoires = len(scene.sons_aleatoires)
         for k, son in enumerate(scene.sons_aleatoires):
             dictb["alea"].append(
-                (Bouton(x_position_2, 200, 150, 40, f"{son.nom}", "aleatoire"), son)
+                (Bouton(x_position_2, 200, 150, 40, f"{son.nom[:13]}", "aleatoire"), son)
             )
             fp = son.localise_son()
             son.charge = pygame.mixer.Sound(fp)

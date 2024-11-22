@@ -233,8 +233,16 @@ class SonService:
 
             # Enfin, on le télécharge avec son id_freesound:
             Freesound().telecharger_son(id_freesound=son_to_add.id_freesound)
-        except ValueError as e:
-            raise ValueError(f"{e}")
+
+            # On termine par mettre à jour la session:
+            Session().utilisateur.ajouter_son_a_scene(
+                id_sd=Session().sd_to_param.id_sd,
+                id_scene=Session().scene_to_param.id_scene,
+                son=son_to_add,
+            )
+            return True
+        except ValueError:
+            return False
 
     def instancier_son_par_id_type(self, id_son: str, type_son: str, schema: str):
         """Instancie un son (et tous ses tags) à partir de son id et de son type
@@ -483,7 +491,7 @@ class SonService:
 
         Freesound().telecharger_son(id_freesound=son.id_freesound)
         son.jouer_son_preview()
-        print("Ecoute en cours... (10secondes)")
-        time.sleep(12)
-        pygame.mixer.music.stop()  # Pour arrêter le MP3 (sinon impossible de le supprimer)
+        # print("Ecoute en cours... (10secondes)")
+        # time.sleep(12)
+        # pygame.mixer.music.stop()  # Pour arrêter le MP3 (sinon impossible de le supprimer)
         Freesound().supprimer_son(id_freesound=son.id_freesound)
