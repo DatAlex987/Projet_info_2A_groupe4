@@ -26,7 +26,7 @@ class Son_Aleatoire(Son):
         self.cooldown_max = cooldown_max
         self.charge = None
         self.thread = None
-        self.event_son = pygame.USEREVENT + 1
+        self.event_son = None
 
         if not isinstance(cooldown_min, int) or not isinstance(cooldown_max, int):
             raise TypeError("Les cooldowns doivent être des entiers.")

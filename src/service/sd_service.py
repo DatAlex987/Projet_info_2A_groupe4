@@ -60,7 +60,7 @@ class SDService:
         str
             Identifiant (supposé unique) généré pour une SD.
         """
-        all_sds = SDDAO().consulter_sds()
+        all_sds = SDDAO().consulter_sds(schema="ProjetInfo")
         all_ids = [sd["id_sd"] for sd in all_sds]
         generation = "".join(random.choices(string.ascii_letters + string.digits, k=7))
         unique_id = f"{generation}"
