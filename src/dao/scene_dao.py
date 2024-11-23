@@ -1,3 +1,4 @@
+from business_object.scene import Scene
 from dao.db_connection import DBConnection
 from dao.son_dao import SonDAO
 
@@ -5,7 +6,7 @@ from dao.son_dao import SonDAO
 class SceneDAO:
     """Implémente les méthodes du CRUD pour accéder à la base de données des scènes"""
 
-    def ajouter_scene(self, scene, schema):
+    def ajouter_scene(self, scene: Scene, schema: str):
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
                 query = f"""
@@ -25,7 +26,7 @@ class SceneDAO:
                 scene.id = cursor.fetchone()["id_scene"]
         return scene
 
-    def modifier_scene(self, scene, schema):
+    def modifier_scene(self, scene: Scene, schema: str):
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
                 query = f"""
@@ -45,7 +46,7 @@ class SceneDAO:
                 )
         return scene
 
-    def supprimer_scene(self, id_scene, schema):
+    def supprimer_scene(self, id_scene: str, schema: str):
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
                 query = f"""
@@ -57,7 +58,7 @@ class SceneDAO:
                     {"id_scene": id_scene},
                 )
 
-    def consulter_scenes(self, schema):
+    def consulter_scenes(self, schema: str):
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
                 query = f"""
@@ -92,7 +93,7 @@ class SceneDAO:
             )
         return scenes_trouvees
 
-    def rechercher_par_id_scene(self, id_scene, schema):
+    def rechercher_par_id_scene(self, id_scene: str, schema: str):
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
                 query = f"""
@@ -125,7 +126,7 @@ class SceneDAO:
         }
         return Scene_trouvee
 
-    def rechercher_scenes_par_sd(self, id_sd: str, schema):
+    def rechercher_scenes_par_sd(self, id_sd: str, schema: str):
         """
         Recherche les scenes appartenant à un SD.
 
@@ -189,7 +190,7 @@ class SceneDAO:
             print(f"Erreur lors de la récupération des sound-decks : {e}")
             return []
 
-    def ajouter_association_sd_scene(self, id_sd: str, id_scene: str, schema):
+    def ajouter_association_sd_scene(self, id_sd: str, id_scene: str, schema: str):
         """
         Ajoute une nouvelle association SD - Scene dans la table d'association.
 
@@ -228,7 +229,7 @@ class SceneDAO:
             print(f"Erreur lors de l'ajout de l'association : {e}")
             return None
 
-    def supprimer_association_sd_scene(self, id_sd: str, id_scene: str, schema):
+    def supprimer_association_sd_scene(self, id_sd: str, id_scene: str, schema: str):
         """
         Supprimer une association SD - Scene dans la table d'association.
 
@@ -265,7 +266,7 @@ class SceneDAO:
             print(f"Erreur lors de la suppression de l'association : {e}")
             return None
 
-    def check_if_scene_in_sd(self, id_sd: str, id_scene: str, schema):
+    def check_if_scene_in_sd(self, id_sd: str, id_scene: str, schema: str):
         """
         Vérifie si une scène appartient à un SD.
 
@@ -369,7 +370,7 @@ class SceneDAO:
                 res = cursor.fetchall()
         return [row["id_son"] for row in res]
 
-    def supprimer_toutes_associations_scene(self, id_scene: str, schema):
+    def supprimer_toutes_associations_scene(self, id_scene: str, schema: str):
         # On récupère tous les Sd qui possède la scène spécifiée
         sds_possedants = [
             sd_id

@@ -7,7 +7,7 @@ from dao.db_connection import DBConnection
 class SDDAO(metaclass=Singleton):
     """Implémente les méthodes du CRUD pour accéder à la base de données des sound-decks"""
 
-    def ajouter_sd(self, sd: SD, schema) -> SD:
+    def ajouter_sd(self, sd: SD, schema: str) -> SD:
         """
         Ajoute un nouveau sound-deck à la base de données.
 
@@ -46,7 +46,7 @@ class SDDAO(metaclass=Singleton):
             print(f"Erreur lors de l'ajout du sound-deck : {e}")
             return None
 
-    def modifier_sd(self, sd: SD, schema) -> SD:
+    def modifier_sd(self, sd: SD, schema: str) -> SD:
         """
         Modifie les informations d'un sound-deck existant.
 
@@ -86,7 +86,7 @@ class SDDAO(metaclass=Singleton):
             print(f"Erreur lors de la modification du sound-deck avec ID {sd.id_sd} : {e}")
             return None
 
-    def supprimer_sd(self, id_sd: str, schema) -> bool:
+    def supprimer_sd(self, id_sd: str, schema: str) -> bool:
         """
         Supprime un sound-deck par son ID.
 
@@ -120,7 +120,7 @@ class SDDAO(metaclass=Singleton):
             print(f"Erreur lors de la suppression du sound-deck avec ID {id_sd} : {e}")
             return False
 
-    def consulter_sds(self, schema) -> list:
+    def consulter_sds(self, schema: str) -> list:
         """
         Récupère la liste de tous les sound-decks dans la base de données.
 
@@ -163,7 +163,7 @@ class SDDAO(metaclass=Singleton):
             print(f"Erreur lors de la récupération des sound-decks : {e}")
             return []
 
-    def rechercher_par_id_sd(self, id_sd: str, schema) -> SD:
+    def rechercher_par_id_sd(self, id_sd: str, schema: str) -> SD:
         """
         Recherche un sound-deck dans la base de données par son ID.
 
@@ -212,7 +212,7 @@ class SDDAO(metaclass=Singleton):
             print(f"Erreur lors de la recherche du sound-deck avec ID {id_sd} : {e}")
             return None
 
-    def rechercher_sds_par_user(self, id_user: str, schema):
+    def rechercher_sds_par_user(self, id_user: str, schema: str):
         """
         Recherche les sound-decks dans la base de données d'un utilisateur.
 
@@ -270,7 +270,7 @@ class SDDAO(metaclass=Singleton):
             print(f"Erreur lors de la récupération des sound-decks : {e}")
             return []
 
-    def ajouter_association_user_sd(self, id_user: str, id_sd: str, schema):
+    def ajouter_association_user_sd(self, id_user: str, id_sd: str, schema: str):
         """
         Ajoute une nouvelle association User - SD dans la table d'association.
 
@@ -309,7 +309,7 @@ class SDDAO(metaclass=Singleton):
             print(f"Erreur lors de l'ajout de l'association : {e}")
             return None
 
-    def supprimer_association_user_sd(self, id_user: str, id_sd: str, schema):
+    def supprimer_association_user_sd(self, id_user: str, id_sd: str, schema: str):
         """
         Supprimer une association User - SD dans la table d'association.
 
@@ -346,7 +346,7 @@ class SDDAO(metaclass=Singleton):
             print(f"Erreur lors de la suppression de l'association : {e}")
             return None
 
-    def check_if_sd_in_user(self, id_user: str, id_sd: str, schema):
+    def check_if_sd_in_user(self, id_user: str, id_sd: str, schema: str):
         """
         Vérifie si un sound-deck appartient à un utilisateur.
 
@@ -415,7 +415,7 @@ class SDDAO(metaclass=Singleton):
                 res = cursor.fetchall()
         return [row["id_scene"] for row in res]
 
-    def supprimer_toutes_associations_sd(self, id_sd: str, schema):
+    def supprimer_toutes_associations_sd(self, id_sd: str, schema: str):
         # On récupère tous les Users ayant la SD spécifiée
         users_possedants = [
             user_id

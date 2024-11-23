@@ -13,7 +13,7 @@ class DBConnection(metaclass=Singleton):
     Elle permet de n'ouvrir qu'une seule et unique connexion
     """
 
-    def __init__(self, schema):
+    def __init__(self, schema: str):
         """Ouverture de la connexion"""
         dotenv.load_dotenv()
 

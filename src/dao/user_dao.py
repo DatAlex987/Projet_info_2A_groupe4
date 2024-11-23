@@ -114,7 +114,7 @@ class UserDAO(metaclass=Singleton):
             return users_trouves
         return None
 
-    def rechercher_par_id_user(self, id_user: str, schema) -> dict:
+    def rechercher_par_id_user(self, id_user: str, schema: str) -> dict:
         """
         Recherche un utilisateur dans la base de données par son ID.
 
@@ -155,7 +155,7 @@ class UserDAO(metaclass=Singleton):
             return user_trouve
         return None
 
-    def rechercher_par_pseudo_user(self, pseudo_user: str, schema) -> dict:
+    def rechercher_par_pseudo_user(self, pseudo_user: str, schema: str) -> dict:
         """
         Recherche un utilisateur dans la base de données par son pseudo.
 

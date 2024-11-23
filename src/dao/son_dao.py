@@ -106,7 +106,7 @@ class SonDAO:
                 )
         return son
 
-    def supprimer_son(self, id_son, schema: str):
+    def supprimer_son(self, id_son: str, schema: str):
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
                 query = f"""
