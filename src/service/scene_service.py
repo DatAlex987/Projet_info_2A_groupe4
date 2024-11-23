@@ -279,7 +279,7 @@ class SceneService:
         # On update la BDD
         SceneDAO().modifier_scene(scene=scene, schema=schema)
 
-    def afficher_details_scene(self, scene):
+    def afficher_details_scene(self, scene: Scene):
         """Affiche les détails d'un son aléatoire."""
         console = Console()
         table = Table(

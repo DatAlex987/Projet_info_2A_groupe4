@@ -19,7 +19,7 @@ class Recherche(metaclass=Singleton):
         self.page_size = 5  # Nombre de résultats par page
         self.page = 1
 
-    def ajouter_critere(self, reponse_critere):
+    def ajouter_critere(self, reponse_critere: dict):
         """Ajouter un critère de recherche au dictionnaire des critères."""
         if reponse_critere["tag"]:
             self.dict_critere["query"] = reponse_critere["tag"]
