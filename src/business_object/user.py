@@ -1,9 +1,14 @@
-import hashlib
-from business_object.personne import Personne
 import datetime
 import re
+import hashlib
+
+####
+from business_object.personne import Personne
 from business_object.sd import SD
 from business_object.scene import Scene
+from business_object.son_aleatoire import Son_Aleatoire
+from business_object.son_manuel import Son_Manuel
+from business_object.son_continu import Son_Continu
 
 
 class User(Personne):
@@ -29,7 +34,14 @@ class User(Personne):
     """
 
     def __init__(
-        self, nom, prenom, date_naissance, id_user, mdp=None, SD_possedes=None, pseudo=None
+        self,
+        nom: str,
+        prenom: str,
+        date_naissance: datetime.date,
+        id_user: str,
+        mdp=None,
+        SD_possedes=None,
+        pseudo=None,
     ):
         # mdp optionel. N'est précisé que lors de la première instantiation
         # (pour éviter de hasher le mdp déjà hashé lors de l'instantiation après
@@ -53,7 +65,7 @@ class User(Personne):
         pseudo : str
             Pseudonyme de l'utilisateur pour se connecter à l'application
         """
-        # Vérifications de type dans l'ordre spécifié par les tests
+        # Vérifications de type
         if not isinstance(nom, str):
             raise TypeError("Le nom doit être une instance de str.")
         if not isinstance(prenom, str):
@@ -92,7 +104,7 @@ class User(Personne):
         self.SD_possedes = SD_possedes
         self.pseudo = pseudo
 
-    def _hash_mdp(self, mdp):
+    def _hash_mdp(self, mdp: str):
         gen_hash = hashlib.pbkdf2_hmac(
             "sha256", mdp.encode("utf-8"), self.nom.encode("utf-8"), 100000
         )
@@ -118,3 +130,33 @@ class User(Personne):
                 for scene in sd.scenes:
                     if scene.id_scene == id_scene:
                         sd.scenes.remove(scene)
+
+    def ajouter_son_a_scene(self, id_sd: str, id_scene: str, son):
+        for sd in self.SD_possedes:
+            if sd.id_sd == id_sd:
+                for scene in sd.scenes:
+                    if scene.id_scene == id_scene:
+                        if isinstance(son, Son_Aleatoire):
+                            scene.ajouter_son_aleatoire(nouveau_son_aleatoire=son)
+                        elif isinstance(son, Son_Manuel):
+                            scene.ajouter_son_manuel(nouveau_son_manuel=son)
+                        elif isinstance(son, Son_Continu):
+                            scene.ajouter_son_continu(nouveau_son_continu=son)
+
+    def supprimer_son_a_scene(self, id_sd: str, id_scene: str, son):
+        for sd in self.SD_possedes:
+            if sd.id_sd == id_sd:
+                for scene in sd.scenes:
+                    if scene.id_scene == id_scene:
+                        if isinstance(son, Son_Aleatoire):
+                            for son_alea in scene.sons_aleatoires:
+                                if son_alea.id_son == son.id_son:
+                                    scene.supprimer_son_aleatoire(son_aleatoire=son_alea)
+                        elif isinstance(son, Son_Manuel):
+                            for son_manuel in scene.sons_manuels:
+                                if son_manuel.id_son == son.id_son:
+                                    scene.supprimer_son_manuel(son_manuel=son_manuel)
+                        elif isinstance(son, Son_Continu):
+                            for son_cont in scene.sons_continus:
+                                if son_cont.id_son == son.id_son:
+                                    scene.supprimer_son_continu(son_continu=son_cont)

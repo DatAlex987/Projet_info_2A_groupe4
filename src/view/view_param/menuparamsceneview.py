@@ -6,11 +6,11 @@ from InquirerPy import prompt
 ####
 from service.sd_service import SDService
 from service.scene_service import SceneService
+from service.session import Session
 
 ####
 from view.abstractview import AbstractView
 from view.view_param.menuparammodifsdview import MenuParamModifSDView
-from service.session import Session
 
 
 class MenuParamSceneView(AbstractView):
@@ -48,9 +48,7 @@ class MenuParamSceneView(AbstractView):
                 "message": "Que souhaitez-vous faire ? \n"
                 " ID         |   Nom   | Date de création \n"
                 "------------------------------------------------------------",
-                "choices": SceneService().formatage_question_scenes_of_sd(
-                    id_sd=Session().sd_to_param.id_sd
-                ),
+                "choices": SceneService().formatage_question_scenes_of_sd(),
             }
         ]
 
@@ -93,10 +91,7 @@ class MenuParamSceneView(AbstractView):
             else:
                 next_view = MenuParamSceneView()
             return next_view
-            # Contraint de faire l'import ici pour éviter un circular import
-            # from view.menuparamsdview import MenuParamSDView
 
-            # next_view = MenuParamSDView()
         if choix["Choix Scene"] == "Ajouter une scène":
             scene_creee_avec_succes = False
             while not scene_creee_avec_succes:
@@ -117,7 +112,9 @@ class MenuParamSceneView(AbstractView):
                     print(
                         Fore.RED + f"Erreur lors de la création de la scène : {e}" + Style.RESET_ALL
                     )
-            next_view = MenuParamSceneView()
+            from view.view_param.menuparamsdview import MenuParamSDView
+
+            next_view = MenuParamSDView()
             return next_view
         else:
             id_scene_select = choix["Choix Scene"].split()[1]

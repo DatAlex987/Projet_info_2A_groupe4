@@ -2,12 +2,13 @@
 
 from colorama import Fore, Style
 from InquirerPy import prompt
-from view.abstractview import AbstractView
-from service.session import Session
 
-# from service.sd_service import SDService
-# from service.scene_service import SceneService
+####
+from service.session import Session
 from service.son_service import SonService
+
+####
+from view.abstractview import AbstractView
 
 
 class MenuParamAjoutSonView(AbstractView):
@@ -51,12 +52,21 @@ class MenuParamAjoutSonView(AbstractView):
             },
         ]
 
-    def make_choice(self):  # NON TESTE YET
+    def make_choice(self):
         son_desc = prompt(self.question_description)
-        Session().son_to_dl["description"] = son_desc["desc"]
+        Session().son_to_search["description"] = son_desc["desc"]
         choix_type = prompt(self.question_type_son)
         if choix_type["type son"] == "Son aléatoire":
-            choix_param = prompt(self.question_param_alea)
+            while True:
+                choix_param = prompt(self.question_param_alea)
+                if choix_param["param alea min"] < choix_param["param alea max"]:
+                    break
+                else:
+                    print(
+                        Fore.RED
+                        + "Le cooldown minimal ne peut pas être supérieur au cooldown maximal"
+                        + Style.RESET_ALL
+                    )
             param1 = choix_param["param alea min"]
             param2 = choix_param["param alea max"]
         elif choix_type["type son"] == "Son manuel":
@@ -67,16 +77,22 @@ class MenuParamAjoutSonView(AbstractView):
             param1 = None
             param2 = None
         # On stocke ces nouvelles infos en session pour les utiliser ensuite pour l'ajout en DAO
-        Session().son_to_dl["type_son"] = choix_type["type son"]
-        Session().son_to_dl["param1"] = param1
-        Session().son_to_dl["param2"] = param2
-        if SonService().ajouter_nouveau_son(son_kwargs=Session().son_to_dl, schema="ProjetInfo"):
-            print("Ajout du son avec succès. Retour au menu de votre scène.")
+        Session().son_to_search["type_son"] = choix_type["type son"]
+        Session().son_to_search["param1"] = param1
+        Session().son_to_search["param2"] = param2
+        if SonService().ajouter_nouveau_son(
+            son_kwargs=Session().son_to_search, schema="ProjetInfo"
+        ):
+            print(
+                Fore.GREEN
+                + "Ajout du son avec succès. Retour au menu de votre scène."
+                + Style.RESET_ALL
+            )
         else:
-            print("L'ajout du son n'a pas pu aboutir.")
-        from view.menuparamscenespecifiqueview import MenuParamSceneSpecifiqueView
+            print(Fore.RED + "L'ajout du son n'a pas pu aboutir." + Style.RESET_ALL)
+        from view.view_param.menuparamsceneview import MenuParamSceneView
 
-        return MenuParamSceneSpecifiqueView()
+        return MenuParamSceneView()
 
     def display_info(self):
         print(Fore.BLUE + " [PARAMETRAGE] MENU SON ".center(80, "=") + Style.RESET_ALL)

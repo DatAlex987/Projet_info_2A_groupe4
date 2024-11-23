@@ -1,7 +1,9 @@
 import hashlib
 import pytest
-from business_object.user import User
 from datetime import date
+
+####
+from business_object.user import User
 
 
 @pytest.mark.parametrize(

@@ -35,7 +35,15 @@ class Son:
     )
     """
 
-    def __init__(self, nom, description, duree, id_son, id_freesound, tags):
+    def __init__(
+        self,
+        nom: str,
+        description: str,
+        duree: datetime.timedelta,
+        id_son: str,
+        id_freesound: str,
+        tags: list,
+    ):
         """Constructeur"""
         self.nom = nom
         self.description = description
@@ -43,7 +51,7 @@ class Son:
         self.id_freesound = id_freesound
         self.id_son = id_son
         self.tags = tags
-        self.en_lecture = False
+        self.en_jeu = False
 
         if not isinstance(nom, str):
             raise TypeError("Le nom doit etre une instance de str.")
@@ -71,22 +79,29 @@ class Son:
         file_path = os.path.join(directory, f"{matching_files[0]}")
         if not os.path.exists(file_path):
             print(f"Erreur : Le fichier {file_path} n'existe pas.")
-        else:
-            print(f"fichier {file_path} trouvé")
         return file_path
+
+    def Arret_Son_Preview(self):
+        input("Appuyer sur Entrée pour arrêter le son")
+        self.en_jeu = False
+        pygame.mixer.music.stop()
+        pygame.quit()
 
     def jouer_son_preview(self):
         file_path = self.localise_son()
+        pygame.init()
+        pygame.mixer.init()
         try:
-            # faire le pygame.mixer.init() avant
+            # pygame.mixer.init() before
             pygame.mixer.music.load(file_path)
-            print("load")
-            pygame.mixer.music.play()
-            print("jeu")
+            pygame.mixer.music.play(loops=-1)
+            self.en_jeu = True
             # Run the input listener in a separate thread
-            thread = threading.Thread(target=self.Arret_Son)
-            # thread.daemon = True  # Ensure it exits when the main program does
+            thread = threading.Thread(target=self.Arret_Son_Preview)
+            thread.daemon = True  # Ensure it exits when the main program does
             thread.start()
+            while self.en_jeu:
+                pass
         except pygame.error as e:
             print(f"Erreur lors de la lecture du fichier : {e}")
 

@@ -2,11 +2,15 @@ import re
 import datetime
 import random
 import string
-from service.session import Session
 
+####
+from rich.console import Console
+from rich.table import Table
+from rich.style import Style
+
+####
 from business_object.sd import SD
 from business_object.scene import Scene
-from business_object.son import Son
 from business_object.son_continu import Son_Continu
 from business_object.son_aleatoire import Son_Aleatoire
 from business_object.son_manuel import Son_Manuel
@@ -16,9 +20,7 @@ from dao.son_dao import SonDAO
 from dao.tag_dao import TagDAO
 
 ####
-from rich.console import Console
-from rich.table import Table
-from rich.style import Style
+from service.session import Session
 
 
 class SDService:
@@ -60,8 +62,13 @@ class SDService:
         str
             Identifiant (supposé unique) généré pour une SD.
         """
+        all_sds = SDDAO().consulter_sds(schema="ProjetInfo")
+        all_ids = [sd["id_sd"] for sd in all_sds]
         generation = "".join(random.choices(string.ascii_letters + string.digits, k=7))
         unique_id = f"{generation}"
+        while unique_id in all_ids:  # On vérifie que l'id n'existe pas déjà
+            generation = "".join(random.choices(string.ascii_letters + string.digits, k=7))
+            unique_id = f"{generation}"
         return unique_id
 
     def creer_sd(self, nom: str, description: str, schema: str):
@@ -103,9 +110,6 @@ class SDService:
     def supprimer_sd(
         self, sd: SD, schema: str
     ):  # On a besoin de l'objet en entier pour supprimer en "cascade"
-        # La suppression d'une SD supprime l'objet + toutes les associations dans les tables +
-        # les associations en cascade. Mais pas les objets en cascade (car ils peuvent tjrs
-        # exister dans d'autres SD)
         """Supprime une SD dans la BDD ainsi que toutes les associations qui en découlent
 
         Params
@@ -154,8 +158,8 @@ class SDService:
             Instance de la SD demandée
         """
         sd_kwargs = SDDAO().rechercher_par_id_sd(id_sd=id_sd, schema=schema)
+        Scenes_of_sd = []
         for scene in sd_kwargs["scenes"]:
-            # Ces 3 init de listes étaient juste avant le for avant de régler le pb
             Sons_Alea_scene = []
             Sons_Cont_scene = []
             Sons_Manu_scene = []
@@ -195,17 +199,15 @@ class SDService:
                         start_key=son_manu_kwargs["param1"],
                     )
                 )
-        Scenes_of_sd = []
-        for scene_kwargs in sd_kwargs["scenes"]:
             Scenes_of_sd.append(
                 Scene(
-                    nom=scene_kwargs["nom"],
-                    description=scene_kwargs["description"],
-                    id_scene=scene_kwargs["id_scene"],
+                    nom=scene["nom"],
+                    description=scene["description"],
+                    id_scene=scene["id_scene"],
                     sons_aleatoires=Sons_Alea_scene,
                     sons_manuels=Sons_Manu_scene,
                     sons_continus=Sons_Cont_scene,
-                    date_creation=scene_kwargs["date_creation"],
+                    date_creation=scene["date_creation"],
                 )
             )
         sd = SD(
@@ -268,8 +270,6 @@ class SDService:
                 sounddeck.modifier_description_sd(nouvelle_description=new_desc)
         # On update la BDD
         SDDAO().modifier_sd(sd=sounddeck, schema=schema)
-
-    # TEST PAS ENCORE FONCTIONNEL NE PAS ENLEVER CEST POUR LES TABLEAUX :
 
     def afficher_tableau_sds_user(self):
         """
@@ -338,7 +338,7 @@ class SDService:
             choix.append("Retour au menu de recherche de consultation")
             return choix
 
-    def ajouter_sd_existante_to_user(self, schema: str):  # NOT TESTED YET
+    def ajouter_sd_existante_to_user(self, schema: str):
         try:
             Session().utilisateur.ajouter_sd(sd=Session().sd_to_consult)
             SDDAO().ajouter_association_user_sd(
@@ -371,7 +371,6 @@ class SDService:
         SDDAO().ajouter_sd(sd=sd_duplicated, schema=schema)
         dict_of_associations_scene_son = {}
         for scene in sd_to_dupli.scenes:  # Pour chaque scène...
-            print("sons alea dans scène:", scene.sons_aleatoires)
             # On duplique la Scène puis on l'ajoute
             scene_duplicated = Scene(
                 nom=scene.nom,
@@ -385,7 +384,6 @@ class SDService:
             SceneDAO().ajouter_scene(scene=scene_duplicated, schema=schema)
             dict_of_associations_scene_son[scene_duplicated] = []
             for son_alea in scene.sons_aleatoires:  # ... on instancie le son dupliqué
-                print("id son alea a dupliquer:", son_alea.id_son)
                 # On duplique le son puis on l'ajoute
                 son_duplicated = Son_Aleatoire(
                     nom=son_alea.nom,
@@ -458,7 +456,7 @@ class SDService:
         new_sd = SDService().instancier_sd_par_id(id_sd=sd_duplicated.id_sd, schema=schema)
         Session().utilisateur.ajouter_sd(sd=new_sd)
 
-    def afficher_details_sd(self, sd):
+    def afficher_details_sd(self, sd: SD):
         """Affiche les détails d'un son aléatoire."""
         console = Console()
         table = Table(

@@ -1,13 +1,13 @@
 from utils.singleton import Singleton
-from dao.db_connection import DBConnection
 from business_object.sd import SD
 from dao.scene_dao import SceneDAO
+from dao.db_connection import DBConnection
 
 
 class SDDAO(metaclass=Singleton):
     """Implémente les méthodes du CRUD pour accéder à la base de données des sound-decks"""
 
-    def ajouter_sd(self, sd: SD, schema) -> SD:
+    def ajouter_sd(self, sd: SD, schema: str) -> SD:
         """
         Ajoute un nouveau sound-deck à la base de données.
 
@@ -46,7 +46,7 @@ class SDDAO(metaclass=Singleton):
             print(f"Erreur lors de l'ajout du sound-deck : {e}")
             return None
 
-    def modifier_sd(self, sd: SD, schema) -> SD:
+    def modifier_sd(self, sd: SD, schema: str) -> SD:
         """
         Modifie les informations d'un sound-deck existant.
 
@@ -86,7 +86,7 @@ class SDDAO(metaclass=Singleton):
             print(f"Erreur lors de la modification du sound-deck avec ID {sd.id_sd} : {e}")
             return None
 
-    def supprimer_sd(self, id_sd: str, schema) -> bool:
+    def supprimer_sd(self, id_sd: str, schema: str) -> bool:
         """
         Supprime un sound-deck par son ID.
 
@@ -120,7 +120,7 @@ class SDDAO(metaclass=Singleton):
             print(f"Erreur lors de la suppression du sound-deck avec ID {id_sd} : {e}")
             return False
 
-    def consulter_sds(self, schema) -> list:
+    def consulter_sds(self, schema: str) -> list:
         """
         Récupère la liste de tous les sound-decks dans la base de données.
 
@@ -163,7 +163,7 @@ class SDDAO(metaclass=Singleton):
             print(f"Erreur lors de la récupération des sound-decks : {e}")
             return []
 
-    def rechercher_par_id_sd(self, id_sd: str, schema) -> SD:
+    def rechercher_par_id_sd(self, id_sd: str, schema: str) -> SD:
         """
         Recherche un sound-deck dans la base de données par son ID.
 
@@ -206,15 +206,13 @@ class SDDAO(metaclass=Singleton):
                 "description": res["description"],
                 "date_creation": res["date_creation"],
                 "id_createur": res["id_createur"],
-                "scenes": SceneDAO().rechercher_scenes_par_sd(
-                    str(res["id_sd"]), schema=schema
-                ),  # A AJOUTER PLUS TARD
+                "scenes": SceneDAO().rechercher_scenes_par_sd(str(res["id_sd"]), schema=schema),
             }
         except Exception as e:
             print(f"Erreur lors de la recherche du sound-deck avec ID {id_sd} : {e}")
             return None
 
-    def rechercher_sds_par_user(self, id_user: str, schema):
+    def rechercher_sds_par_user(self, id_user: str, schema: str):
         """
         Recherche les sound-decks dans la base de données d'un utilisateur.
 
@@ -261,7 +259,7 @@ class SDDAO(metaclass=Singleton):
                         "nom": row["nom"],
                         "scenes": SceneDAO().rechercher_scenes_par_sd(
                             str(row["id_sd"]), schema=schema
-                        ),  # A AJOUTER PLUS TARD
+                        ),
                         "description": row["description"],
                         "date_creation": row["date_creation"],
                         "id_createur": row["id_createur"],
@@ -272,7 +270,7 @@ class SDDAO(metaclass=Singleton):
             print(f"Erreur lors de la récupération des sound-decks : {e}")
             return []
 
-    def ajouter_association_user_sd(self, id_user: str, id_sd: str, schema):
+    def ajouter_association_user_sd(self, id_user: str, id_sd: str, schema: str):
         """
         Ajoute une nouvelle association User - SD dans la table d'association.
 
@@ -311,7 +309,7 @@ class SDDAO(metaclass=Singleton):
             print(f"Erreur lors de l'ajout de l'association : {e}")
             return None
 
-    def supprimer_association_user_sd(self, id_user: str, id_sd: str, schema):
+    def supprimer_association_user_sd(self, id_user: str, id_sd: str, schema: str):
         """
         Supprimer une association User - SD dans la table d'association.
 
@@ -343,12 +341,12 @@ class SDDAO(metaclass=Singleton):
                         },
                     )
                     nb_lignes_supp = cursor.rowcount
-            return nb_lignes_supp  # Permet notamment de savoir si aucune ligne n'a été trouvée
+            return nb_lignes_supp  # Permet en particulier de savoir si aucune ligne n'a été trouvée
         except Exception as e:
             print(f"Erreur lors de la suppression de l'association : {e}")
             return None
 
-    def check_if_sd_in_user(self, id_user: str, id_sd: str, schema):
+    def check_if_sd_in_user(self, id_user: str, id_sd: str, schema: str):
         """
         Vérifie si un sound-deck appartient à un utilisateur.
 
@@ -381,9 +379,7 @@ class SDDAO(metaclass=Singleton):
                         },
                     )
 
-                    # Fetch the result
                     res = cursor.fetchone()
-                    # Check if the count is greater than zero
                     return res["count"] > 0
 
         except Exception as e:
@@ -419,26 +415,26 @@ class SDDAO(metaclass=Singleton):
                 res = cursor.fetchall()
         return [row["id_scene"] for row in res]
 
-    def supprimer_toutes_associations_sd(self, id_sd: str, schema):
-        # Get all users associated with the given Sounddeck
+    def supprimer_toutes_associations_sd(self, id_sd: str, schema: str):
+        # On récupère tous les Users ayant la SD spécifiée
         users_possedants = [
             user_id
             for user_id in self.get_users_of_sd(id_sd=id_sd, schema=schema)
             if self.check_if_sd_in_user(id_sd=id_sd, id_user=user_id, schema=schema)
         ]
 
-        # Delete all associations in user_sd for the given Sounddeck
+        # Puis on supprimer toutes les associations User_SD
         for id_user in users_possedants:
             self.supprimer_association_user_sd(id_sd=id_sd, id_user=id_user, schema=schema)
 
-        # Get all scenes associated with the given Sounddeck
+        # Même travail avec les scènes associées à la SD spécifiée
         scenes_incluses = [
             scene_id
             for scene_id in self.get_scenes_of_sd(id_sd=id_sd, schema=schema)
             if SceneDAO().check_if_scene_in_sd(id_sd=id_sd, id_scene=scene_id, schema=schema)
         ]
 
-        # Delete all associations in sd_scene for the given Sounddeck
+        # idem
         for id_scene in scenes_incluses:
             SceneDAO().supprimer_association_sd_scene(id_sd=id_sd, id_scene=id_scene, schema=schema)
 
@@ -448,24 +444,17 @@ class SDDAO(metaclass=Singleton):
         """
         Supprime une Sounddeck si elle n'est reliée à aucun utilisateur.
         """
-        all_ids = [sd["id_sd"] for sd in SDDAO().consulter_sds]
-        for id_sd in all_ids:
-            with DBConnection(schema=schema).connection as connection:
-                with connection.cursor() as cursor:
-                    # Vérifie si des utilisateurs sont liés à la Sounddeck
+        all_sds = self.consulter_sds(schema=schema)
+        with DBConnection(schema=schema).connection as connection:
+            with connection.cursor() as cursor:
+                for sd in all_sds:
+                    # On vérifie si des utilisateurs sont liés à la Sounddeck
                     cursor.execute(
                         f"SELECT COUNT(*) AS user_count FROM {schema}.User_Sounddeck WHERE id_sd = %(id_sd)s;",
-                        {"id_sd": id_sd},
+                        {"id_sd": sd["id_sd"]},
                     )
                     user_count = cursor.fetchone()["user_count"]
 
-                    # Si aucun utilisateur n'est relié, supprimer la Sounddeck
-                    if user_count == 0:
-                        cursor.execute(
-                            f"DELETE FROM {schema}.Sounddeck WHERE id_sd = %(id_sd)s;",
-                            {"id_sd": id_sd},
-                        )
-                        connection.commit()
-                        return True  # Indique que la suppression a été effectuée
-                    else:
-                        return False  # La Sounddeck n'a pas été supprimée car elle est encore liée à des utilisateurs
+        # Si aucun utilisateur n'est relié on supprime la Sounddeck
+        if user_count == 0:
+            SDDAO().supprimer_sd(id_sd=sd["id_sd"])

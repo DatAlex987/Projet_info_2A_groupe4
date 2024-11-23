@@ -1,9 +1,9 @@
+import datetime
+
+####
 from business_object.son_aleatoire import Son_Aleatoire
 from business_object.son_continu import Son_Continu
 from business_object.son_manuel import Son_Manuel
-import datetime
-import os
-import pygame
 
 
 class Scene:
@@ -30,13 +30,13 @@ class Scene:
 
     def __init__(
         self,
-        nom,
-        description,
-        id_scene,
-        sons_aleatoires,
-        sons_manuels,
-        sons_continus,
-        date_creation,
+        nom: str,
+        description: str,
+        id_scene: str,
+        sons_aleatoires: list,
+        sons_manuels: list,
+        sons_continus: list,
+        date_creation: datetime.date,
     ):
         """Constructeur"""
         self.nom = nom
@@ -62,13 +62,13 @@ class Scene:
         if not isinstance(date_creation, datetime.date):
             raise TypeError("La date de création doit être une instance de datetime.")
 
-    def modifier_nom(self, nouveau_nom):
+    def modifier_nom(self, nouveau_nom: str):
         """Modifier le nom de la scène"""
         if not isinstance(nouveau_nom, str):
             raise TypeError("Le nouveau nom doit etre une instance de str.")
         self.nom = nouveau_nom
 
-    def modifier_description(self, nouvelle_description):
+    def modifier_description(self, nouvelle_description: str):
         """Modifier la description de la scène"""
         if not isinstance(nouvelle_description, str):
             raise TypeError("La nouvelle description doit etre une instance de str.")
@@ -93,78 +93,13 @@ class Scene:
         self.sons_manuels.append(nouveau_son_manuel)
 
     def supprimer_son_aleatoire(self, son_aleatoire: Son_Aleatoire):
-        """Ajoute un nouveau son aléatoire dans la scène"""
+        "Ajoute un nouveau son aléatoire dans la scène"
         self.sons_aleatoires.remove(son_aleatoire)
 
     def supprimer_son_continu(self, son_continu: Son_Continu):
-        """Ajoute un nouveau son continu dans la scène"""
+        "Ajoute un nouveau son continu dans la scène"
         self.sons_continus.remove(son_continu)
 
     def supprimer_son_manuel(self, son_manuel: Son_Manuel):
-        """Ajoute un nouveau son manuel dans la scène"""
+        "Ajoute un nouveau son manuel dans la scène"
         self.sons_manuels.remove(son_manuel)
-
-    def supprimer_scene(self):
-        del self
-        return True
-
-    def jouer_scene(self):
-        """methode de jeu avec fenêtre interactive"""
-        os.environ["SDL_VIDEO_WINDOW_POS"] = "100,50"
-        # Initialisation de Pygame
-
-        largeur = 1490
-        hauteur = 400
-        # Obtenir la taille de l'écran
-        info_ecran = pygame.display.Info()
-        largeur_ecran = info_ecran.current_w
-        hauteur_ecran = info_ecran.current_h
-        k = 97
-        g = 89
-        # Calculer la position pour centrer la fenêtre
-        position_x = (largeur_ecran - largeur) // 2 + g
-        position_y = (hauteur_ecran - hauteur) // 2 - k
-
-        # Définir la position de la fenêtre
-        os.environ["SDL_VIDEO_WINDOW_POS"] = f"{position_x},{position_y}"
-        fenetre = pygame.display.set_mode((largeur, hauteur))
-        # Définir le titre de la fenêtre
-        pygame.display.set_caption("DM Sound buddy window")
-        for sc in self.sons_continus:
-            sc.localise_son()
-            pygame.mixer.load(sc)
-
-        # Définir les couleurs (R, G, B)
-        BLANC = (255, 255, 255)
-        NOIR = (0, 0, 0)
-        ROUGE = (255, 0, 0)
-
-        running = True
-        while running:
-            # Gérer les événements
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        running = False
-                    elif event.key == pygame.K_SPACE:
-                        print("Espace pressé !")
-
-        # Dessiner un fond de couleur unie
-        fenetre.fill(BLANC)
-
-        # Dessiner un rectangle (x, y, largeur, hauteur)
-        pygame.draw.rect(fenetre, ROUGE, (300, 200, 200, 100))
-
-        # Afficher du texte (optionnel)
-        font = pygame.font.SysFont("Arial", 36)
-        texte = font.render("Bonjour, Pygame !", True, NOIR)
-        fenetre.blit(texte, (250, 50))
-
-        # Afficher une image (optionnel)
-        # fenetre.blit(image, (100, 100))
-
-        # Mettre à jour l'affichage
-        pygame.display.flip()
-        pass

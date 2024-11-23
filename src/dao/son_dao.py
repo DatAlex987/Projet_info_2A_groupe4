@@ -1,12 +1,12 @@
-from dao.db_connection import DBConnection
+import datetime
 
-# from business_object.son import Son
+####
 from business_object.son_aleatoire import Son_Aleatoire
 from business_object.son_manuel import Son_Manuel
 from business_object.son_continu import Son_Continu
-from dao.tag_dao import TagDAO
 from service.session import Session
-import datetime
+from dao.tag_dao import TagDAO
+from dao.db_connection import DBConnection
 
 
 class SonDAO:
@@ -80,7 +80,7 @@ class SonDAO:
                 )
         return son
 
-    def modifier_param_son(self, son, schema: str):  # NON TESTED YET
+    def modifier_param_son(self, son, schema: str):
         dict_f_string = {
             "param1": None,
             "param2": None,
@@ -106,7 +106,7 @@ class SonDAO:
                 )
         return son
 
-    def supprimer_son(self, id_son, schema: str):
+    def supprimer_son(self, id_son: str, schema: str):
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
                 query = f"""
@@ -335,7 +335,7 @@ class SonDAO:
                         {"id_scene": id_scene, "id_son": id_son, "type": type_son},
                     )
                     nb_lignes_supp = cursor.rowcount
-            return nb_lignes_supp  # Permet notamment de savoir si aucune ligne n'a été trouvée
+            return nb_lignes_supp  # Permet en particulier de savoir si aucune ligne n'a été trouvée
         except Exception as e:
             print(f"Erreur lors de la suppression de l'association : {e}")
             return None
@@ -382,7 +382,7 @@ class SonDAO:
                     return res["count"] > 0
 
         except Exception as e:
-            print(f"Erreur lors de la vérification : {id_scene},{id_freesound},{type_son} : {e}")
+            print(f"Erreur lors de la vérification : {id_scene},{id_son},{type_son} : {e}")
             return False
 
     def get_scenes_of_son_aleatoire(self, id_son: str, schema: str):
@@ -394,7 +394,7 @@ class SonDAO:
                 query = f"""SELECT id_scene
                         FROM {schema}.Scene_Son
                         WHERE id_son = %(id_son)s
-                        AND type = "aleatoire";"""
+                        AND type = 'aleatoire';"""
                 cursor.execute(
                     query,
                     {"id_son": id_son},
@@ -411,7 +411,7 @@ class SonDAO:
                 query = f"""SELECT id_scene
                         FROM {schema}.Scene_Son
                         WHERE id_son = %(id_son)s
-                        AND type = "continu";"""
+                        AND type = 'continu';"""
                 cursor.execute(
                     query,
                     {"id_son": id_son},
@@ -428,7 +428,7 @@ class SonDAO:
                 query = f"""SELECT id_scene
                         FROM {schema}.Scene_Son
                         WHERE id_son = %(id_son)s
-                        AND type = "manuel";"""
+                        AND type = 'manuel';"""
                 cursor.execute(
                     query,
                     {"id_son": id_son},
@@ -450,7 +450,7 @@ class SonDAO:
         return [row["nom_tag"] for row in res]
 
     def supprimer_toutes_associations_son(self, id_son: str, type_son: str, schema: str):
-        # Get all scenes having the given son as type_son
+        # On récupère toutes les scènes qui possède le son spécifié
         if type_son == "aleatoire":
             scenes_possedants = [
                 scene_id
@@ -466,7 +466,7 @@ class SonDAO:
         if type_son == "continu":
             scenes_possedants = [
                 scene_id
-                for scene_id in self.get_scenes_of_son_aleatoire(id_son=id_son, schema=schema)
+                for scene_id in self.get_scenes_of_son_continu(id_son=id_son, schema=schema)
                 if self.check_if_son_in_scene(
                     id_scene=scene_id, id_son=id_son, type_son="continu", schema=schema
                 )
@@ -475,55 +475,44 @@ class SonDAO:
         if type_son == "manuel":
             scenes_possedants = [
                 scene_id
-                for scene_id in self.get_scenes_of_son_aleatoire(id_son=id_son, schema=schema)
+                for scene_id in self.get_scenes_of_son_manuel(id_son=id_son, schema=schema)
                 if self.check_if_son_in_scene(
                     id_scene=scene_id, id_son=id_son, type_son="manuel", schema=schema
                 )
             ]
-        # Delete all associations in scene_son for the given son
+        # Puis on supprime leurs associations
         for id_scene in scenes_possedants:
             self.supprimer_association_scene_son(
-                id_scene=id_scene, id_freesound=id_freesound, type_son=type_son, schema=schema
+                id_scene=id_scene, id_son=id_son, type_son=type_son, schema=schema
             )
 
-        # Get all tags associated with the given son
+        # idem avec les tags
         tags_inclus = [
             nom_tag
-            for nom_tag in self.get_tags_of_son(id_freesound=id_freesound, schema=schema)
-            if TagDAO().check_if_son_has_tag(id_freesound=id_freesound, tag=nom_tag, schema=schema)
+            for nom_tag in self.get_tags_of_son(id_son=id_son, schema=schema)
+            if TagDAO().check_if_son_has_tag(id_son=id_son, tag=nom_tag, schema=schema)
         ]
-        # Delete all associations in son_tag for the given son
         for tag in tags_inclus:
-            TagDAO().supprimer_association_son_tag(
-                id_freesound=id_freesound, tag=tag, schema=schema
-            )
+            TagDAO().supprimer_association_son_tag(id_son=id_son, tag=tag, schema=schema)
 
-    # nettoyage
-    def delete_son_if_no_scenes(self, id_son: str, schema: str):
+    def delete_son_if_no_scenes(self, schema: str):
         """
         Supprime un son s'il n'est associé à aucune scène.
         """
+        all_sons = self.consulter_sons(schema=schema)
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
-                # Vérifie si des scènes sont liées au son
-                query = f"""SELECT COUNT(*) AS scene_count
-                            FROM {schema}.Scene_Son
-                            WHERE id_son = %(id_son)s;"""
-                cursor.execute(
-                    query,
-                    {"id_son": id_son},
-                )
-                scene_count = cursor.fetchone()["scene_count"]
-
-                # Si aucune scène n'est liée, supprimer le son
-                if scene_count == 0:
-                    delete_query = f"""DELETE FROM {schema}.Son
-                                    WHERE id_son = %(id_son)s;"""
+                for son in all_sons:
+                    # On vérifie si des scènes sont liées au son
+                    query = f"""SELECT COUNT(*) AS scene_count
+                                FROM {schema}.Scene_Son
+                                WHERE id_son = %(id_son)s;"""
                     cursor.execute(
-                        delete_query,
-                        {"id_son": id_son},
+                        query,
+                        {"id_son": son["id_son"]},
                     )
-                    connection.commit()
-                    return True  # Indique que la suppression a été effectuée
-                else:
-                    return False  # Le son n'a pas été supprimé car il est encore lié à des scènes
+                    scene_count = cursor.fetchone()["scene_count"]
+
+        # Si aucune scène n'est liée on supprime le son
+        if scene_count == 0:
+            self.supprimer_son(id_son=son["id_son"], schema=schema)

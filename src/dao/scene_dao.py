@@ -1,13 +1,12 @@
+from business_object.scene import Scene
 from dao.db_connection import DBConnection
-
-# from business_object.scene import Scene
 from dao.son_dao import SonDAO
 
 
 class SceneDAO:
     """Implémente les méthodes du CRUD pour accéder à la base de données des scènes"""
 
-    def ajouter_scene(self, scene, schema):
+    def ajouter_scene(self, scene: Scene, schema: str):
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
                 query = f"""
@@ -27,7 +26,7 @@ class SceneDAO:
                 scene.id = cursor.fetchone()["id_scene"]
         return scene
 
-    def modifier_scene(self, scene, schema):
+    def modifier_scene(self, scene: Scene, schema: str):
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
                 query = f"""
@@ -47,7 +46,7 @@ class SceneDAO:
                 )
         return scene
 
-    def supprimer_scene(self, id_scene, schema):
+    def supprimer_scene(self, id_scene: str, schema: str):
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
                 query = f"""
@@ -59,7 +58,7 @@ class SceneDAO:
                     {"id_scene": id_scene},
                 )
 
-    def consulter_scenes(self, schema):
+    def consulter_scenes(self, schema: str):
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
                 query = f"""
@@ -81,26 +80,20 @@ class SceneDAO:
                     "nom": row["nom"],
                     "sons_aleatoires": SonDAO().rechercher_sons_par_scene(
                         str(row["id_scene"]), schema=schema
-                    )[
-                        "sons_aleatoires"
-                    ],  # SANS DOUTE A MODIFIER à L'AVENIR
+                    )["sons_aleatoires"],
                     "sons_continus": SonDAO().rechercher_sons_par_scene(
                         str(row["id_scene"]), schema=schema
-                    )[
-                        "sons_continus"
-                    ],  # SANS DOUTE A MODIFIER à L'AVENIR
+                    )["sons_continus"],
                     "sons_manuels": SonDAO().rechercher_sons_par_scene(
                         str(row["id_scene"]), schema=schema
-                    )[
-                        "sons_manuels"
-                    ],  # SANS DOUTE A MODIFIER à L'AVENIR
+                    )["sons_manuels"],
                     "description": row["description"],
                     "date_creation": row["date_creation"],
                 }
             )
         return scenes_trouvees
 
-    def rechercher_par_id_scene(self, id_scene, schema):
+    def rechercher_par_id_scene(self, id_scene: str, schema: str):
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
                 query = f"""
@@ -121,23 +114,19 @@ class SceneDAO:
             "nom": res["nom"],
             "sons_aleatoires": SonDAO().rechercher_sons_par_scene(
                 str(res["id_scene"]), schema=schema
-            )[
-                "sons_aleatoires"
-            ],  # SANS DOUTE A MODIFIER à L'AVENIR
+            )["sons_aleatoires"],
             "sons_continus": SonDAO().rechercher_sons_par_scene(
                 str(res["id_scene"]), schema=schema
-            )[
-                "sons_continus"
-            ],  # SANS DOUTE A MODIFIER à L'AVENIR
+            )["sons_continus"],
             "sons_manuels": SonDAO().rechercher_sons_par_scene(str(res["id_scene"]), schema=schema)[
                 "sons_manuels"
-            ],  # SANS DOUTE A MODIFIER à L'AVENIR
+            ],
             "description": res["description"],
             "date_creation": res["date_creation"],
         }
         return Scene_trouvee
 
-    def rechercher_scenes_par_sd(self, id_sd: str, schema):
+    def rechercher_scenes_par_sd(self, id_sd: str, schema: str):
         """
         Recherche les scenes appartenant à un SD.
 
@@ -185,19 +174,13 @@ class SceneDAO:
                         "nom": row["nom"],
                         "sons_aleatoires": SonDAO().rechercher_sons_par_scene(
                             str(row["id_scene"]), schema=schema
-                        )[
-                            "sons_aleatoires"
-                        ],  # SANS DOUTE A MODIFIER à L'AVENIR
+                        )["sons_aleatoires"],
                         "sons_continus": SonDAO().rechercher_sons_par_scene(
                             str(row["id_scene"]), schema=schema
-                        )[
-                            "sons_continus"
-                        ],  # SANS DOUTE A MODIFIER à L'AVENIR
+                        )["sons_continus"],
                         "sons_manuels": SonDAO().rechercher_sons_par_scene(
                             str(row["id_scene"]), schema=schema
-                        )[
-                            "sons_manuels"
-                        ],  # SANS DOUTE A MODIFIER à L'AVENIR
+                        )["sons_manuels"],
                         "description": row["description"],
                         "date_creation": row["date_creation"],
                     }
@@ -207,7 +190,7 @@ class SceneDAO:
             print(f"Erreur lors de la récupération des sound-decks : {e}")
             return []
 
-    def ajouter_association_sd_scene(self, id_sd: str, id_scene: str, schema):
+    def ajouter_association_sd_scene(self, id_sd: str, id_scene: str, schema: str):
         """
         Ajoute une nouvelle association SD - Scene dans la table d'association.
 
@@ -246,7 +229,7 @@ class SceneDAO:
             print(f"Erreur lors de l'ajout de l'association : {e}")
             return None
 
-    def supprimer_association_sd_scene(self, id_sd: str, id_scene: str, schema):
+    def supprimer_association_sd_scene(self, id_sd: str, id_scene: str, schema: str):
         """
         Supprimer une association SD - Scene dans la table d'association.
 
@@ -278,12 +261,12 @@ class SceneDAO:
                         },
                     )
                     nb_lignes_supp = cursor.rowcount
-            return nb_lignes_supp  # Permet notamment de savoir si aucune ligne n'a été trouvée
+            return nb_lignes_supp  # Permet en particulier de savoir si aucune ligne n'a été trouvée
         except Exception as e:
             print(f"Erreur lors de la suppression de l'association : {e}")
             return None
 
-    def check_if_scene_in_sd(self, id_sd: str, id_scene: str, schema):
+    def check_if_scene_in_sd(self, id_sd: str, id_scene: str, schema: str):
         """
         Vérifie si une scène appartient à un SD.
 
@@ -316,9 +299,7 @@ class SceneDAO:
                         },
                     )
 
-                    # Fetch the result
                     res = cursor.fetchone()
-                    # Check if the count is greater than zero
                     return res["count"] > 0
 
         except Exception as e:
@@ -347,7 +328,7 @@ class SceneDAO:
                 query = f"""SELECT id_son
                         FROM {schema}.Scene_Son
                         WHERE id_scene = %(id_scene)s
-                        AND type = 'aleatoire';"""
+                        AND type = 'aleatoire';"""  # Ces 2 conditions portent sur Son Aleatoires
                 cursor.execute(
                     query,
                     {"id_scene": id_scene},
@@ -389,76 +370,80 @@ class SceneDAO:
                 res = cursor.fetchall()
         return [row["id_son"] for row in res]
 
-    def supprimer_toutes_associations_scene(self, id_scene: str, schema):
-        # Get all sd having the given scene
+    def supprimer_toutes_associations_scene(self, id_scene: str, schema: str):
+        # On récupère tous les Sd qui possède la scène spécifiée
         sds_possedants = [
             sd_id
             for sd_id in self.get_sds_of_scene(id_scene=id_scene, schema=schema)
             if self.check_if_scene_in_sd(id_sd=sd_id, id_scene=id_scene, schema=schema)
         ]
 
-        # Delete all associations in sd_scene for the given scene
+        # On supprime toutes les associations de SD_Scene qui impliquent la scène
         for id_sd in sds_possedants:
             self.supprimer_association_sd_scene(id_sd=id_sd, id_scene=id_scene, schema=schema)
 
-        # Get all sons associated with the given scene
+        # On récup tous les sons aléatoires associés à la scène
         sons_inclus = [
             son_id
             for son_id in self.get_sons_aleatoires_of_scene(id_scene=id_scene, schema=schema)
-            if SonDAO().check_if_son_in_scene(id_son=son_id, id_scene=id_scene, schema=schema)
+            if SonDAO().check_if_son_in_scene(
+                id_son=son_id, id_scene=id_scene, type_son="aleatoire", schema=schema
+            )
         ]
 
-        # Delete all associations in scene_son for the given scene
+        # On supprime toutes les associations son_alea - scene
         for id_son in sons_inclus:
             SonDAO().supprimer_association_scene_son(
                 id_son=id_son, id_scene=id_scene, type_son="aleatoire", schema=schema
             )
 
+        # idem pour sons continus
         sons_inclus = [
             son_id
             for son_id in self.get_sons_continus_of_scene(id_scene=id_scene, schema=schema)
-            if SonDAO().check_if_son_in_scene(id_son=son_id, id_scene=id_scene, schema=schema)
+            if SonDAO().check_if_son_in_scene(
+                id_son=son_id, id_scene=id_scene, type_son="continu", schema=schema
+            )
         ]
 
-        # Delete all associations in scene_son for the given scene
         for id_son in sons_inclus:
             SonDAO().supprimer_association_scene_son(
                 id_son=id_son, id_scene=id_scene, type_son="continu", schema=schema
             )
 
+        # idem pour sons manuels
         sons_inclus = [
             son_id
             for son_id in self.get_sons_manuels_of_scene(id_scene=id_scene, schema=schema)
-            if SonDAO().check_if_son_in_scene(id_son=son_id, id_scene=id_scene, schema=schema)
+            if SonDAO().check_if_son_in_scene(
+                id_son=son_id, id_scene=id_scene, type_son="manuel", schema=schema
+            )
         ]
-        # Delete all associations in scene_son for the given scene
+
         for id_son in sons_inclus:
             SonDAO().supprimer_association_scene_son(
                 id_son=id_son, id_scene=id_scene, type_son="manuel", schema=schema
             )
 
-    # nettoyage
-
-    def delete_scene_if_no_sds(self, id_scene: str, schema: str):
+    def delete_scene_if_no_sds(self, schema: str):
         """
         Supprime une scène si elle n'est reliée à aucune Sounddeck.
         """
+        all_scenes = self.consulter_scenes(schema=schema)
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
-                # Vérifie si des Sounddecks sont liés à la scène
-                cursor.execute(
-                    f"SELECT COUNT(*) AS sd_count FROM {schema}.Sounddeck_Scene WHERE id_scene = %(id_scene)s;",
-                    {"id_scene": id_scene},
-                )
-                sd_count = cursor.fetchone()["sd_count"]
-
-                # Si aucune Sounddeck n'est liée, supprimer la scène
-                if sd_count == 0:
+                for scene in all_scenes:
+                    # On vérifie si des Sounddecks sont liés à la scène
                     cursor.execute(
-                        f"DELETE FROM {schema}.Scene WHERE id_scene = %(id_scene)s;",
-                        {"id_scene": id_scene},
+                        f"SELECT COUNT(*) AS sd_count FROM {schema}.Sounddeck_Scene WHERE id_scene = %(id_scene)s;",
+                        {"id_scene": scene["id_scene"]},
                     )
-                    connection.commit()
-                    return True  # Indique que la suppression a été effectuée
-                else:
-                    return False  # La scène n'a pas été supprimée car elle est encore liée à des Sounddecks
+                    sd_count = cursor.fetchone()["sd_count"]
+
+                    # Si aucune Sounddeck n'est liée on supprime la scène
+                    if sd_count == 0:
+                        cursor.execute(
+                            f"DELETE FROM {schema}.Scene WHERE id_scene = %(id_scene)s;",
+                            {"id_scene": scene["id_scene"]},
+                        )
+                        connection.commit()

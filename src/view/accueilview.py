@@ -3,10 +3,14 @@
 from colorama import Fore, Style
 from InquirerPy import prompt
 import psycopg2
-from view.abstractview import AbstractView
-from view.menuprincipalview import MenuPrincipalView
+
+####
 from service.user_service import UserService
 from service.session import Session
+
+####
+from view.abstractview import AbstractView
+from view.menuprincipalview import MenuPrincipalView
 
 
 class AccueilView(AbstractView):

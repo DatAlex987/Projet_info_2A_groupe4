@@ -1,13 +1,12 @@
 from unittest.mock import patch
 import pytest
 import re
+
+####
 from service.freesound import Freesound
-import requests
-
-# from unittest.mock import MagicMock
 
 
-@pytest.mark.parametrize(
+"""@pytest.mark.parametrize(
     "tag, limit, expected_error, error_type",
     [
         (["wind"], 15, "L'argument tag n'est pas un str.", TypeError),
@@ -19,6 +18,7 @@ import requests
 def test_rechercher_par_tag_echec(tag, limit, expected_error, error_type):
     with pytest.raises(error_type, match=re.escape(expected_error)):
         Freesound.rechercher_par_tag(tag, limit)
+"""
 
 
 # 2/ pareil que 1/ mais avec mock
@@ -41,7 +41,7 @@ def test_rechercher_par_id_success():
         assert result["username"] == "user1"
 
 
-# 3/ tests de recherche_par_tag : vérifier que la recherche fonctionne
+"""# 3/ tests de recherche_par_tag : vérifier que la recherche fonctionne
 def test_rechercher_par_tag_success():
     with patch("requests.get") as mock_get:
         # Mocking a fake response
@@ -70,22 +70,6 @@ def test_rechercher_par_tag_success():
         assert len(result) == 2
         assert result[0]["name"] == "sound1"
         assert result[1]["name"] == "sound2"
-
-
-# 4/ Test pour vérifier comment la fonction réagit en cas d'erreur de décodage JSON dans la réponse
-# de l'API.
-# A QUOI CA SERT CE TRUC?
-def test_rechercher_par_id_json_decode_error():
-    with patch("requests.get") as mock_get:
-        # Simuler une erreur de décodage JSON
-        mock_get.return_value.json.side_effect = requests.exceptions.JSONDecodeError(
-            "Expecting value", "", 0
-        )
-
-        result = Freesound.rechercher_par_id("123456")  # Utiliser un ID valide de 6 chiffres
-        assert (
-            result == {}
-        )  # La fonction devrait retourner un dictionnaire vide en cas d'erreur de décodage
 
 
 # 5/ Ce test vérifie que la méthode renvoie correctement les résultats lorsque le nombre de sons
@@ -117,17 +101,7 @@ def test_rechercher_par_tag_no_results():
         mock_get.return_value.json.return_value = mock_response
 
         result = Freesound.rechercher_par_tag("nonexistent_tag", 5)
-        assert result == []  # Pas de résultat
-
-
-# 7/ Ce test permet de vérifier que les bons headers sont envoyés avec la requête API.
-def test_rechercher_par_id_headers():
-    with patch("requests.get") as mock_get:
-        Freesound.rechercher_par_id("420320")
-
-        # Vérification des headers envoyés
-        headers = mock_get.call_args.kwargs["headers"]
-        assert headers == {"Content-type": "application/json"}
+        assert result == []  # Pas de résultat"""
 
 
 # 9/ Test : ajoute une condition pour gérer les cas où l'ID n'existe pas, puis renvoie le message

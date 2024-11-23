@@ -1,21 +1,23 @@
 import pytest
+
+####
 from dao.scene_dao import SceneDAO
-from business_object.scene import Scene
 from dao.db_connection import DBConnection
+from business_object.scene import Scene
 from utils.reset_database import ResetDatabase
 
 
 def test_ajouter_scene_succes(scene1_kwargs):
     ResetDatabase().ResetTEST()
-    # GIVEN: A Scene object to add and the test schema
+    # GIVEN: Une scène à ajouter et un schéma sur lequel opérer
     schema = "SchemaTest"
     scene_to_add = Scene(**scene1_kwargs)
 
-    # WHEN: Adding the scene to the database
+    # WHEN: On ajoute une scène à la BDD
     scene_dao = SceneDAO()
     added_scene = scene_dao.ajouter_scene(scene_to_add, schema)
 
-    # THEN: The returned scene should have the correct ID, and the data should match
+    # THEN: On s'assure que la scène retournée est correcte
     assert added_scene.id_scene == scene1_kwargs["id_scene"]
     assert added_scene.nom == scene1_kwargs["nom"]
     assert added_scene.sons_aleatoires == scene1_kwargs["sons_aleatoires"]
@@ -24,7 +26,7 @@ def test_ajouter_scene_succes(scene1_kwargs):
     assert added_scene.description == scene1_kwargs["description"]
     assert added_scene.date_creation == scene1_kwargs["date_creation"]
 
-    # THEN: Verify the scene was added to the database by querying it
+    # THEN: On vérifie que la scène ajoutée est bien celle souhaitée
     with DBConnection(schema=schema).connection as connection:
         with connection.cursor() as cursor:
             query = f"SELECT * FROM {schema}.Scene WHERE id_scene = %(id_scene)s"
@@ -40,7 +42,7 @@ def test_ajouter_scene_succes(scene1_kwargs):
             assert result["description"] == scene1_kwargs["description"]
             assert result["date_creation"] == scene1_kwargs["date_creation"]
 
-    # Clean up the test data
+    # On nettoie la BDD de test
     reseter = ResetDatabase()
     reseter.ResetTEST()
 
@@ -134,14 +136,6 @@ def test_consulter_scenes_succes(scene1_kwargs, scene2_kwargs):
     # Clean up the test data
     reseter = ResetDatabase()
     reseter.ResetTEST()
-    """for found_scene in all_found_scenes:
-        with DBConnection(schema=schema).connection as connection:
-            with connection.cursor() as cursor:
-                query = f"DELETE FROM {schema}.Scene WHERE id_scene = %(id_scene)s"
-                cursor.execute(
-                    query,
-                    {"id_scene": found_scene["id_scene"]},
-                )"""
 
 
 def test_rechercher_par_id_scenes_succes(scene1_kwargs):
@@ -156,19 +150,9 @@ def test_rechercher_par_id_scenes_succes(scene1_kwargs):
     # THEN: The returned scene should have the correct ID, and the data should match
     assert found_scene["id_scene"] == str(added_scene.id_scene)
     assert found_scene["nom"] == added_scene.nom
-    # assert found_scene["sons_aleatoires"] == added_scene.sons_aleatoires
-    # assert found_scene["sons_continus"] == added_scene.sons_continus
-    # assert found_scene["sons_manuels"] == added_scene.sons_manuels
     assert found_scene["description"] == added_scene.description
     assert found_scene["date_creation"] == added_scene.date_creation
 
     # Clean up the test data
     reseter = ResetDatabase()
     reseter.ResetTEST()
-    """with DBConnection(schema=schema).connection as connection:
-        with connection.cursor() as cursor:
-            query = f"DELETE FROM {schema}.Scene WHERE id_scene = %(id_scene)s"
-            cursor.execute(
-                query,
-                {"id_scene": added_scene.id_scene},
-            )"""

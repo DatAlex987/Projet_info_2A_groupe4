@@ -1,12 +1,13 @@
-from utils.singleton import Singleton
-from InquirerPy import prompt
-from service.freesound import Freesound
-from service.session import Session
-from business_object.son import Son
-from colorama import Fore, Style
 from rich.console import Console
 from rich.table import Table
 from rich.style import Style
+
+####
+from utils.singleton import Singleton
+
+####
+from service.freesound import Freesound
+from service.session import Session
 
 
 class Recherche(metaclass=Singleton):
@@ -61,19 +62,19 @@ class Recherche(metaclass=Singleton):
                     dico_filtres=self.dict_critere, limit=self.limit
                 )
                 if self.results:
-                    self.page = 0  # Set the initial page to 0
+                    self.page = 0  # Au départ, on est sur la page 0
                     return self.results
             except Exception as e:
                 print(f"Erreur lors de la recherche : {e}")
 
-    def afficher_details_son(self, son):
+    def afficher_details_son(self, son: dict):
         """Affiche les détails d'un son"""
         try:
             son_id = str(son["id"])
             son_details = Freesound.rechercher_par_id(
                 id=son_id
             )  # Nouvelle requête pour obtenir les détails du son
-            Session().son_to_dl = son_details
+            Session().son_to_search = son_details
         except Exception as e:
             print(f"Erreur lors de la récupération des détails du son : {e}")
             return
@@ -95,7 +96,7 @@ class Recherche(metaclass=Singleton):
             style="white",
         )
 
-        # Définition de l'alignement centré et de la couleur bleue pour les titres des colonnes
+        # Définition de l'alignement et de la couleur pour les titres des colonnes
         table.add_column("Champ", style=Style(color="honeydew2"), width=20)
         table.add_column("Détails", style=Style(color="honeydew2"))
 

@@ -2,15 +2,18 @@
 
 from colorama import Fore, Style
 from InquirerPy import prompt
-from view.abstractview import AbstractView
+
+####
 from service.session import Session
+from service.son_service import SonService
+from service.scene_service import SceneService
 from business_object.son_aleatoire import Son_Aleatoire
 from business_object.son_continu import Son_Continu
 from business_object.son_manuel import Son_Manuel
 
-# from service.sd_service import SDService
-# from service.scene_service import SceneService
-from service.son_service import SonService
+####
+from view.abstractview import AbstractView
+from view.view_param.menuparamsceneview import MenuParamSceneView
 
 
 class MenuParamModifSonView(AbstractView):
@@ -30,6 +33,7 @@ class MenuParamModifSonView(AbstractView):
                     "Modifier la description",
                     "Modifier le cooldown minimal",
                     "Modifier le cooldown maximal",
+                    "Supprimer le son",
                 ],
             }
         ]
@@ -43,6 +47,7 @@ class MenuParamModifSonView(AbstractView):
                     "Modifier le nom",
                     "Modifier la description",
                     "Modifier la touche de déclenchement",
+                    "Supprimer le son",
                 ],
             }
         ]
@@ -55,6 +60,7 @@ class MenuParamModifSonView(AbstractView):
                     "Voir la fiche du son",
                     "Modifier le nom",
                     "Modifier la description",
+                    "Supprimer le son",
                 ],
             }
         ]
@@ -84,6 +90,7 @@ class MenuParamModifSonView(AbstractView):
                 "type": "input",
                 "name": "modif cdmin",
                 "message": "Entrez le nouveau cooldown minimal pour ce son:",
+                "validate": lambda val: int(val) < Session().son_to_param.cooldown_max,
             }
         ]
         self.question_modif_cdmax = [
@@ -91,10 +98,11 @@ class MenuParamModifSonView(AbstractView):
                 "type": "input",
                 "name": "modif cdmax",
                 "message": "Entrez le nouveau cooldown maximal pour ce son:",
+                "validate": lambda val: int(val) > Session().son_to_param.cooldown_min,
             }
         ]
 
-    def make_choice(self):  # NON TESTE YET
+    def make_choice(self):
         if isinstance(Session().son_to_param, Son_Aleatoire):
             choix_modif = prompt(self.question_modif_alea)
             if choix_modif["choix modif"] == "Voir la fiche du son":
@@ -112,17 +120,24 @@ class MenuParamModifSonView(AbstractView):
             elif choix_modif["choix modif"] == "Modifier le cooldown minimal":
                 new_cdmin = prompt(self.question_modif_cdmin)
                 SonService().modifier_cdmin_son(
-                    son=Session().son_to_param,
+                    son_alea=Session().son_to_param,
                     new_cdmin=new_cdmin["modif cdmin"],
                     schema="ProjetInfo",
                 )
             elif choix_modif["choix modif"] == "Modifier le cooldown maximal":
                 new_cdmax = prompt(self.question_modif_cdmax)
                 SonService().modifier_cdmax_son(
-                    son=Session().son_to_param,
+                    son_alea=Session().son_to_param,
                     new_cdmax=new_cdmax["modif cdmax"],
                     schema="ProjetInfo",
                 )
+            elif choix_modif["choix modif"] == "Supprimer le son":
+                SceneService().supprimer_son_existant(
+                    son_to_delete=Session().son_to_param, schema="ProjetInfo"
+                )
+                print(Fore.GREEN + "Suppression du son effectuée avec succès" + Style.RESET_ALL)
+                return MenuParamSceneView()
+
         elif isinstance(Session().son_to_param, Son_Continu):
             choix_modif = prompt(self.question_modif_continu)
             if choix_modif["choix modif"] == "Voir la fiche du son":
@@ -137,6 +152,13 @@ class MenuParamModifSonView(AbstractView):
                 SonService().modifier_desc_son(
                     son=Session().son_to_param, new_desc=new_desc["modif desc"], schema="ProjetInfo"
                 )
+            elif choix_modif["choix modif"] == "Supprimer le son":
+                SceneService().supprimer_son_existant(
+                    son_to_delete=Session().son_to_param, schema="ProjetInfo"
+                )
+                print(Fore.GREEN + "Suppression du son effectuée avec succès" + Style.RESET_ALL)
+                return MenuParamSceneView()
+
         elif isinstance(Session().son_to_param, Son_Manuel):
             choix_modif = prompt(self.question_modif_manuel)
             if choix_modif["choix modif"] == "Voir la fiche du son":
@@ -156,11 +178,18 @@ class MenuParamModifSonView(AbstractView):
             elif choix_modif["choix modif"] == "Modifier la touche de déclenchement":
                 new_key = prompt(self.question_modif_key)
                 SonService().modifier_start_key_son(
-                    son=Session().son_to_param,
+                    son_manuel=Session().son_to_param,
                     new_start_key=new_key["modif key"],
                     schema="ProjetInfo",
                 )
                 print(Fore.GREEN + "Modification effectuée avec succès" + Style.RESET_ALL)
+
+            elif choix_modif["choix modif"] == "Supprimer le son":
+                SceneService().supprimer_son_existant(
+                    son_to_delete=Session().son_to_param, schema="ProjetInfo"
+                )
+                print(Fore.GREEN + "Suppression du son effectuée avec succès" + Style.RESET_ALL)
+                return MenuParamSceneView()
 
         from view.view_param.menuparamscenespecifiqueview import MenuParamSceneSpecifiqueView
 

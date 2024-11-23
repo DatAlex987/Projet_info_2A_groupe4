@@ -2,14 +2,11 @@ from colorama import Fore, Style
 from InquirerPy import prompt
 
 ####
-# from service.user_service import UserService
-# from service.sd_service import SDService
 from service.scene_service import SceneService
+from service.session import Session
 
 ####
 from view.abstractview import AbstractView
-from view.view_jeu.menu_jeu_sons_view import MenuJeuSonsView
-from service.session import Session
 
 
 class MenuJeuSceneView(AbstractView):
@@ -25,9 +22,7 @@ class MenuJeuSceneView(AbstractView):
                 "message": "Quelle scène souhaitez-vous lancer ? \n"
                 " ID         |   Nom   | Date de création \n"
                 "------------------------------------------------------------",
-                "choices": SceneService().formatage_question_scenes_of_sd_menu_jeu(
-                    id_sd=Session().sd_to_play.id_sd
-                ),
+                "choices": SceneService().formatage_question_scenes_of_sd_menu_jeu(),
             }
         ]
 
@@ -42,7 +37,8 @@ class MenuJeuSceneView(AbstractView):
             Session().scene_to_play = SceneService().instancier_scene_par_id(
                 id_scene=id_scene_select, schema="ProjetInfo"
             )
-            next_view = MenuJeuSonsView()
+            SceneService().jouer_scene(scene=Session().scene_to_play)
+            next_view = MenuJeuSceneView()
         return next_view
 
     def display_info(self):

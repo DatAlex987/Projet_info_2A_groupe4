@@ -1,8 +1,9 @@
 import os
 import dotenv
 import psycopg2
-
 from psycopg2.extras import RealDictCursor
+
+####
 from utils.singleton import Singleton
 
 
@@ -12,7 +13,7 @@ class DBConnection(metaclass=Singleton):
     Elle permet de n'ouvrir qu'une seule et unique connexion
     """
 
-    def __init__(self, schema):
+    def __init__(self, schema: str):
         """Ouverture de la connexion"""
         dotenv.load_dotenv()
 

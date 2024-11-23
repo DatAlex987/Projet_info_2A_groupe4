@@ -1,10 +1,7 @@
-# from utils.reset_database import ResetDatabase
-from view.accueilview import AccueilView
 from colorama import Fore, Style
 
-# from business_object.user import User
-# from dao.user_dao import UserDAO
-# import datetime
+####
+from view.accueilview import AccueilView
 
 view = AccueilView()
 
@@ -22,7 +19,6 @@ while view:
     view.display_info()
     view = view.make_choice()
 
-# Insérer la suppression des objets orphelins ici
 
 banner_quit = (
     f"{Fore.CYAN}{'~' * 100}\n"
@@ -33,5 +29,3 @@ banner_quit = (
     f"{Fore.CYAN}{'~' * 100}{Style.RESET_ALL}\n"
 )
 print(banner_quit)
-
-# pip install pygame

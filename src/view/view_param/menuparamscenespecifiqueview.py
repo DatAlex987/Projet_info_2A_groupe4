@@ -5,16 +5,15 @@ from InquirerPy import prompt
 import re
 
 ####
-# from service.sd_service import SDService
 from service.scene_service import SceneService
 from service.son_service import SonService
+from service.session import Session
 
 ####
 from view.menurecherchefreesoundview import MenuRechercheFreesoundView
 from view.view_param.menuparammodifsonview import MenuParamModifSonView
 from view.view_param.menuparammodifsceneview import MenuParamModifSceneView
 from view.abstractview import AbstractView
-from service.session import Session
 
 
 class MenuParamSceneSpecifiqueView(AbstractView):
@@ -41,9 +40,7 @@ class MenuParamSceneSpecifiqueView(AbstractView):
                 "message": "Que souhaitez-vous faire (Sélectionnez un son pour le modifier) ? \n"
                 " ID du son  |    Type      |   Nom   |   Durée \n"
                 "------------------------------------------------------------",
-                "choices": SonService().formatage_question_sons_of_scene(
-                    id_sd=Session().sd_to_param.id_sd, id_scene=Session().scene_to_param.id_scene
-                ),
+                "choices": SonService().formatage_question_sons_of_scene(),
             }
         ]
 
@@ -80,9 +77,9 @@ class MenuParamSceneSpecifiqueView(AbstractView):
                         + Style.RESET_ALL
                     )
                 # Contraint de faire l'import ici pour éviter un circular import
-                from view.view_param.menuparamsceneview import MenuParamSceneView
+                from view.view_param.menuparamsdview import MenuParamSDView
 
-                next_view = MenuParamSceneView()
+                next_view = MenuParamSDView()
             else:
                 from view.view_param.menuparamsceneview import MenuParamSceneView
 
@@ -96,7 +93,7 @@ class MenuParamSceneSpecifiqueView(AbstractView):
             type_son = re.search(r"\[(.*?)\]", choix["Choix Scene Specifique"]).group(1)
             # Puis on update la session
             Session().son_to_param = SonService().instancier_son_par_id_type(
-                id_son=id_son_striped, type_son=type_son, schema="ProjetInfo"
+                id_son=id_son_striped, type_son=type_son, menu="param", schema="ProjetInfo"
             )
             next_view = MenuParamModifSonView()
         return next_view

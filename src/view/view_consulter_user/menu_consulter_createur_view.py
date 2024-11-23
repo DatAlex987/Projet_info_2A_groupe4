@@ -1,4 +1,3 @@
-from view.abstractview import AbstractView
 from colorama import Fore, Style
 from InquirerPy import prompt
 
@@ -6,11 +5,8 @@ from InquirerPy import prompt
 from service.user_service import UserService
 
 ####
-# from view.abstractview import AbstractView
+from view.abstractview import AbstractView
 from view.view_consulter_user.consulter_users_proches_view import ConsulterUsersProchesView
-
-# from view.view_consulter_user.menu_consulter_createur_view import ConsulterCreateurView
-# from view.view_consulter_user.menu_consulter_nom_view import ConsulterNomView
 
 
 class ConsulterCreateurView(AbstractView):
@@ -33,7 +29,7 @@ class ConsulterCreateurView(AbstractView):
         )
         # Rechercher tous les users qui ont un pseudo proche
         # La liste des Users ayant un nom proche sera stocké en Session
-        # Puis envoyer vers une view pour sélectionner le créateur que l'on veut consulter.
+        # Puis, envoyer vers une view pour sélectionner le créateur que l'on veut consulter.
         return ConsulterUsersProchesView()
 
     def display_info(self):

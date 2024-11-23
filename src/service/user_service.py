@@ -1,20 +1,20 @@
-# from tabulate import tabulate
-# from utils.log_decorator import log
-# from utils.securite import hash_password
 import hashlib
 import random
 import string
+import datetime
 import re
-from business_object.user import User
+
+####
 from dao.user_dao import UserDAO
-from service.session import Session
+from business_object.user import User
 from business_object.sd import SD
 from business_object.scene import Scene
-from business_object.son import Son
 from business_object.son_continu import Son_Continu
 from business_object.son_aleatoire import Son_Aleatoire
 from business_object.son_manuel import Son_Manuel
-import datetime
+
+####
+from service.session import Session
 
 
 class UserService:
@@ -40,8 +40,13 @@ class UserService:
         str
         Identifiant (supposé unique) généré pour un utilisateur.
         """
+        all_users = UserDAO().consulter_users(schema="ProjetInfo")
+        all_ids = [user["id_user"] for user in all_users]
         generation = "".join(random.choices(string.ascii_letters + string.digits, k=6))
         unique_id = f"{generation}"
+        while unique_id in all_ids:  # On vérifie que l'id n'existe pas déjà
+            generation = "".join(random.choices(string.ascii_letters + string.digits, k=6))
+            unique_id = f"{generation}"
         return unique_id
 
     def input_checking_injection(
@@ -91,15 +96,14 @@ class UserService:
 
     def instancier_par_id_user(self, id_user: str, schema: str):
         dic_user = UserDAO().rechercher_par_id_user(id_user=id_user, schema=schema)
-        SDs_of_user = []  # List to hold all sounddecks
+        SDs_of_user = []  # Liste de toutes les SDs
         for sd in dic_user["SD_possedes"]:
-            Scenes_of_user = []  # Create scenes list for each SD
+            Scenes_of_user = []
 
             for scene in sd["scenes"]:
-                Sons_Alea_scene = []  # Create these lists inside the scene loop
+                Sons_Alea_scene = []
                 Sons_Cont_scene = []
                 Sons_Manu_scene = []
-                # Process Sons_Alea_scene for each scene of the sounddeck
                 for son_alea_kwargs in scene["sons_aleatoires"]:
                     Sons_Alea_scene.append(
                         Son_Aleatoire(
@@ -113,7 +117,6 @@ class UserService:
                             cooldown_max=son_alea_kwargs["param2"],
                         )
                     )
-                # Process Sons_Cont_scene for each scene
                 for son_cont_kwargs in scene["sons_continus"]:
                     Sons_Cont_scene.append(
                         Son_Continu(
@@ -125,7 +128,6 @@ class UserService:
                             tags=son_cont_kwargs["tags"],
                         )
                     )
-                # Process Sons_Manu_scene for each scene
                 for son_manu_kwargs in scene["sons_manuels"]:
                     Sons_Manu_scene.append(
                         Son_Manuel(
@@ -138,7 +140,6 @@ class UserService:
                             start_key=son_manu_kwargs["param1"],
                         )
                     )
-                # Create scene objects for this sounddeck
                 Scenes_of_user.append(
                     Scene(
                         nom=scene["nom"],
@@ -151,7 +152,6 @@ class UserService:
                     )
                 )
 
-            # Now add the sounddeck with its scenes to SDs_of_user
             SDs_of_user.append(
                 SD(
                     nom=sd["nom"],
@@ -184,8 +184,6 @@ class UserService:
                 self, mdp=mdp, sel=nom, mdp_hashe=dic_user["mdp_hashe"]
             ):
                 self.session = Session()  # On lance la session avec le bon user
-                # l.86 - l.152 : On instancie tous les objets liés à l'utilisateur avec les données
-                # fournies par l'appel DAO rechercher_par_pseudo_user()
                 self.session.connexion(
                     self.instancier_par_id_user(id_user=dic_user["id_user"], schema=schema)
                 )
@@ -253,66 +251,3 @@ class UserService:
             compteur += 1
         choix.append("Retour au menu de consultation")
         return choix
-
-
-"""    @log
-    def creer(self, nom, prenom, date_naissance, id_user, mdp, SD_possedes):
-
-        new_user = User(nom, prenom, date_naissance, id_user, mdp, SD_possedes)
-        return new_user if UserDAO().ajouter_user(new_user) else None
-
-    @log
-    def supprimer(self, utilisateur) -> bool:
-
-        return UserDAO().supprimer(utilisateur)
-
-    @log
-    def lister_tous_les_utilisateurs(self, inclure_mdp=False) -> list[User]:
-        "Lister tous les joueurs
-        Si inclure_mdp=True, les mots de passe seront inclus
-        Par défaut, tous les mdp des joueurs sont à None
-        "
-        utilisateurs = UserDAO().consulter_users()
-        if not inclure_mdp:
-            for u in utilisateurs:
-                u.mdp = None
-        return utilisateurs
-
-    @log
-    def afficher_tous(self) -> str:
-
-        entetes = ["pseudo", "..."]
-
-        utilisateurs = UserDAO().consulter_users()
-
-        for u in utilisateurs:  # mesure de sécurité dans le cas d'une l'implémentation
-            if u.pseudo == "admin":  # futur objet Admin
-                utilisateurs.remove(u)
-
-        utilisateurs_as_list = [u.as_list() for u in utilisateurs]
-
-        str_users = "-" * 100
-        str_users += "\nListe des joueurs \n"
-        str_users += "-" * 100
-        str_users += "\n"
-        str_users += tabulate(
-            tabular_data=utilisateurs_as_list,
-            headers=entetes,
-            tablefmt="psql",
-            floatfmt=".2f",
-        )
-        str_users += "\n"
-
-        return str_users
-
-    @log
-    def trouver_par_id(self, id_user) -> User:
-
-        return UserDAO().rechercher_par_id_users(id_user)
-
-    @log
-    def pseudo_deja_utilise(self, pseudo) -> bool:
-        "Vérifie si le pseudo est déjà utilisé
-        Retourne True si le pseudo existe déjà en BDD"
-        utilisateurs = UserDAO().consulter_users()
-        return pseudo in [u.pseudo for u in utilisateurs]"""

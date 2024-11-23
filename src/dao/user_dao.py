@@ -2,7 +2,6 @@ from utils.singleton import Singleton
 from dao.db_connection import DBConnection
 from business_object.user import User
 from dao.sd_dao import SDDAO
-import hashlib
 
 
 class UserDAO(metaclass=Singleton):
@@ -47,8 +46,6 @@ class UserDAO(metaclass=Singleton):
                         "pseudo": user.pseudo,
                     },
                 )
-        # .strftime("%Y-%m-%d")
-        # res = cursor.fetchone()
         return user
 
     def supprimer_user(self, id_user: int, schema: str) -> bool:
@@ -117,7 +114,7 @@ class UserDAO(metaclass=Singleton):
             return users_trouves
         return None
 
-    def rechercher_par_id_user(self, id_user: str, schema) -> dict:
+    def rechercher_par_id_user(self, id_user: str, schema: str) -> dict:
         """
         Recherche un utilisateur dans la base de données par son ID.
 
@@ -158,7 +155,7 @@ class UserDAO(metaclass=Singleton):
             return user_trouve
         return None
 
-    def rechercher_par_pseudo_user(self, pseudo_user: str, schema) -> dict:
+    def rechercher_par_pseudo_user(self, pseudo_user: str, schema: str) -> dict:
         """
         Recherche un utilisateur dans la base de données par son pseudo.
 
@@ -211,91 +208,3 @@ class UserDAO(metaclass=Singleton):
                 )
                 res = cursor.fetchall()
         return [row["id_sd"] for row in res]
-
-    def supprimer_toutes_associations_user(self, id_user: str, schema):
-        # Get all SDs associated with the given User
-        sds_possedes = [
-            sd_id
-            for sd_id in self.get_sds_of_user(id_user=id_user, schema=schema)
-            if SDDAO().check_if_sd_in_user(id_sd=sd_id, id_user=id_user, schema=schema)
-        ]
-
-        # Delete all associations in user_sd for the given User
-        for id_sd in sds_possedes:
-            SDDAO().supprimer_association_user_sd(id_sd=id_sd, id_user=id_user, schema=schema)
-
-
-"""
-    def compare_mdp(self, id_user: str, mdp: str, schema):
-        "compare le mdp hashe et un mdp en entree"
-        with DBConnection(schema=schema).connection as connection:
-            with connection.cursor() as cursor:
-                cursor.execute(
-                    f"SELECT * FROM {schema}.Utilisateur WHERE id_user = %(id_user)s;",
-                    {"id_user": id_user},
-                )
-                user_data = cursor.fetchone()
-        if user_data:
-            mdp_combine = mdp + user_data["prenom"]
-            val = user_data["mdp_hashe"] == hashlib.pbkdf2_hmac(
-                "sha256", mdp_combine.encode("utf-8"), self.nom.encode("utf-8"), 100000
-            )
-            return val
-        return None
-"""
-# Potentiellement une methode recherche_par_pseudo_user ou recherche_par_nom_prenom_user
-
-
-# Pas de modifier user car rien à modifier
-
-# ###"def ajouter_sounddeck(self, user: User, nom: str, schema) -> None:
-#     """
-#     Ajoute un sounddeck pour un utilisateur.
-
-#     Parameters
-#     ----------
-#     user : User
-#         Instance de la classe User à qui associer le sounddeck.
-#     nom : str
-#         Le nom du sounddeck à ajouter.
-#     """
-#     if nom not in user.SD_possedes:
-#         user.SD_possedes.append(nom)
-#         print(f"Le sounddeck '{nom}' a été ajouté pour l'utilisateur {user.id_user}.")
-#     else:
-#         print(f"Le sounddeck '{nom}' existe déjà pour l'utilisateur {user.id_user}.")
-
-# def consulter_sounddecks_par_user(self, user: User, schema) -> list:
-#     """
-#     Récupère tous les sounddecks d'un utilisateur.
-
-#     Returns
-#     -------
-#     list
-#         La liste des sounddecks associés à cet utilisateur.
-#     """
-#     return user.SD_possedes
-
-# def supprimer_sounddeck(self, user: User, nom: str, schema) -> bool:
-#     """
-#     Supprime un sounddeck d'un utilisateur.
-
-#     Parameters
-#     ----------
-#     user : User
-#         Instance de la classe User à partir de laquelle supprimer le sounddeck.
-#     nom : str
-#         Le nom du sounddeck à supprimer.
-
-#     Returns
-#     -------
-#     bool
-#         True si le sounddeck a été supprimé avec succès, sinon False.
-#     """
-#     if nom in user.SD_possedes:
-#         user.SD_possedes.remove(nom)
-#         print(f"Le sounddeck '{nom}' a été supprimé pour l'utilisateur {user.id_user}.")
-#         return True
-#     else:
-#         print(f"Le sounddeck '{nom}' n'existe pas pour l'utilisateur {user.id_user}.")
-#         return False

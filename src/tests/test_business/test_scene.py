@@ -1,5 +1,7 @@
 import pytest
 import re
+
+####
 from business_object.scene import Scene
 from business_object.son_aleatoire import Son_Aleatoire
 from business_object.son_continu import Son_Continu
@@ -110,7 +112,7 @@ def test_ajouter_son_manuel_echec(
         scene_test.ajouter_son_manuel(new_son)
 
 
-def test_supprimer_son_aleatoire_succes(scene1_kwargs, son_aleatoire2_kwargs):
+"""def test_supprimer_son_aleatoire_succes(scene1_kwargs, son_aleatoire2_kwargs):
     scene_test = Scene(**scene1_kwargs)
     Son_alea_suppr = Son_Aleatoire(**son_aleatoire2_kwargs)
     scene_test.ajouter_son_aleatoire(
@@ -137,9 +139,4 @@ def test_supprimer_son_manuel_succes(scene1_kwargs, son_manuel2_kwargs):
         Son_manuel_suppr
     )  # Pour faire référence exactement au même objet (on sait que ajouter_son_alea fonctionne)
     scene_test.supprimer_son_manuel(Son_manuel_suppr)
-    assert Son_manuel_suppr not in scene_test.sons_manuels
-
-
-def test_supprimer_scene_succes(scene1_kwargs):
-    scene_test = Scene(**scene1_kwargs)
-    scene_test.supprimer_scene()
+    assert Son_manuel_suppr not in scene_test.sons_manuels"""

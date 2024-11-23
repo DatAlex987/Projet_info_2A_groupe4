@@ -1,5 +1,5 @@
-from utils.singleton import Singleton
 from dao.db_connection import DBConnection
+from utils.singleton import Singleton
 
 
 class ResetDatabase(metaclass=Singleton):

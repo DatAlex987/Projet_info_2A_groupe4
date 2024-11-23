@@ -1,15 +1,13 @@
-from view.abstractview import AbstractView
 from colorama import Fore, Style
 from InquirerPy import prompt
 
 ####
-# from service.user_service import UserService
+from service.session import Session
 
 ####
-# from view.abstractview import AbstractView
+from view.abstractview import AbstractView
 from view.view_consulter_user.menu_consulter_createur_view import ConsulterCreateurView
 from view.view_consulter_user.menu_consulter_nom_view import ConsulterNomView
-from service.session import Session
 
 
 class MenuConsulterUserView(AbstractView):

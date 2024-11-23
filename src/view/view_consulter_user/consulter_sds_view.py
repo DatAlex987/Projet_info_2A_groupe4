@@ -1,17 +1,12 @@
-from view.abstractview import AbstractView
 from colorama import Fore, Style
 from InquirerPy import prompt
 
 ####
-# from service.user_service import UserService
 from service.sd_service import SDService
-
-####
-# from view.abstractview import AbstractView
 from service.session import Session
 
-# from view.view_consulter_user.menu_consulter_createur_view import ConsulterCreateurView
-# from view.view_consulter_user.menu_consulter_nom_view import ConsulterNomView
+####
+from view.abstractview import AbstractView
 
 
 class ConsulterSDsView(AbstractView):
@@ -46,7 +41,7 @@ class ConsulterSDsView(AbstractView):
             )
             from view.view_consulter_user.consulter_choix_sd import ConsulterChoixSD
 
-            next_view = ConsulterChoixSD()  # Il faut la créer
+            next_view = ConsulterChoixSD()
         return next_view
 
     def display_info(self):

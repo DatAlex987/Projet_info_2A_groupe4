@@ -1,23 +1,27 @@
-from business_object.scene import Scene
-from business_object.son_continu import Son_Continu
-from business_object.son_aleatoire import Son_Aleatoire
-from business_object.son_manuel import Son_Manuel
-from service.session import Session
-from service.sd_service import SDService
-from utils.Bouton import Bouton
 from os import environ
-import pygame
 import datetime
 import random
 import string
-from dao.scene_dao import SceneDAO
-from dao.son_dao import SonDAO
-from dao.tag_dao import TagDAO
+import pygame
 
 ####
 from rich.console import Console
 from rich.table import Table
 from rich.style import Style
+
+####
+from business_object.scene import Scene
+from business_object.son_continu import Son_Continu
+from business_object.son_aleatoire import Son_Aleatoire
+from business_object.son_manuel import Son_Manuel
+from dao.scene_dao import SceneDAO
+from dao.son_dao import SonDAO
+from dao.tag_dao import TagDAO
+from utils.Bouton import Bouton
+
+####
+from service.session import Session
+from service.sd_service import SDService
 
 
 class SceneService:
@@ -34,11 +38,16 @@ class SceneService:
         str
             Identifiant (supposé unique) généré pour une Scène.
         """
-        generation = "".join(random.choices(string.ascii_letters + string.digits, k=8))
+        all_scenes = SceneDAO().consulter_scenes(schema="ProjetInfo")
+        all_ids = [scene["id_scene"] for scene in all_scenes]
+        generation = "".join(random.choices(string.ascii_letters + string.digits, k=7))
         unique_id = f"{generation}"
+        while unique_id in all_ids:  # On vérifie que l'id n'existe pas déjà
+            generation = "".join(random.choices(string.ascii_letters + string.digits, k=7))
+            unique_id = f"{generation}"
         return unique_id
 
-    def formatage_question_scenes_of_sd(self, id_sd: str):
+    def formatage_question_scenes_of_sd(self):
         """Construit une liste des choix à afficher après sélection d'une SD
 
         Params
@@ -51,14 +60,9 @@ class SceneService:
         list
             Liste des choix proposés à l'utilisateur
         """
-        sds_user = Session().utilisateur.SD_possedes
-        sd_selectionne = None
-        for sd in sds_user:
-            if sd.id_sd == id_sd:
-                sd_selectionne = sd
         choix = []
         compteur = 1
-        for scene in sd_selectionne.scenes:
+        for scene in Session().sd_to_param.scenes:
             mise_en_page_ligne = (
                 f"{compteur}. {scene.id_scene} | {scene.nom} | {scene.date_creation}"
             )
@@ -110,15 +114,10 @@ class SceneService:
         except ValueError as e:
             raise ValueError(f"{e}")
 
-    def formatage_question_scenes_of_sd_menu_jeu(self, id_sd: str):
-        sds_user = Session().utilisateur.SD_possedes
-        sd_selectionne = None
-        for sd in sds_user:
-            if sd.id_sd == id_sd:
-                sd_selectionne = sd
+    def formatage_question_scenes_of_sd_menu_jeu(self):
         choix = []
         compteur = 1
-        for scene in sd_selectionne.scenes:
+        for scene in Session().sd_to_play.scenes:
             mise_en_page_ligne = (
                 f"{compteur}. {scene.id_scene} | {scene.nom} | {scene.date_creation}"
             )
@@ -127,15 +126,10 @@ class SceneService:
         choix.append("Retour au menu de choix des sound-decks")
         return choix
 
-    def formatage_question_scenes_of_sd_menu_consult(self, id_sd: str):
-        sds_consult = Session().sds_to_consult
-        sd_selectionne = None
-        for sd in sds_consult:
-            if sd.id_sd == id_sd:
-                sd_selectionne = sd
+    def formatage_question_scenes_of_sd_menu_consult(self):
         choix = []
         compteur = 1
-        for scene in sd_selectionne.scenes:
+        for scene in Session().sd_to_consult.scenes:
             mise_en_page_ligne = (
                 f"{compteur}. {scene.id_scene} | {scene.nom} | {scene.date_creation}"
             )
@@ -212,9 +206,6 @@ class SceneService:
     def supprimer_scene(
         self, scene: Scene, schema: str
     ):  # On a besoin de l'objet en entier pour supprimer en "cascade"
-        # La suppression d'une Scène supprime l'objet + toutes les associations dans les tables +
-        # les associations en cascade. Mais pas les objets en cascade (car ils peuvent tjrs
-        # exister dans d'autres Scène)
         """Supprime une Scène dans la BDD ainsi que toutes les associations qui en découlent
 
         Params
@@ -309,6 +300,8 @@ class SceneService:
     def jouer_scene(self, scene: Scene):
         """methode de jeu avec fenêtre interactive"""
         # Initialisation de Pygame
+        pygame.init()
+        pygame.mixer.init()
 
         largeur = 1490
         hauteur = 400
@@ -318,33 +311,53 @@ class SceneService:
         hauteur_ecran = info_ecran.current_h
         k = 97
         g = 89
-        # Calculer la position pour centrer la fenêtre
+        # Calcul de la position pour centrer la fenêtre
         position_x = (largeur_ecran - largeur) // 2 + g
         position_y = (hauteur_ecran - hauteur) // 2 - k
 
-        dictb = {"continus": [], "alea": []}
-        bouton_continu_actif = [] # suivi du son actif continu
+        dictb = {"continus": [], "alea": [], "manuels": []}
+        bouton_continu_actif = []  # suivi du son actif continu
         bouton_continu_actif.append(Bouton(0, 0, 0, 0, "_", "continu"))
         x_position = 50
         x_position_2 = 50
+        x_position_3 = 50
         # Création des boutons pour les sons continus
+        for son in scene.sons_manuels:
+            dictb["manuels"].append(
+                (
+                    Bouton(
+                        x_position_3,
+                        300,
+                        150,
+                        40,
+                        f"{son.nom[:12]}... , {son.start_key.upper()}",
+                        "manuel",
+                        couleur=(173, 216, 230),
+                    ),
+                    son,
+                )
+            )
+            x_position_3 += 170
+            fp = son.localise_son()
+            son.charge = pygame.mixer.Sound(fp)
 
         for son in scene.sons_continus:
             dictb["continus"].append(
-                (Bouton(x_position, 100, 100, 40, "Jouer/Arreter", "continu"), son)
+                (Bouton(x_position, 100, 150, 40, f"{son.nom[:13]}...", "continu"), son)
             )
-            x_position += 150
+            x_position += 170
             fp = son.localise_son()
-            # sc.charge = pygame.mixer.Sound(fp)
             pygame.mixer.music.load(fp)
         # Création des boutons pour les sons aléatoires
-        for son in scene.sons_aleatoires:
+        longueur_sons_aleatoires = len(scene.sons_aleatoires)
+        for k, son in enumerate(scene.sons_aleatoires):
             dictb["alea"].append(
-                (Bouton(x_position_2, 200, 100, 40, "Jouer/Arreter", "aleatoire"), son)
+                (Bouton(x_position_2, 200, 150, 40, f"{son.nom[:13]}", "aleatoire"), son)
             )
             fp = son.localise_son()
             son.charge = pygame.mixer.Sound(fp)
-            x_position_2 += 150
+            son.event_son = pygame.USEREVENT + (k + 1)
+            x_position_2 += 170
 
         # Définir la position de la fenêtre
         environ["SDL_VIDEO_WINDOW_POS"] = f"{position_x},{position_y}"
@@ -353,28 +366,21 @@ class SceneService:
         pygame.display.set_caption("DM Sound buddy window")
 
         NOIR = (0, 0, 0)
-        BLANC = (255, 255, 255)
+        BEIGE = (245, 222, 179)
         # Dessiner un fond de couleur noire
-        fenetre.fill(NOIR)
-        font = pygame.font.Font(None, 74)  # Taille de la police : 74 
-        texte_1_surface = font.render("Tableau de contrôle", True, BLANC)
-        texte_2_surface = font.render("Sons continus", True, BLANC)
-        texte_3_surface = font.render("Sons aleatoires", True, BLANC)
+        fenetre.fill(BEIGE)
+        font = pygame.font.Font(None, 74)  # Taille de la police : 74
+        texte_1_surface = font.render("Tableau de contrôle", True, NOIR)
+        texte_2_surface = font.render("Sons continus", True, NOIR)
+        texte_3_surface = font.render("Sons aleatoires", True, NOIR)
+        texte_3_surface = font.render("Sons aleatoires", True, NOIR)
+        texte_4_surface = font.render("Sons manuels", True, NOIR)
         # Obtenir la taille et la position du texte
         texte_1_rect = texte_1_surface.get_rect(center=(largeur // 2, 50))
         texte_2_rect = texte_2_surface.get_rect(topleft=(50, 50))
-        texte_3_rect = texte_3_surface.get_rect(topleft = (50, 150))
-        # chargement des sons
-        for sm in scene.sons_manuels:
-            fp = sm.localise_son()
-            sm.charge = pygame.mixer.Sound(fp)
+        texte_3_rect = texte_3_surface.get_rect(topleft=(50, 150))
+        texte_4_rect = texte_4_surface.get_rect(topleft=(50, 250))
 
-            # lecture des sons alea et continus
-        # for son in scene.sons_aleatoires:
-        #    son.jouer_Son()
-        # for son in scene.sons_continus:
-        #    son.jouer_Son()
-        # Boucle principale pour la scène
         running = True
         while running:
             events = pygame.event.get()
@@ -382,81 +388,83 @@ class SceneService:
                 if event.type == pygame.QUIT:
                     running = False
                 if event.type == pygame.KEYDOWN:
-                    for sm in scene.sons_manuels:
-                        if event.key == sm.convert_to_kpg(sm.start_key):
-                            sm.jouer_Son()
+                    for bouton, son in dictb["manuels"]:
+                        if event.key == son.convert_to_kpg(son.start_key):
+                            son.jouer_Son()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     position_souris = pygame.mouse.get_pos()
                     for bouton, son in dictb["continus"]:
                         if bouton.est_clique(position_souris):
-                                if bouton.couleur == (200, 100, 100):
-                                        son.Arret_Son()
-                                if bouton.couleur == (100, 200, 100):
-                                        son.jouer_Son()
-                                        bouton_continu_actif[0].couleur = (200, 100, 100)
-                                        bouton_continu_actif.clear()
-                                        bouton_continu_actif.append(bouton)
+                            if bouton.couleur == (200, 100, 100):
+                                son.Arret_Son()
+                            if bouton.couleur == (100, 200, 100):
+                                son.jouer_Son()
+                                bouton_continu_actif[0].couleur = (200, 100, 100)
+                                bouton_continu_actif.clear()
+                                bouton_continu_actif.append(bouton)
                     for bouton, son in dictb["alea"]:
                         if bouton.est_clique(position_souris):
-                                if bouton.couleur == (200, 100, 100):
-                                        son.Arret_Son()
-                                if bouton.couleur == (100, 200, 100):
-                                        son.jouer_Son()
-    
+                            if bouton.couleur == (200, 100, 100):
+                                son.Arret_Son()
+                            if bouton.couleur == (100, 200, 100):
+                                son.jouer_Son()
+                elif (
+                    pygame.USEREVENT + 1
+                    <= event.type
+                    <= pygame.USEREVENT + longueur_sons_aleatoires
+                ):
+                    j = event.type - pygame.USEREVENT  # Calculer le numéro du son
+                    for son in scene.sons_aleatoires:
+                        if son.event_son - pygame.USEREVENT == j:
+                            son.charge.play()
+
             for bouton, r in dictb["continus"]:
                 bouton.dessiner(fenetre)
             for bouton, r in dictb["alea"]:
                 bouton.dessiner(fenetre)
-            
+            for bouton, r in dictb["manuels"]:
+                bouton.dessiner(fenetre)
+
             fenetre.blit(texte_1_surface, texte_1_rect)
             fenetre.blit(texte_2_surface, texte_2_rect)
             fenetre.blit(texte_3_surface, texte_3_rect)
+            fenetre.blit(texte_4_surface, texte_4_rect)
             pygame.display.flip()
 
         pygame.mixer.stop()
+        pygame.quit()
 
+    def supprimer_son_existant(
+        self, son_to_delete, schema: str
+    ):  # On a besoin de l'objet en entier pour supprimer en "cascade"
+        """Supprime un son associé à une scène dans la BDD ainsi que toutes les associations qui en découlent
 
-"""
-    @log
-    def creer(**kwargs):
-        "Création d'une scène à partir de ses attributs"
-        new_scene = Scene(**kwargs)
-        return new_scene if SceneDAO().ajouter_scene(new_scene) else None
+        Params
+        -------------
+        son : Son_Aleatoire ou Son_Manuel ou Son_Continu
+            Son à supprimer
+        schema : str
+            Schema sur lequel opérer la suppression
 
-    @log
-    def supprimer(self, scene) -> bool:
-        "Supprimme une scene"
-        return SceneDAO().supprimer(scene)
+        Returns
+        -------------
+        bool
+            True si la suppression n'a pas soulevé d'erreur, rien sinon
+        """
+        try:
+            SonDAO().supprimer_son(id_son=son_to_delete.id_son, schema=schema)
+            SonDAO().supprimer_toutes_associations_son(
+                id_son=son_to_delete.id_son,
+                type_son=SonDAO().type_of_son(son=son_to_delete),
+                schema=schema,
+            )
+            # On termine par actualiser la session
 
-    @log
-    def modifier_nom(self, scene, new_name):
-        pass
-
-    @log
-    def modifier_description(self, scene, new_desc):
-        pass
-
-    @log
-    def ajouter_son_aleatoire(self, scene, new_son_aleatoire):
-        pass
-
-    @log
-    def ajouter_son_manuel(self, scene, new_son_manuel):
-        pass
-
-    @log
-    def ajouter_son_continu(self, scene, new_son_continu):
-        pass
-
-    @log
-    def modifier_son_aleatoire(self, scene, new_son_aleatoire):
-        pass
-
-    @log
-    def modifier_son_manuel(self, scene, new_son_manuel):
-        pass
-
-    @log
-    def modifier_son_continu(self, scene, new_son_continu):
-        pass
-"""
+            Session().utilisateur.supprimer_son_a_scene(
+                id_sd=Session().sd_to_param.id_sd,
+                id_scene=Session().scene_to_param.id_scene,
+                son=son_to_delete,
+            )
+        except (ValueError, AttributeError) as e:
+            raise ValueError(f"La suppression du son n'a pas abouti : {e}")
+        return True
