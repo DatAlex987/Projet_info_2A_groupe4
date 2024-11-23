@@ -64,10 +64,13 @@ Cette application propose une interface dans le terminal, ainsi qu'avec une fen�
 Pour profiter d'une base de données déjà peuplée, lancez le script `reset_database.py`
 L'utilisateur suivant est d'ores et déjà doté de multiples créations :
 
-Nom :
-Prénom :
-Pseudo :
-Mot de Passe :
+Nom : De Vannes
+Prénom : Karadoc
+Pseudo : KaradocDV
+Mot de Passe : Kdv1234@
+
+Vous pouvez vous y connecter.
+Un autre utilisateur (pseudo: PercevalDG) possède une sound-deck JDR Versaillais
 
 Puis, pour lancer l'application, lancez le script `src/__main__.py`
 
