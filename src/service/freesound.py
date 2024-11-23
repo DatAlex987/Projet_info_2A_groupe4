@@ -143,7 +143,7 @@ class Freesound(metaclass=Singleton):
 
         return result
 
-    def telecharger_son(self, id_freesound):
+    def telecharger_son(self, id_freesound: str):
         # Renommer les sons téléchargés au format précisé dans jouer_son (son.py)
         sound_data = Freesound.rechercher_par_id(id_freesound)
         mp3_url = sound_data["previews"]["preview-hq-mp3"]
@@ -167,7 +167,7 @@ class Freesound(metaclass=Singleton):
             print(f"Erreur lors du téléchargement du fichier : {mp3_response.status_code}")
             return None
 
-    def supprimer_son(self, id_freesound):
+    def supprimer_son(self, id_freesound: str):
         # Chemin complet vers le fichier
         dossier_sauvegarde = os.getenv("DOSSIER_SAUVEGARDE")
         chemin_fichier_mp3 = os.path.join(dossier_sauvegarde, f"{id_freesound}.mp3")

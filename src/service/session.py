@@ -35,7 +35,7 @@ class Session(metaclass=Singleton):
         self.scene_to_consult = None
         self.son_to_consult = None
 
-    def connexion(self, utilisateur):
+    def connexion(self, utilisateur: User):
         """Enregistement des données en session"""
         self.utilisateur = utilisateur
         self.debut_connexion = datetime.now().strftime("%d/%m/%Y %H:%M:%S")

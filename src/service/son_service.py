@@ -403,7 +403,7 @@ class SonService:
                         son.modifier_start_key(new_start_key=new_start_key)
         SonDAO().modifier_param_son(son_manuel, schema=schema)
 
-    def afficher_details_son_continu(self, son_continu):
+    def afficher_details_son_continu(self, son_continu: Son_Continu):
         """Affiche les détails d'un son continu."""
         console = Console()
         table = Table(
@@ -427,7 +427,7 @@ class SonService:
 
         console.print(table)
 
-    def afficher_details_son_manuel(self, son_manuel):
+    def afficher_details_son_manuel(self, son_manuel: Son_Manuel):
         """Affiche les détails d'un son manuel."""
         console = Console()
         table = Table(
@@ -452,7 +452,7 @@ class SonService:
 
         console.print(table)
 
-    def afficher_details_son_aleatoire(self, son_aleatoire):
+    def afficher_details_son_aleatoire(self, son_aleatoire: Son_Aleatoire):
         """Affiche les détails d'un son aléatoire."""
         console = Console()
         table = Table(
