@@ -7,7 +7,7 @@ from dao.sd_dao import SDDAO
 class UserDAO(metaclass=Singleton):
     """Implémente les méthodes du CRUD pour accéder à la base de données des utilisateurs."""
 
-    def ajouter_user(self, user: User, schema: str) -> int:
+    def ajouter_user(self, user: User, schema: str):
         """
         Ajoute un utilisateur dans la base de données.
 

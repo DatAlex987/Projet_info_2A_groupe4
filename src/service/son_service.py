@@ -39,13 +39,16 @@ class SonService:
             Identifiant (supposé unique) généré pour un son.
         """
         all_sons = SonDAO().consulter_sons(schema="ProjetInfo")
-        all_ids = [son["id_son"] for son in all_sons]
         generation = "".join(random.choices(string.ascii_letters + string.digits, k=8))
         unique_id = f"{generation}"
-        while unique_id in all_ids:  # On vérifie que l'id n'existe pas déjà
-            generation = "".join(random.choices(string.ascii_letters + string.digits, k=8))
-            unique_id = f"{generation}"
-        return unique_id
+        if len(all_sons) > 0:
+            all_ids = [son["id_son"] for son in all_sons]
+            while unique_id in all_ids:  # On vérifie que l'id n'existe pas déjà
+                generation = "".join(random.choices(string.ascii_letters + string.digits, k=8))
+                unique_id = f"{generation}"
+            return unique_id
+        else:
+            return unique_id
 
     def formatage_question_sons_of_scene(self):
         """Construit une liste des choix à afficher après sélection d'une Scène

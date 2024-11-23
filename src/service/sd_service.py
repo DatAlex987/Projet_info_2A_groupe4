@@ -63,13 +63,16 @@ class SDService:
             Identifiant (supposé unique) généré pour une SD.
         """
         all_sds = SDDAO().consulter_sds(schema="ProjetInfo")
-        all_ids = [sd["id_sd"] for sd in all_sds]
         generation = "".join(random.choices(string.ascii_letters + string.digits, k=7))
         unique_id = f"{generation}"
-        while unique_id in all_ids:  # On vérifie que l'id n'existe pas déjà
-            generation = "".join(random.choices(string.ascii_letters + string.digits, k=7))
-            unique_id = f"{generation}"
-        return unique_id
+        if len(all_sds) > 0:
+            all_ids = [sd["id_sd"] for sd in all_sds]
+            while unique_id in all_ids:  # On vérifie que l'id n'existe pas déjà
+                generation = "".join(random.choices(string.ascii_letters + string.digits, k=7))
+                unique_id = f"{generation}"
+            return unique_id
+        else:
+            return unique_id
 
     def creer_sd(self, nom: str, description: str, schema: str):
         """Instancie une SD avec les inputs de l'utilisateur et l'ajoute dans la BDD

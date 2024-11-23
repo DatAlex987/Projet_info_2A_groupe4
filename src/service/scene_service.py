@@ -39,13 +39,16 @@ class SceneService:
             Identifiant (supposé unique) généré pour une Scène.
         """
         all_scenes = SceneDAO().consulter_scenes(schema="ProjetInfo")
-        all_ids = [scene["id_scene"] for scene in all_scenes]
         generation = "".join(random.choices(string.ascii_letters + string.digits, k=7))
         unique_id = f"{generation}"
-        while unique_id in all_ids:  # On vérifie que l'id n'existe pas déjà
-            generation = "".join(random.choices(string.ascii_letters + string.digits, k=7))
-            unique_id = f"{generation}"
-        return unique_id
+        if len(all_scenes) > 0:
+            all_ids = [scene["id_scene"] for scene in all_scenes]
+            while unique_id in all_ids:  # On vérifie que l'id n'existe pas déjà
+                generation = "".join(random.choices(string.ascii_letters + string.digits, k=7))
+                unique_id = f"{generation}"
+            return unique_id
+        else:
+            return unique_id
 
     def formatage_question_scenes_of_sd(self):
         """Construit une liste des choix à afficher après sélection d'une SD
