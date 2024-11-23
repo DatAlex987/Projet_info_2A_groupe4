@@ -2,18 +2,15 @@
 
 from colorama import Fore, Style
 from InquirerPy import prompt
-from view.abstractview import AbstractView
-from view.view_param.menuparamajoutson import MenuParamAjoutSonView
 
+####
 from service.session import Session
-
-# from service.sd_service import SDService
-# from service.scene_service import SceneService
-# from service.freesound import Freesound
 from service.recherche import Recherche
 from service.son_service import SonService
 
-# from view.accueilview import AccueilView
+####
+from view.abstractview import AbstractView
+from view.view_param.menuparamajoutson import MenuParamAjoutSonView
 
 
 class MenuRechercheFreesoundView(AbstractView):

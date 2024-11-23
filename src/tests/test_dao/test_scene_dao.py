@@ -1,7 +1,9 @@
 import pytest
+
+####
 from dao.scene_dao import SceneDAO
-from business_object.scene import Scene
 from dao.db_connection import DBConnection
+from business_object.scene import Scene
 from utils.reset_database import ResetDatabase
 
 

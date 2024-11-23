@@ -1,7 +1,7 @@
 from utils.singleton import Singleton
-from dao.db_connection import DBConnection
 from business_object.sd import SD
 from dao.scene_dao import SceneDAO
+from dao.db_connection import DBConnection
 
 
 class SDDAO(metaclass=Singleton):

@@ -1,6 +1,7 @@
-import pytest
-from business_object.son_aleatoire import Son_Aleatoire
 import datetime
+
+####
+from business_object.son_aleatoire import Son_Aleatoire
 
 
 def test_initialisation_son_aleatoire(son_aleatoire1_kwargs):

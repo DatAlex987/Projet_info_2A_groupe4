@@ -2,13 +2,11 @@ from colorama import Fore, Style
 from InquirerPy import prompt
 
 ####
-# from service.user_service import UserService
-# from service.sd_service import SDService
 from service.scene_service import SceneService
+from service.session import Session
 
 ####
 from view.abstractview import AbstractView
-from service.session import Session
 
 
 class MenuJeuSceneView(AbstractView):

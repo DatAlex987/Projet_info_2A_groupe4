@@ -1,7 +1,5 @@
 from dao.db_connection import DBConnection
 
-# from business_object.son import Son
-
 
 class TagDAO:
 

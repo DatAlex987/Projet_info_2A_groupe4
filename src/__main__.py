@@ -1,10 +1,7 @@
-# from utils.reset_database import ResetDatabase
-from view.accueilview import AccueilView
 from colorama import Fore, Style
 
-# from business_object.user import User
-# from dao.user_dao import UserDAO
-# import datetime
+####
+from view.accueilview import AccueilView
 
 view = AccueilView()
 

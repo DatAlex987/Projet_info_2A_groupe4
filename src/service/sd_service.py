@@ -2,11 +2,15 @@ import re
 import datetime
 import random
 import string
-from service.session import Session
 
+####
+from rich.console import Console
+from rich.table import Table
+from rich.style import Style
+
+####
 from business_object.sd import SD
 from business_object.scene import Scene
-from business_object.son import Son
 from business_object.son_continu import Son_Continu
 from business_object.son_aleatoire import Son_Aleatoire
 from business_object.son_manuel import Son_Manuel
@@ -16,9 +20,7 @@ from dao.son_dao import SonDAO
 from dao.tag_dao import TagDAO
 
 ####
-from rich.console import Console
-from rich.table import Table
-from rich.style import Style
+from service.session import Session
 
 
 class SDService:

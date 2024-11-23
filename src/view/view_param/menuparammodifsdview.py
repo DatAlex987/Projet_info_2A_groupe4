@@ -2,16 +2,13 @@
 
 from colorama import Fore, Style
 from InquirerPy import prompt
-from view.abstractview import AbstractView
-from service.session import Session
 
-# from business_object.son_aleatoire import Son_Aleatoire
-# from business_object.son_continu import Son_Continu
-# from business_object.son_manuel import Son_Manuel
+####
+from service.session import Session
 from service.sd_service import SDService
 
-# from service.scene_service import SceneService
-# from service.son_service import SonService
+####
+from view.abstractview import AbstractView
 
 
 class MenuParamModifSDView(AbstractView):

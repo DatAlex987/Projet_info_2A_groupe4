@@ -1,10 +1,9 @@
 from unittest.mock import patch
 import pytest
 import re
-from service.freesound import Freesound
-import requests
 
-# from unittest.mock import MagicMock
+####
+from service.freesound import Freesound
 
 
 @pytest.mark.parametrize(

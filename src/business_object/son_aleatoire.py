@@ -1,8 +1,10 @@
-from business_object.son import Son
 import random
 import time
 import threading
 import pygame
+
+####
+from business_object.son import Son
 
 
 class Son_Aleatoire(Son):

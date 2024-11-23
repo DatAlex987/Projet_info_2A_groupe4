@@ -1,9 +1,10 @@
-from typing import Optional, Dict, Any, Union
 import os
-from dotenv import load_dotenv
 import requests
+from typing import Optional, Dict, Union
+from dotenv import load_dotenv
+
+####
 from utils.singleton import Singleton
-import re
 
 
 class Freesound(metaclass=Singleton):

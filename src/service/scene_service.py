@@ -1,23 +1,27 @@
-from business_object.scene import Scene
-from business_object.son_continu import Son_Continu
-from business_object.son_aleatoire import Son_Aleatoire
-from business_object.son_manuel import Son_Manuel
-from service.session import Session
-from service.sd_service import SDService
-from utils.Bouton import Bouton
 from os import environ
-import pygame
 import datetime
 import random
 import string
-from dao.scene_dao import SceneDAO
-from dao.son_dao import SonDAO
-from dao.tag_dao import TagDAO
+import pygame
 
 ####
 from rich.console import Console
 from rich.table import Table
 from rich.style import Style
+
+####
+from business_object.scene import Scene
+from business_object.son_continu import Son_Continu
+from business_object.son_aleatoire import Son_Aleatoire
+from business_object.son_manuel import Son_Manuel
+from dao.scene_dao import SceneDAO
+from dao.son_dao import SonDAO
+from dao.tag_dao import TagDAO
+from utils.Bouton import Bouton
+
+####
+from service.session import Session
+from service.sd_service import SDService
 
 
 class SceneService:

@@ -1,18 +1,14 @@
+import re
 from colorama import Fore, Style
 from InquirerPy import prompt
-import re
 
 ####
-# from service.user_service import UserService
-from service.sd_service import SDService
-
-# from service.scene_service import SceneService
+from service.session import Session
 from service.son_service import SonService
 
 ####
 from view.abstractview import AbstractView
 from view.view_consulter_user.consulter_info_son_select_view import MenuConsulterInfoSonSelectView
-from service.session import Session
 
 
 class MenuConsulterSonsView(AbstractView):

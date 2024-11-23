@@ -2,7 +2,6 @@ from utils.singleton import Singleton
 from dao.db_connection import DBConnection
 from business_object.user import User
 from dao.sd_dao import SDDAO
-import hashlib
 
 
 class UserDAO(metaclass=Singleton):

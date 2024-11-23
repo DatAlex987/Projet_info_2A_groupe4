@@ -1,6 +1,4 @@
 from dao.db_connection import DBConnection
-
-# from business_object.scene import Scene
 from dao.son_dao import SonDAO
 
 

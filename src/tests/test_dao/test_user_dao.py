@@ -1,6 +1,8 @@
 import pytest
-from dao.user_dao import UserDAO
+
+####
 from business_object.user import User
+from dao.user_dao import UserDAO
 from dao.db_connection import DBConnection
 from utils.reset_database import ResetDatabase
 

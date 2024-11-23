@@ -1,15 +1,10 @@
-from view.abstractview import AbstractView
 from colorama import Fore, Style
 from InquirerPy import prompt
 
 ####
-# from service.user_service import UserService
-
-####
 from view.view_consulter_user.menuconsulteruser import MenuConsulterUserView
 from view.view_jeu.menu_jeu_view import MenuJeuView
-
-# from view.abstractview import AbstractView
+from view.abstractview import AbstractView
 
 
 class MenuPrincipalView(AbstractView):

@@ -5,16 +5,15 @@ from InquirerPy import prompt
 import re
 
 ####
-# from service.sd_service import SDService
 from service.scene_service import SceneService
 from service.son_service import SonService
+from service.session import Session
 
 ####
 from view.menurecherchefreesoundview import MenuRechercheFreesoundView
 from view.view_param.menuparammodifsonview import MenuParamModifSonView
 from view.view_param.menuparammodifsceneview import MenuParamModifSceneView
 from view.abstractview import AbstractView
-from service.session import Session
 
 
 class MenuParamSceneSpecifiqueView(AbstractView):

@@ -2,7 +2,6 @@ import datetime
 import os
 import pygame
 import threading
-import time
 from dotenv import load_dotenv
 
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
