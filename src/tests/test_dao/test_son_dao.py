@@ -1,4 +1,5 @@
 import pytest
+import datetime
 
 ####
 from business_object.son_aleatoire import Son_Aleatoire
@@ -18,9 +19,7 @@ def test_ajouter_son_succes(son_aleatoire1_kwargs):
     assert added_son.id_freesound == son_aleatoire1_kwargs["id_freesound"]
     assert added_son.id_son == son_aleatoire1_kwargs["id_son"]
     assert added_son.nom == son_aleatoire1_kwargs["nom"]
-    assert added_son.type == son_aleatoire1_kwargs["type"]
-    assert added_son.duree == son_aleatoire1_kwargs["duree"]
-    assert added_son.date_creation == son_aleatoire1_kwargs["date_creation"]
+    assert added_son.description == son_aleatoire1_kwargs["description"]
 
     with DBConnection(schema=schema).connection as connection:
         with connection.cursor() as cursor:
@@ -31,15 +30,14 @@ def test_ajouter_son_succes(son_aleatoire1_kwargs):
             assert result is not None
             assert result["id_freesound"] == son_aleatoire1_kwargs["id_freesound"]
             assert result["id_son"] == son_aleatoire1_kwargs["id_son"]
+            assert result["description"] == son_aleatoire1_kwargs["description"]
             assert result["nom"] == son_aleatoire1_kwargs["nom"]
-            assert result["type"] == son_aleatoire1_kwargs["type"]
-            assert result["duree"] == son_aleatoire1_kwargs["duree"]
 
     ResetDatabase().ResetTEST()
 
 
-@pytest.mark.parametrize("new_nom, new_duree", [("NouveauNomSon", 300)])
-def test_modifier_son_succes(son_aleatoire1_kwargs, new_nom, new_duree):
+@pytest.mark.parametrize("new_nom, new_desc", [("NouveauNomSon", "Nouvelle description")])
+def test_modifier_son_succes(son_aleatoire1_kwargs, new_nom, new_desc):
     ResetDatabase().ResetTEST()
     schema = "SchemaTest"
     son_to_add = Son_Aleatoire(**son_aleatoire1_kwargs)
@@ -47,15 +45,13 @@ def test_modifier_son_succes(son_aleatoire1_kwargs, new_nom, new_duree):
     added_son = son_dao.ajouter_son(son_to_add, schema)
 
     added_son.nom = new_nom
-    added_son.duree = new_duree
+    added_son.description = new_desc
     modified_added_son = son_dao.modifier_son(added_son, schema)
 
     assert modified_added_son.id_son == added_son.id_son
     assert modified_added_son.id_freesound == added_son.id_freesound
     assert modified_added_son.nom == added_son.nom
-    assert modified_added_son.type == added_son.type
-    assert modified_added_son.duree == added_son.duree
-    assert modified_added_son.date_creation == added_son.date_creation
+    assert modified_added_son.description == added_son.description
 
     with DBConnection(schema=schema).connection as connection:
         with connection.cursor() as cursor:
@@ -67,7 +63,7 @@ def test_modifier_son_succes(son_aleatoire1_kwargs, new_nom, new_duree):
             assert result["id_son"] == modified_added_son.id_son
             assert result["id_freesound"] == modified_added_son.id_freesound
             assert result["nom"] == modified_added_son.nom
-            assert result["duree"] == modified_added_son.duree
+            assert result["description"] == modified_added_son.description
 
     ResetDatabase().ResetTEST()
 
@@ -117,7 +113,6 @@ def test_rechercher_par_id_son_succes(son_aleatoire1_kwargs):
     assert found_son["id_freesound"] == str(added_son.id_freesound)
     assert found_son["id_son"] == str(added_son.id_son)
     assert found_son["nom"] == added_son.nom
-    assert found_son["type"] == added_son.type
-    assert found_son["duree"] == added_son.duree
+    assert found_son["description"] == added_son.description
 
     ResetDatabase().ResetTEST()

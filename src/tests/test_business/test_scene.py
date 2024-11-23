@@ -110,33 +110,3 @@ def test_ajouter_son_manuel_echec(
     with pytest.raises(error_type, match=re.escape(expected_error)):
         scene_test = Scene(**scene1_kwargs)
         scene_test.ajouter_son_manuel(new_son)
-
-
-"""def test_supprimer_son_aleatoire_succes(scene1_kwargs, son_aleatoire2_kwargs):
-    scene_test = Scene(**scene1_kwargs)
-    Son_alea_suppr = Son_Aleatoire(**son_aleatoire2_kwargs)
-    scene_test.ajouter_son_aleatoire(
-        Son_alea_suppr
-    )  # Pour faire référence exactement au même objet (on sait que ajouter_son_alea fonctionne)
-    scene_test.supprimer_son_aleatoire(Son_alea_suppr)
-    assert Son_alea_suppr not in scene_test.sons_aleatoires
-
-
-def test_supprimer_son_continu_succes(scene1_kwargs, son_continu2_kwargs):
-    scene_test = Scene(**scene1_kwargs)
-    Son_continu_suppr = Son_Continu(**son_continu2_kwargs)
-    scene_test.ajouter_son_continu(
-        Son_continu_suppr
-    )  # Pour faire référence exactement au même objet (on sait que ajouter_son_continu fonctionne)
-    scene_test.supprimer_son_continu(Son_continu_suppr)
-    assert Son_continu_suppr not in scene_test.sons_continus
-
-
-def test_supprimer_son_manuel_succes(scene1_kwargs, son_manuel2_kwargs):
-    scene_test = Scene(**scene1_kwargs)
-    Son_manuel_suppr = Son_Manuel(**son_manuel2_kwargs)
-    scene_test.ajouter_son_manuel(
-        Son_manuel_suppr
-    )  # Pour faire référence exactement au même objet (on sait que ajouter_son_alea fonctionne)
-    scene_test.supprimer_son_manuel(Son_manuel_suppr)
-    assert Son_manuel_suppr not in scene_test.sons_manuels"""
