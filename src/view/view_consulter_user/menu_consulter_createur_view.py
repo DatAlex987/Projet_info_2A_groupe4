@@ -10,7 +10,6 @@ from view.view_consulter_user.consulter_users_proches_view import ConsulterUsers
 
 
 class ConsulterCreateurView(AbstractView):
-    "test"
 
     def __init__(self):
         super().__init__()

@@ -11,8 +11,8 @@ from view.view_consulter_user.menu_consulter_nom_view import ConsulterNomView
 
 
 class MenuConsulterUserView(AbstractView):
-    "classe représentant l'accès au menu de consultations des créations des utilisateurs, après le"
-    "menu principal"
+    """classe représentant l'accès au menu de consultations des créations des utilisateurs, après le
+    menu principal"""
 
     def __init__(self):
         super().__init__()

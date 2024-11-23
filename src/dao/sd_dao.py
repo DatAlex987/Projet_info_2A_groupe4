@@ -7,7 +7,7 @@ from dao.db_connection import DBConnection
 class SDDAO(metaclass=Singleton):
     """Implémente les méthodes du CRUD pour accéder à la base de données des sound-decks"""
 
-    def ajouter_sd(self, sd: SD, schema: str) -> SD:
+    def ajouter_sd(self, sd: SD, schema: str):
         """
         Ajoute un nouveau sound-deck à la base de données.
 
@@ -46,7 +46,7 @@ class SDDAO(metaclass=Singleton):
             print(f"Erreur lors de l'ajout du sound-deck : {e}")
             return None
 
-    def modifier_sd(self, sd: SD, schema: str) -> SD:
+    def modifier_sd(self, sd: SD, schema: str):
         """
         Modifie les informations d'un sound-deck existant.
 
@@ -86,7 +86,7 @@ class SDDAO(metaclass=Singleton):
             print(f"Erreur lors de la modification du sound-deck avec ID {sd.id_sd} : {e}")
             return None
 
-    def supprimer_sd(self, id_sd: str, schema: str) -> bool:
+    def supprimer_sd(self, id_sd: str, schema: str):
         """
         Supprime un sound-deck par son ID.
 
@@ -437,8 +437,6 @@ class SDDAO(metaclass=Singleton):
         # idem
         for id_scene in scenes_incluses:
             SceneDAO().supprimer_association_sd_scene(id_sd=id_sd, id_scene=id_scene, schema=schema)
-
-    # nettoyage
 
     def delete_sd_if_no_users(self, schema: str):
         """

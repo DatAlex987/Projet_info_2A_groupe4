@@ -10,7 +10,6 @@ from view.view_consulter_user.consulter_sds_view import ConsulterSDsView
 
 
 class ConsulterNomView(AbstractView):
-    "test"
 
     def __init__(self):
         super().__init__()

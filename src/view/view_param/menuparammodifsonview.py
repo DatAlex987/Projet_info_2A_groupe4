@@ -75,14 +75,14 @@ class MenuParamModifSonView(AbstractView):
             {
                 "type": "input",
                 "name": "modif desc",
-                "message": "Entrez la nouvelle description pour ce son (max. 280 caractères):",
+                "message": "Entrez la nouvelle description pour ce son:",
             }
         ]
         self.question_modif_key = [
             {
                 "type": "input",
                 "name": "modif key",
-                "message": "Entrez la lettre de la touche avec laquelle vous souhaitez déclencher ce son:",
+                "message": "Entrez la lettre de la touche avec laquelle vous souhaitez déclencher ce son (une lettre):",
             }
         ]
         self.question_modif_cdmin = [
