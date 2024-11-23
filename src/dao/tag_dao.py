@@ -228,7 +228,6 @@ class TagDAO:
         Supprime un tag s'il n'est associé à aucun son.
         """
         all_tags = self.consulter_tags(schema=schema)
-
         with DBConnection(schema=schema).connection as connection:
             with connection.cursor() as cursor:
                 for nom_tag in all_tags:
@@ -241,7 +240,6 @@ class TagDAO:
                         {"nom_tag": nom_tag},
                     )
                     son_count = cursor.fetchone()["son_count"]
-
-        # Si aucun son n'est lié on supprime le tag
-        if son_count == 0:
-            self.supprimer_tag(tag=nom_tag, schema=schema)
+                    # Si aucun son n'est lié on supprime le tag
+                    if son_count == 0:
+                        self.supprimer_tag(tag=nom_tag, schema=schema)

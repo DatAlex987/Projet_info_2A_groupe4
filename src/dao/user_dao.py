@@ -112,7 +112,7 @@ class UserDAO(metaclass=Singleton):
                 )
                 # Le mot de passe est ignoré pour évité d'être hashé de nouveau.
             return users_trouves
-        return None
+        return []
 
     def rechercher_par_id_user(self, id_user: str, schema: str) -> dict:
         """

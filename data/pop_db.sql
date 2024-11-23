@@ -1,112 +1,252 @@
 -- Insert data into Utilisateur
--- Password user1 : Test111!
 INSERT INTO ProjetInfo.Utilisateur (id_user, mdp_hashe, date_naissance, nom, prenom, pseudo)
 VALUES
-('IUSZEM', 'df45a38d72964fbe867eaaf20589bdcb394c0f4b680760b91097ee3f78170c43', '1111-11-11', 't', 't', 't'),
-('LBNVXN', 'e8d9f96e04790fce95a5cb00f217f73e7b4e73547af3710ae1ceeb4aa9cb4371', '1111-11-11', 'n', 'n', 'n');
+('qN9f9V', 'ef9589c925e87c96c8c41dff41b9214d123e7c288800a129f3191515e6908544', '1992-12-06', 'Pendragon', 'Arthur', 'ArthurP'),
+('QRsZjM', '26026d4b0359fb99f297159e8861d0292ba823cd0d6d98d57500ce3b116fe7d6', '1991-12-06', 'De Vannes', 'Karadoc', 'KaradocDV'),
+('6DQftH', 'f56eb13432d3ea553170eee725f7eb588238661008db4743bd6b17325042cd50', '1994-10-04', 'De Galles', 'Perceval', 'PercevalDG');
 
 -- Insert data into Sounddeck
 INSERT INTO ProjetInfo.Sounddeck (id_sd, nom, description, date_creation, id_createur)
 VALUES
-('sd1', 'Fantasy Ambience', 'A mystical sounddeck for fantasy RPGs.', '2024-01-01', 'IUSZEM'),
-('sd2', 'Sci-fi Sounds', 'Futuristic sound effects for space adventures.', '2024-01-02', 'IUSZEM'),
-('sd3', 'Horror Atmosphere', 'Spooky sounds for horror games.', '2024-01-03', 'IUSZEM'),
-('sd4', 'Nature Sounds', 'Relaxing nature-themed sounddeck.', '2024-01-01', 'LBNVXN'),
-('sd5', 'City Ambience', 'Urban sounds for city-based games.', '2024-01-02', 'LBNVXN'),
-('sd6', 'Battle Effects', 'Intense battle sounds.', '2024-01-03', 'LBNVXN');
+('T0murLv', 'JDR Kaamelott', 'SD ambiance médieval inspirée par Kaamelott', '2024-11-23', 'QRsZjM'),
+('qo5gbFU', 'JDR Spatial', 'Scenes pour une soirée JDR dans un vaisseau spatial', '2024-11-23', 'QRsZjM'),
+('QoL3xQ9', 'JDR Versaillais', 'SD pour soirée JDR dans une ambiance royale', '2024-11-23', '6DQftH');
 
 -- Insert data into Scene
 INSERT INTO ProjetInfo.Scene (id_scene, nom, description, date_creation)
 VALUES
-('scene1', 'Forest', 'Calm forest ambience.', '2024-01-04'),
-('scene2', 'Dungeon', 'Echoing dungeon sounds.', '2024-01-05'),
-('scene3', 'Spaceship Interior', 'Mechanical hums and alarms.', '2024-01-06'),
-('scene4', 'Alien Planet', 'Strange and eerie sounds.', '2024-01-07'),
-('scene5', 'Haunted House', 'Creepy old house sounds.', '2024-01-08'),
-('scene6', 'Abandoned Hospital', 'Echoing halls and creepy whispers.', '2024-01-09'),
-('scene7', 'Jungle', 'Sounds of exotic animals and trees.', '2024-01-10'),
-('scene8', 'Beach', 'Waves crashing and seagulls.', '2024-01-11'),
-('scene9', 'City Street', 'Cars honking and people chatting.', '2024-01-12'),
-('scene10', 'Market Square', 'Busy market sounds.', '2024-01-13'),
-('scene11', 'Battlefield', 'Explosions and war cries.', '2024-01-14'),
-('scene12', 'Castle Siege', 'Sounds of a medieval battle.', '2024-01-15');
+('UPofNEi', 'Château', 'Ambiance dans le chateau ', '2024-11-23'),
+('Dz5AZ6K', 'Forêt', 'Ambiance dans la forêt autour du chateau', '2024-11-23'),
+('eSX2xUl', 'Dans le vide', 'Scène dans le vide', '2024-11-23'),
+('8y61up1', 'Dans le vaisseau', 'Ensemble de sons dans le vaisseau', '2024-11-23'),
+('lbbTU4m', 'Dans les jardins', 'Scène dans les jardins du chateau', '2024-11-23'),
+('2e3sz1D', 'Cérémonie', 'Ambiance formelle, cérémonie', '2024-11-23');
 
 -- Insert data into Son
 INSERT INTO ProjetInfo.Son (id_son, id_freesound, nom, description, duree)
 VALUES
 -- Random sounds
-('son1', 'fs1', 'Rain', 'Light rain with occasional thunder.', '00:02:00'),
-('son2', 'fs2', 'Wind Howling', 'Strong wind in the mountains.', '00:01:00'),
--- Continuous sounds
-('son3', 'fs3', 'Birds Chirping', 'Soothing bird sounds.', '00:01:30'),
-('son4', 'fs4', 'Ocean Waves', 'Gentle waves on the shore.', '00:03:00'),
--- Manual sounds
-('son5', 'fs5', 'Sword Clash', 'Sound of swords clashing.', '00:00:05'),
-('son6', 'fs6', 'Gunshot', 'Loud and sharp gunshot.', '00:00:02');
-
--- Add more sounds for variety
-INSERT INTO ProjetInfo.Son (id_son, id_freesound, nom, description, duree)
-VALUES
--- Random sounds
-('son7', 'fs7', 'Thunder', 'Deep, rumbling thunder.', '00:01:00'),
-('son8', 'fs8', 'Footsteps', 'Walking on dry leaves.', '00:00:45'),
--- Continuous sounds
-('son9', 'fs9', 'Waterfall', 'Continuous sound of a waterfall.', '00:02:30'),
-('son10', 'fs10', 'Crickets', 'Night-time cricket sounds.', '00:01:30'),
--- Manual sounds
-('son11', 'fs11', 'Explosion', 'A large explosion sound.', '00:00:03'),
-('son12', 'fs12', 'Door Creaking', 'Old wooden door creaking open.', '00:00:05');
+('VmjE08vH', '510806', 'Renaissance Strings', 'Musique ambiance chateau', '00:00:58'),
+('q76WpNbH', '435465', 'footsteps inside old house.wav', 'Bruits de pas en intérieur', '00:00:09'),
+('hq1WCUU5', '704955', 'KNIFE OR SWORD SLINGS FINAL EDIT.wav', 'Bruits épées qui sentrechoquent', '00:00:15'),
+('uEflimxP', '559389', 'Mystic Forest Ambient.wav', 'Musique ambiance de foret magique', '00:01:55'),
+('4qlrwiQC', '405133', 'Autumn forest - leaves falling near pond I (loopable)', 'Bruit du vent dans les feuilles de la foret', '00:00:24'),
+('CUeBUhw2', '709986', 'Cosmic Ambient Space (loop)', 'Son ambiant dans le vide', '00:01:36'),
+('sy2i4keq', '130225', 'remix 2 of 130201__alienxxx__telecom-21-14-1.flac', 'Bip de telecommunication', '00:00:01'),
+('1M7Ammmz', '443010', 'RATIEUVILLE_Coralie_2018_2019_astronaut.wav', 'Sons étranges techniques', '00:00:16'),
+('jivDBFw2', '345109', 'spaceship-boom-render-wav', 'Bruit de décollage vaisseau', '00:00:13'),
+('VwcCM6n1', '214663', 'Deep Space Ship Effect', 'Fond bruit blanc vaisseau spatial abandonné', '00:00:10'),
+('TZlClPiy', '736478', 'baroque edm - Dancing in the Palace A', 'Musique baroque Versaillaise', '00:02:00'),
+('bfPzQ30d', '169550', 'Gravel impacts 1', 'Impact objet sur du gravier', '00:00:02'),
+('LvaDFvfq', '115236', 'Warsaw-priest-sermon-1.wav', 'Messe prononcée par un pretre', '00:01:45'),
+('IlJDKCm6', '321775', 'Traditional Church Organ Music [Florence - Italy] 03', 'Musique orgue', '00:08:07');
 
 -- Insert data into Tag
 INSERT INTO ProjetInfo.Tag (nom_tag)
 VALUES
-('Relaxing'),
-('Intense'),
+('medieval'),
+('historic'),
+('old'),
+('strings'),
+('violin'),
+('acoustic'),
+('cello'),
+('calm'),
+('music'),
+('renaissance'),
+('background'),
+('ambient'),
+('violins'),
+('song'),
+('classical'),
+('viola'),
+('rpg'),
+('town'),
+('footsteps'),
+('foot'),
+('steps'),
+('walk'),
+('inside'),
+('floor'),
+('walking'),
+('SLING'),
+('SLINGING'),
+('SNIFE'),
+('SWORD'),
+('METAL'),
+('SOUND'),
+('SICKLE'),
+('Film'),
+('Soundscape'),
 ('Ambient'),
-('Natural'),
+('Fantasy'),
+('Ambiance'),
+('Mystic'),
+('SFX'),
+('Atmosphere'),
+('Wind'),
+('Drone'),
+('Creepy'),
+('Scary'),
+('Sound'),
+('Chill'),
+('Sound-Design'),
+('Dark'),
 ('Cinematic'),
-('Eerie');
+('Amb'),
+('Horror'),
+('Ambience'),
+('Spooky'),
+('Forest'),
+('Music'),
+('Travel'),
+('Movie'),
+('Sci-Fi'),
+('Slow'),
+('loop'),
+('wind'),
+('ambience'),
+('fall'),
+('forest'),
+('video'),
+('atmo'),
+('game'),
+('autumn'),
+('ambiance'),
+('leaves'),
+('nature'),
+('field-recording'),
+('pond'),
+('stillness'),
+('universe'),
+('documentaries'),
+('science'),
+('spaceship'),
+('airy'),
+('cosmic'),
+('soft'),
+('atmospheric'),
+('planets'),
+('film'),
+('empty'),
+('way'),
+('drone'),
+('cinematic'),
+('milky'),
+('technology'),
+('galaxy'),
+('stars'),
+('atmosphere'),
+('sci-fi'),
+('sunrise'),
+('mysterious'),
+('soundscape'),
+('space'),
+('underwater'),
+('deep'),
+('documentary'),
+('transmission'),
+('computer'),
+('digital'),
+('telecom'),
+('morse'),
+('code'),
+('electronic'),
+('shortwave'),
+('alienxxx'),
+('130201'),
+('radio'),
+('bleeps'),
+('rocket'),
+('astronaut'),
+('airlocks'),
+('effects'),
+('Futuristic'),
+('FL'),
+('ultra-speed'),
+('boom'),
+('Sound-Effects'),
+('sounddesign'),
+('Future'),
+('bang'),
+('rapide'),
+('high'),
+('fx'),
+('sfx'),
+('Remixing'),
+('roar'),
+('theater'),
+('white-noise'),
+('dark'),
+('effect'),
+('hum'),
+('noise'),
+('engine'),
+('white'),
+('movie'),
+('jet'),
+('space-ship'),
+('ship'),
+('distant'),
+('general-noise'),
+('baroque'),
+('melody'),
+('edm'),
+('dirt'),
+('hit'),
+('gravel'),
+('dust'),
+('impact'),
+('catholic'),
+('church'),
+('mass'),
+('poland'),
+('polish'),
+('priest'),
+('sermon'),
+('speech'),
+('voice'),
+('warsaw'),
+('Church'),
+('Organ'),
+('Classical'),
+('Italy');
 
 -- Associate Users with Sounddecks (User_Sounddeck)
 INSERT INTO ProjetInfo.User_Sounddeck (id_user, id_sd)
 VALUES
 -- User 1's Sounddecks
-('IUSZEM', 'sd1'),
-('IUSZEM', 'sd2'),
-('IUSZEM', 'sd3'),
--- User 2's Sounddecks
-('LBNVXN', 'sd4'),
-('LBNVXN', 'sd5'),
-('LBNVXN', 'sd6');
+('QRsZjM', 'T0murLv'),
+('QRsZjM', 'qo5gbFU'),
+('6DQftH', 'QoL3xQ9');
 
 -- Associate Sounddecks with Scenes (Sounddeck_Scene)
 INSERT INTO ProjetInfo.Sounddeck_Scene (id_scene, id_sd)
 VALUES
-('scene1', 'sd1'), ('scene2', 'sd1'),
-('scene3', 'sd2'), ('scene4', 'sd2'),
-('scene5', 'sd3'), ('scene6', 'sd3'),
-('scene7', 'sd4'), ('scene8', 'sd4'),
-('scene9', 'sd5'), ('scene10', 'sd5'),
-('scene11', 'sd6'), ('scene12', 'sd6');
+('UPofNEi', 'T0murLv'),
+('Dz5AZ6K', 'T0murLv'),
+('eSX2xUl', 'qo5gbFU'),
+('8y61up1', 'qo5gbFU'),
+('lbbTU4m', 'QoL3xQ9'),
+('2e3sz1D', 'QoL3xQ9');
 
 -- Associate Scenes with Sons (Scene_Son)
 INSERT INTO ProjetInfo.Scene_Son (id_scene, id_son, param1, param2, type)
 VALUES
--- Forest Scene
-('scene9', 'son1', '1', '2', 'aleatoire'),
-('scene9', 'son2', '4', '20', 'aleatoire'),
-('scene9', 'son3', 'none', 'none', 'continu'),
-('scene9', 'son4', 'none', 'none', 'continu'),
-('scene9', 'son5', 'a', 'none', 'manuel'),
-('scene9', 'son6', 'b', 'none', 'manuel'),
-
--- Dungeon Scene
-('scene10', 'son7', '20', '69', 'aleatoire'),
-('scene10', 'son8', '4', '7', 'aleatoire'),
-('scene10', 'son9', 'none', 'none', 'continu'),
-('scene10', 'son10', 'none', 'none', 'continu'),
-('scene10', 'son11', 'c', 'none', 'manuel'),
-('scene10', 'son12', 'd', 'none', 'manuel');
+('UPofNEi', 'VmjE08vH','none', 'none', 'continu'),
+('UPofNEi', 'q76WpNbH','b', 'none', 'manuel'),
+('UPofNEi', 'hq1WCUU5', 'e', 'none', 'manuel'),
+('Dz5AZ6K', 'uEflimxP', 'none', 'none', 'continu'),
+('Dz5AZ6K', '4qlrwiQC', 30, 25, 'aleatoire'),
+('eSX2xUl', 'CUeBUhw2', 'none', 'none', 'continu'),
+('eSX2xUl', 'sy2i4keq', 15, 20, 'aleatoire'),
+('eSX2xUl', '1M7Ammmz', 't', 'none', 'manuel'),
+('8y61up1', 'jivDBFw2', 'd', 'none', 'manuel'),
+('8y61up1', 'VwcCM6n1', 'none', 'none', 'continu'),
+('lbbTU4m', 'TZlClPiy', 'm', 'none', 'manuel'),
+('lbbTU4m', 'bfPzQ30d', 'i', 'none', 'manuel'),
+('2e3sz1D', 'LvaDFvfq', 'i', 'none', 'manuel'),
+('2e3sz1D', 'IlJDKCm6', 45, 50, 'aleatoire');
 
 -- Add similar associations for all other scenes...
 

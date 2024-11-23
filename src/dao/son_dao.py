@@ -512,7 +512,6 @@ class SonDAO:
                         {"id_son": son["id_son"]},
                     )
                     scene_count = cursor.fetchone()["scene_count"]
-
-        # Si aucune scène n'est liée on supprime le son
-        if scene_count == 0:
-            self.supprimer_son(id_son=son["id_son"], schema=schema)
+                    # Si aucune scène n'est liée on supprime le son
+                    if scene_count == 0:
+                        self.supprimer_son(id_son=son["id_son"], schema=schema)

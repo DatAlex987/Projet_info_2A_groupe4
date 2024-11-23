@@ -439,11 +439,6 @@ class SceneDAO:
                         {"id_scene": scene["id_scene"]},
                     )
                     sd_count = cursor.fetchone()["sd_count"]
-
                     # Si aucune Sounddeck n'est liée on supprime la scène
                     if sd_count == 0:
-                        cursor.execute(
-                            f"DELETE FROM {schema}.Scene WHERE id_scene = %(id_scene)s;",
-                            {"id_scene": scene["id_scene"]},
-                        )
-                        connection.commit()
+                        self.supprimer_scene(id_scene=scene["id_scene"], schema=schema)

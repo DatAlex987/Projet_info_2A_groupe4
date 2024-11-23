@@ -452,7 +452,6 @@ class SDDAO(metaclass=Singleton):
                         {"id_sd": sd["id_sd"]},
                     )
                     user_count = cursor.fetchone()["user_count"]
-
-        # Si aucun utilisateur n'est relié on supprime la Sounddeck
-        if user_count == 0:
-            SDDAO().supprimer_sd(id_sd=sd["id_sd"])
+                    # Si aucun utilisateur n'est relié on supprime la Sounddeck
+                    if user_count == 0:
+                        self.supprimer_sd(id_sd=sd["id_sd"])
