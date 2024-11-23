@@ -77,9 +77,9 @@ class MenuParamSceneSpecifiqueView(AbstractView):
                         + Style.RESET_ALL
                     )
                 # Contraint de faire l'import ici pour éviter un circular import
-                from view.view_param.menuparamsceneview import MenuParamSceneView
+                from view.view_param.menuparamsdview import MenuParamSDView
 
-                next_view = MenuParamSceneView()
+                next_view = MenuParamSDView()
             else:
                 from view.view_param.menuparamsceneview import MenuParamSceneView
 

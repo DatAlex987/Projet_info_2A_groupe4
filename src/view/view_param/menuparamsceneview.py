@@ -112,7 +112,9 @@ class MenuParamSceneView(AbstractView):
                     print(
                         Fore.RED + f"Erreur lors de la création de la scène : {e}" + Style.RESET_ALL
                     )
-            next_view = MenuParamSceneView()
+            from view.view_param.menuparamsdview import MenuParamSDView
+
+            next_view = MenuParamSDView()
             return next_view
         else:
             id_scene_select = choix["Choix Scene"].split()[1]

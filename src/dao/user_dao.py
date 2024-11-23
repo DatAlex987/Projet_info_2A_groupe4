@@ -208,17 +208,3 @@ class UserDAO(metaclass=Singleton):
                 )
                 res = cursor.fetchall()
         return [row["id_sd"] for row in res]
-
-
-"""    def supprimer_toutes_associations_user(self, id_user: str, schema):
-        # On récupère toutes les SD associées à l'utilisateur spécifié
-        sds_possedes = [
-            sd_id
-            for sd_id in self.get_sds_of_user(id_user=id_user, schema=schema)
-            if SDDAO().check_if_sd_in_user(id_sd=sd_id, id_user=id_user, schema=schema)
-        ]
-
-        # Et on supprime toutes les associations
-        for id_sd in sds_possedes:
-            SDDAO().supprimer_association_user_sd(id_sd=id_sd, id_user=id_user, schema=schema)
-"""

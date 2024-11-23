@@ -453,10 +453,6 @@ class SDDAO(metaclass=Singleton):
                     )
                     user_count = cursor.fetchone()["user_count"]
 
-                    # Si aucun utilisateur n'est relié on supprime la Sounddeck
-                    if user_count == 0:
-                        cursor.execute(
-                            f"DELETE FROM {schema}.Sounddeck WHERE id_sd = %(id_sd)s;",
-                            {"id_sd": sd["id_sd"]},
-                        )
-                        connection.commit()
+        # Si aucun utilisateur n'est relié on supprime la Sounddeck
+        if user_count == 0:
+            SDDAO().supprimer_sd(id_sd=sd["id_sd"])

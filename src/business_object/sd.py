@@ -63,20 +63,3 @@ class SD:
             raise TypeError("La nouvelle description doit etre une instance de str.")
 
         self.description = nouvelle_description
-
-
-"""    def ajouter_scene(self, nouvelle_scene):
-        "ajoute une scène au sound-deck"
-        if not isinstance(nouvelle_scene, Scene):
-            raise TypeError("La nouvelle scène doit etre une instance de Scene.")
-
-        self.scenes.append(nouvelle_scene)
-
-    def retirer_scene(self, scene):
-        "retire une scène du sound-deck"
-        if not isinstance(scene, Scene):
-            raise TypeError("La scène doit etre une instance de Scene.")
-        if scene in self.scenes:
-            self.scenes.remove(scene)
-        else:
-            print(f"La scène '{scene}' n'existe pas dans la liste.")"""
