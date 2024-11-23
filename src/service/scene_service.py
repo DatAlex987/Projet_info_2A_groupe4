@@ -433,3 +433,38 @@ class SceneService:
 
         pygame.mixer.stop()
         pygame.quit()
+
+    def supprimer_son_existant(
+        self, son_to_delete, schema: str
+    ):  # On a besoin de l'objet en entier pour supprimer en "cascade"
+        """Supprime un son associé à une scène dans la BDD ainsi que toutes les associations qui en découlent
+
+        Params
+        -------------
+        son : Son_Aleatoire ou Son_Manuel ou Son_Continu
+            Son à supprimer
+        schema : str
+            Schema sur lequel opérer la suppression
+
+        Returns
+        -------------
+        bool
+            True si la suppression n'a pas soulevé d'erreur, rien sinon
+        """
+        try:
+            SonDAO().supprimer_son(id_son=son_to_delete.id_son, schema=schema)
+            SonDAO().supprimer_toutes_associations_son(
+                id_son=son_to_delete.id_son,
+                type_son=SonDAO().type_of_son(son=son_to_delete),
+                schema=schema,
+            )
+            # On termine par actualiser la session
+
+            Session().utilisateur.supprimer_son_a_scene(
+                id_sd=Session().sd_to_param.id_sd,
+                id_scene=Session().scene_to_param.id_scene,
+                son=son_to_delete,
+            )
+        except (ValueError, AttributeError) as e:
+            raise ValueError(f"La suppression du son n'a pas abouti : {e}")
+        return True

@@ -394,7 +394,7 @@ class SonDAO:
                 query = f"""SELECT id_scene
                         FROM {schema}.Scene_Son
                         WHERE id_son = %(id_son)s
-                        AND type = "aleatoire";"""
+                        AND type = 'aleatoire';"""
                 cursor.execute(
                     query,
                     {"id_son": id_son},
@@ -411,7 +411,7 @@ class SonDAO:
                 query = f"""SELECT id_scene
                         FROM {schema}.Scene_Son
                         WHERE id_son = %(id_son)s
-                        AND type = "continu";"""
+                        AND type = 'continu';"""
                 cursor.execute(
                     query,
                     {"id_son": id_son},
@@ -428,7 +428,7 @@ class SonDAO:
                 query = f"""SELECT id_scene
                         FROM {schema}.Scene_Son
                         WHERE id_son = %(id_son)s
-                        AND type = "manuel";"""
+                        AND type = 'manuel';"""
                 cursor.execute(
                     query,
                     {"id_son": id_son},
@@ -466,7 +466,7 @@ class SonDAO:
         if type_son == "continu":
             scenes_possedants = [
                 scene_id
-                for scene_id in self.get_scenes_of_son_aleatoire(id_son=id_son, schema=schema)
+                for scene_id in self.get_scenes_of_son_continu(id_son=id_son, schema=schema)
                 if self.check_if_son_in_scene(
                     id_scene=scene_id, id_son=id_son, type_son="continu", schema=schema
                 )
@@ -475,7 +475,7 @@ class SonDAO:
         if type_son == "manuel":
             scenes_possedants = [
                 scene_id
-                for scene_id in self.get_scenes_of_son_aleatoire(id_son=id_son, schema=schema)
+                for scene_id in self.get_scenes_of_son_manuel(id_son=id_son, schema=schema)
                 if self.check_if_son_in_scene(
                     id_scene=scene_id, id_son=id_son, type_son="manuel", schema=schema
                 )
@@ -513,12 +513,6 @@ class SonDAO:
                     )
                     scene_count = cursor.fetchone()["scene_count"]
 
-                    # Si aucune scène n'est liée on supprime le son
-                    if scene_count == 0:
-                        delete_query = f"""DELETE FROM {schema}.Son
-                                        WHERE id_son = %(id_son)s;"""
-                        cursor.execute(
-                            delete_query,
-                            {"id_son": son["id_son"]},
-                        )
-                        connection.commit()
+        # Si aucune scène n'est liée on supprime le son
+        if scene_count == 0:
+            self.supprimer_son(id_son=son["id_son"], schema=schema)

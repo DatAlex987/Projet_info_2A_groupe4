@@ -6,12 +6,14 @@ from InquirerPy import prompt
 ####
 from service.session import Session
 from service.son_service import SonService
+from service.scene_service import SceneService
 from business_object.son_aleatoire import Son_Aleatoire
 from business_object.son_continu import Son_Continu
 from business_object.son_manuel import Son_Manuel
 
 ####
 from view.abstractview import AbstractView
+from view.view_param.menuparamsceneview import MenuParamSceneView
 
 
 class MenuParamModifSonView(AbstractView):
@@ -31,6 +33,7 @@ class MenuParamModifSonView(AbstractView):
                     "Modifier la description",
                     "Modifier le cooldown minimal",
                     "Modifier le cooldown maximal",
+                    "Supprimer le son",
                 ],
             }
         ]
@@ -44,6 +47,7 @@ class MenuParamModifSonView(AbstractView):
                     "Modifier le nom",
                     "Modifier la description",
                     "Modifier la touche de déclenchement",
+                    "Supprimer le son",
                 ],
             }
         ]
@@ -56,6 +60,7 @@ class MenuParamModifSonView(AbstractView):
                     "Voir la fiche du son",
                     "Modifier le nom",
                     "Modifier la description",
+                    "Supprimer le son",
                 ],
             }
         ]
@@ -126,6 +131,13 @@ class MenuParamModifSonView(AbstractView):
                     new_cdmax=new_cdmax["modif cdmax"],
                     schema="ProjetInfo",
                 )
+            elif choix_modif["choix modif"] == "Supprimer le son":
+                SceneService().supprimer_son_existant(
+                    son_to_delete=Session().son_to_param, schema="ProjetInfo"
+                )
+                print(Fore.GREEN + "Suppression du son effectuée avec succès" + Style.RESET_ALL)
+                return MenuParamSceneView()
+
         elif isinstance(Session().son_to_param, Son_Continu):
             choix_modif = prompt(self.question_modif_continu)
             if choix_modif["choix modif"] == "Voir la fiche du son":
@@ -140,6 +152,13 @@ class MenuParamModifSonView(AbstractView):
                 SonService().modifier_desc_son(
                     son=Session().son_to_param, new_desc=new_desc["modif desc"], schema="ProjetInfo"
                 )
+            elif choix_modif["choix modif"] == "Supprimer le son":
+                SceneService().supprimer_son_existant(
+                    son_to_delete=Session().son_to_param, schema="ProjetInfo"
+                )
+                print(Fore.GREEN + "Suppression du son effectuée avec succès" + Style.RESET_ALL)
+                return MenuParamSceneView()
+
         elif isinstance(Session().son_to_param, Son_Manuel):
             choix_modif = prompt(self.question_modif_manuel)
             if choix_modif["choix modif"] == "Voir la fiche du son":
@@ -164,6 +183,13 @@ class MenuParamModifSonView(AbstractView):
                     schema="ProjetInfo",
                 )
                 print(Fore.GREEN + "Modification effectuée avec succès" + Style.RESET_ALL)
+
+            elif choix_modif["choix modif"] == "Supprimer le son":
+                SceneService().supprimer_son_existant(
+                    son_to_delete=Session().son_to_param, schema="ProjetInfo"
+                )
+                print(Fore.GREEN + "Suppression du son effectuée avec succès" + Style.RESET_ALL)
+                return MenuParamSceneView()
 
         from view.view_param.menuparamscenespecifiqueview import MenuParamSceneSpecifiqueView
 

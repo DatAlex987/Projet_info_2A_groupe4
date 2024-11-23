@@ -209,7 +209,8 @@ class UserDAO(metaclass=Singleton):
                 res = cursor.fetchall()
         return [row["id_sd"] for row in res]
 
-    def supprimer_toutes_associations_user(self, id_user: str, schema):
+
+"""    def supprimer_toutes_associations_user(self, id_user: str, schema):
         # On récupère toutes les SD associées à l'utilisateur spécifié
         sds_possedes = [
             sd_id
@@ -220,3 +221,4 @@ class UserDAO(metaclass=Singleton):
         # Et on supprime toutes les associations
         for id_sd in sds_possedes:
             SDDAO().supprimer_association_user_sd(id_sd=id_sd, id_user=id_user, schema=schema)
+"""

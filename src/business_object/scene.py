@@ -93,13 +93,13 @@ class Scene:
         self.sons_manuels.append(nouveau_son_manuel)
 
     def supprimer_son_aleatoire(self, son_aleatoire: Son_Aleatoire):
-        """Ajoute un nouveau son aléatoire dans la scène"""
+        "Ajoute un nouveau son aléatoire dans la scène"
         self.sons_aleatoires.remove(son_aleatoire)
 
     def supprimer_son_continu(self, son_continu: Son_Continu):
-        """Ajoute un nouveau son continu dans la scène"""
+        "Ajoute un nouveau son continu dans la scène"
         self.sons_continus.remove(son_continu)
 
     def supprimer_son_manuel(self, son_manuel: Son_Manuel):
-        """Ajoute un nouveau son manuel dans la scène"""
+        "Ajoute un nouveau son manuel dans la scène"
         self.sons_manuels.remove(son_manuel)

@@ -12,8 +12,8 @@ class Freesound(metaclass=Singleton):
     Classe intéragissant avec l'API Freesound
     """
 
-    def rechercher_par_tag(tag: str, limit: int):
-        """
+    """def rechercher_par_tag(tag: str, limit: int):
+        "
         Envoie une requête à l'API pour récupérer des sons correspondants
         au tag renseigné.
 
@@ -30,7 +30,7 @@ class Freesound(metaclass=Singleton):
             Liste de longueur l = limit. Chaque élément est un
             dictionnaire qui contient les informations
             d'un son : id, nom, tags, licence, username
-        """
+        "
         if not isinstance(tag, str):
             raise TypeError("L'argument tag n'est pas un str.")
         if not isinstance(limit, int):
@@ -52,7 +52,7 @@ class Freesound(metaclass=Singleton):
         results = req.json()
         # La sortie est une liste de dict des 10 sons liés au
         # wind (id, name, tags, licence, username)
-        return results["results"]  # [:limit]
+        return results["results"]  # [:limit]"""
 
     def rechercher_multi_filtres(
         dico_filtres: dict, limit: int
@@ -185,8 +185,8 @@ class Freesound(metaclass=Singleton):
 
         return result
 
-    def rechercher_ids_par_tag(tag: str, limit: int):
-        """
+    """def rechercher_ids_par_tag(tag: str, limit: int):
+        "
         Envoie une requête à l'API pour récupérer uniquement les IDs des sons
         correspondants au tag renseigné.
 
@@ -201,7 +201,7 @@ class Freesound(metaclass=Singleton):
         -----------------
         ids : list
             Liste d'IDs des sons correspondant au tag, longueur l = limit
-        """
+        "
         if not isinstance(tag, str):
             raise TypeError("L'argument tag n'est pas un str.")
         if not isinstance(limit, int):
@@ -233,7 +233,7 @@ class Freesound(metaclass=Singleton):
         # Récupérer uniquement les IDs des résultats
         ids = [result["id"] for result in results.get("results", [])]
 
-        return ids[:limit]
+        return ids[:limit]"""
 
     def telecharger_son(self, id_freesound):
         # Renommer les sons téléchargés au format précisé dans jouer_son (son.py)

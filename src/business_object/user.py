@@ -135,3 +135,21 @@ class User(Personne):
                             scene.ajouter_son_manuel(nouveau_son_manuel=son)
                         elif isinstance(son, Son_Continu):
                             scene.ajouter_son_continu(nouveau_son_continu=son)
+
+    def supprimer_son_a_scene(self, id_sd: str, id_scene: str, son):
+        for sd in self.SD_possedes:
+            if sd.id_sd == id_sd:
+                for scene in sd.scenes:
+                    if scene.id_scene == id_scene:
+                        if isinstance(son, Son_Aleatoire):
+                            for son_alea in scene.sons_aleatoires:
+                                if son_alea.id_son == son.id_son:
+                                    scene.supprimer_son_aleatoire(son_aleatoire=son_alea)
+                        elif isinstance(son, Son_Manuel):
+                            for son_manuel in scene.sons_manuels:
+                                if son_manuel.id_son == son.id_son:
+                                    scene.supprimer_son_manuel(son_manuel=son_manuel)
+                        elif isinstance(son, Son_Continu):
+                            for son_cont in scene.sons_continus:
+                                if son_cont.id_son == son.id_son:
+                                    scene.supprimer_son_continu(son_continu=son_cont)

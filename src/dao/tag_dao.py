@@ -242,12 +242,6 @@ class TagDAO:
                     )
                     son_count = cursor.fetchone()["son_count"]
 
-                    # Si aucun son n'est lié on supprime le tag
-                    if son_count == 0:
-                        delete_query = f"""DELETE FROM {schema}.Tag
-                                        WHERE nom_tag = %(nom_tag)s;"""
-                        cursor.execute(
-                            delete_query,
-                            {"nom_tag": nom_tag},
-                        )
-                        connection.commit()
+        # Si aucun son n'est lié on supprime le tag
+        if son_count == 0:
+            self.supprimer_tag(tag=nom_tag, schema=schema)
