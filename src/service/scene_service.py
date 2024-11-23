@@ -331,7 +331,7 @@ class SceneService:
                     Bouton(
                         x_position_3,
                         300,
-                        150,
+                        170,
                         40,
                         f"{son.nom[:12]}... , {son.start_key.upper()}",
                         "manuel",
@@ -340,27 +340,27 @@ class SceneService:
                     son,
                 )
             )
-            x_position_3 += 170
+            x_position_3 += 190
             fp = son.localise_son()
             son.charge = pygame.mixer.Sound(fp)
 
         for son in scene.sons_continus:
             dictb["continus"].append(
-                (Bouton(x_position, 100, 150, 40, f"{son.nom[:13]}...", "continu"), son)
+                (Bouton(x_position, 100, 170, 40, f"{son.nom[:13]}...", "continu"), son)
             )
-            x_position += 170
+            x_position += 190
             fp = son.localise_son()
             pygame.mixer.music.load(fp)
         # Création des boutons pour les sons aléatoires
         longueur_sons_aleatoires = len(scene.sons_aleatoires)
         for k, son in enumerate(scene.sons_aleatoires):
             dictb["alea"].append(
-                (Bouton(x_position_2, 200, 150, 40, f"{son.nom[:13]}", "aleatoire"), son)
+                (Bouton(x_position_2, 200, 170, 40, f"{son.nom[:13]}", "aleatoire"), son)
             )
             fp = son.localise_son()
             son.charge = pygame.mixer.Sound(fp)
             son.event_son = pygame.USEREVENT + (k + 1)
-            x_position_2 += 170
+            x_position_2 += 190
 
         # Définir la position de la fenêtre
         environ["SDL_VIDEO_WINDOW_POS"] = f"{position_x},{position_y}"
