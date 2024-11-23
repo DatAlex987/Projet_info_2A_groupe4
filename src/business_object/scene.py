@@ -30,13 +30,13 @@ class Scene:
 
     def __init__(
         self,
-        nom,
-        description,
-        id_scene,
-        sons_aleatoires,
-        sons_manuels,
-        sons_continus,
-        date_creation,
+        nom: str,
+        description: str,
+        id_scene: str,
+        sons_aleatoires: list,
+        sons_manuels: list,
+        sons_continus: list,
+        date_creation: datetime.date,
     ):
         """Constructeur"""
         self.nom = nom
@@ -62,13 +62,13 @@ class Scene:
         if not isinstance(date_creation, datetime.date):
             raise TypeError("La date de création doit être une instance de datetime.")
 
-    def modifier_nom(self, nouveau_nom):
+    def modifier_nom(self, nouveau_nom: str):
         """Modifier le nom de la scène"""
         if not isinstance(nouveau_nom, str):
             raise TypeError("Le nouveau nom doit etre une instance de str.")
         self.nom = nouveau_nom
 
-    def modifier_description(self, nouvelle_description):
+    def modifier_description(self, nouvelle_description: str):
         """Modifier la description de la scène"""
         if not isinstance(nouvelle_description, str):
             raise TypeError("La nouvelle description doit etre une instance de str.")

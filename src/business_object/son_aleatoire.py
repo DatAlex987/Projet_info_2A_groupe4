@@ -1,5 +1,6 @@
 import random
 import time
+import datetime
 import threading
 import pygame
 
@@ -20,7 +21,15 @@ class Son_Aleatoire(Son):
     """
 
     def __init__(
-        self, nom, description, duree, id_son, id_freesound, tags, cooldown_min, cooldown_max
+        self,
+        nom: str,
+        description: str,
+        duree: datetime.timedelta,
+        id_son: str,
+        id_freesound: str,
+        tags: list,
+        cooldown_min: int,
+        cooldown_max: int,
     ):
         super().__init__(nom, description, duree, id_son, id_freesound, tags)
         """Constructeur"""
@@ -39,7 +48,7 @@ class Son_Aleatoire(Son):
         if cooldown_min > cooldown_max:
             raise ValueError("Le cooldown minimum ne peut pas être supérieur au cooldown maximum.")
 
-    def modifier_cooldown_min(self, new_cooldown_min):
+    def modifier_cooldown_min(self, new_cooldown_min: int):
         """Modifier les paramètres de cooldown d'un son aléatoire."""
         if not isinstance(new_cooldown_min, int):
             raise TypeError("Les cooldowns doivent être des entiers.")
@@ -47,7 +56,7 @@ class Son_Aleatoire(Son):
             raise ValueError("Les cooldowns ne peuvent pas être négatifs.")
         self.cooldown_min = new_cooldown_min
 
-    def modifier_cooldown_max(self, new_cooldown_max):
+    def modifier_cooldown_max(self, new_cooldown_max: int):
         """Modifier les paramètres de cooldown d'un son aléatoire."""
         if not isinstance(new_cooldown_max, int):
             raise TypeError("Les cooldowns doivent être des entiers.")

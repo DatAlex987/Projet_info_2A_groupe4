@@ -35,7 +35,15 @@ class Son:
     )
     """
 
-    def __init__(self, nom, description, duree, id_son, id_freesound, tags):
+    def __init__(
+        self,
+        nom: str,
+        description: str,
+        duree: datetime.timedelta,
+        id_son: str,
+        id_freesound: str,
+        tags: list,
+    ):
         """Constructeur"""
         self.nom = nom
         self.description = description

@@ -34,7 +34,14 @@ class User(Personne):
     """
 
     def __init__(
-        self, nom, prenom, date_naissance, id_user, mdp=None, SD_possedes=None, pseudo=None
+        self,
+        nom: str,
+        prenom: str,
+        date_naissance: datetime.date,
+        id_user: str,
+        mdp=None,
+        SD_possedes=None,
+        pseudo=None,
     ):
         # mdp optionel. N'est précisé que lors de la première instantiation
         # (pour éviter de hasher le mdp déjà hashé lors de l'instantiation après
@@ -97,7 +104,7 @@ class User(Personne):
         self.SD_possedes = SD_possedes
         self.pseudo = pseudo
 
-    def _hash_mdp(self, mdp):
+    def _hash_mdp(self, mdp: str):
         gen_hash = hashlib.pbkdf2_hmac(
             "sha256", mdp.encode("utf-8"), self.nom.encode("utf-8"), 100000
         )

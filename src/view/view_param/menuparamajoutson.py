@@ -90,9 +90,9 @@ class MenuParamAjoutSonView(AbstractView):
             )
         else:
             print(Fore.RED + "L'ajout du son n'a pas pu aboutir." + Style.RESET_ALL)
-        from view.view_param.menuparamscenespecifiqueview import MenuParamSceneSpecifiqueView
+        from view.view_param.menuparamsceneview import MenuParamSceneView
 
-        return MenuParamSceneSpecifiqueView()
+        return MenuParamSceneView()
 
     def display_info(self):
         print(Fore.BLUE + " [PARAMETRAGE] MENU SON ".center(80, "=") + Style.RESET_ALL)

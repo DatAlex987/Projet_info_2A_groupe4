@@ -1,4 +1,5 @@
 import pygame
+import datetime
 
 ####
 from business_object.son import Son
@@ -15,7 +16,15 @@ class Son_Continu(Son):
     --------
     """
 
-    def __init__(self, nom, description, duree, id_son, id_freesound, tags):
+    def __init__(
+        self,
+        nom: str,
+        description: str,
+        duree: datetime.timedelta,
+        id_son: str,
+        id_freesound: str,
+        tags: list,
+    ):
         super().__init__(nom, description, duree, id_son, id_freesound, tags)
 
     def Arret_Son(self):

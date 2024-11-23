@@ -25,7 +25,15 @@ class SD:
     --------
     """
 
-    def __init__(self, nom, description, id_sd, scenes, date_creation, id_createur):
+    def __init__(
+        self,
+        nom: str,
+        description: str,
+        id_sd: str,
+        scenes: list,
+        date_creation: datetime.date,
+        id_createur: str,
+    ):
         "self.scenes à modifier dès que possible"
         """Constructeur"""
         self.nom = nom
@@ -51,13 +59,13 @@ class SD:
         if not isinstance(date_creation, datetime.date):
             raise TypeError("La date de creation doit etre une date.")
 
-    def modifier_nom_sd(self, nouveau_nom):
+    def modifier_nom_sd(self, nouveau_nom: str):
         """Modifier le nom du sound-deck"""
         if not isinstance(nouveau_nom, str):
             raise TypeError("Le nom doit etre une instance de str.")
         self.nom = nouveau_nom
 
-    def modifier_description_sd(self, nouvelle_description):
+    def modifier_description_sd(self, nouvelle_description: str):
         """Modifier la description du sound-deck"""
         if not isinstance(nouvelle_description, str):
             raise TypeError("La nouvelle description doit etre une instance de str.")
