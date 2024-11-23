@@ -438,6 +438,8 @@ class SDDAO(metaclass=Singleton):
         for id_scene in scenes_incluses:
             SceneDAO().supprimer_association_sd_scene(id_sd=id_sd, id_scene=id_scene, schema=schema)
 
+    # nettoyage
+
     def delete_sd_if_no_users(self, schema: str):
         """
         Supprime une Sounddeck si elle n'est reliée à aucun utilisateur.
